@@ -1,147 +1,3934 @@
 {
-    "openapi": "3.0.3",
-    "info": {
-      "title": "Market Data API",
-      "version": "1.0.0",
-      "description": "Documentation of the Market Data API.",
-      "contact": {
-        "name": "API Support",
-        "email": "support@example.com"
-      },
-      "license": {
-        "name": "MIT",
-        "url": "http://opensource.org/licenses/MIT"
-      }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Market Data API.",
+    "description": "Documentation of the Market Data API.",
+    "contact": {
+      "name": "API Support",
+      "email": "support@example.com"
     },
-    "servers": [
-      {
-        "url": "https://api.go.useallmind.ai/"
-      }
-    ],
-    "paths": {
-      "/api-keys": {
-        "get": {
-          "summary": "List all API keys for a user",
-          "description": "Retrieves all API keys associated with the specified user ID.",
-          "tags": ["apiKeys"],
-          "operationId": "listApiKeys",
-          "parameters": [
-            {
-              "name": "user_id",
-              "in": "query",
-              "required": true,
-              "schema": { "type": "string" },
-              "description": "The user ID to list API keys for"
+    "license": {
+      "name": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.go.useallmind.ai/"
+    }
+  ],
+  "paths": {
+    "/api-keys": {
+      "get": {
+        "tags": [
+          "apiKeys"
+        ],
+        "summary": "List all API keys for a user",
+        "description": "Retrieves all API keys associated with the specified user ID.",
+        "operationId": "listAPIKeys",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "The user ID to list API keys for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "UserID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/APIKeyResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "apiKeys"
+        ],
+        "summary": "Create a new API key",
+        "description": "Creates a new API key with the specified name and permissions for the given user.",
+        "operationId": "createAPIKey",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAPIKeyRequest"
+              }
             }
-          ],
-          "responses": {
-            "200": { "$ref": "#/components/responses/APIKeyList" },
-            "400": { "$ref": "#/components/responses/ErrorResponse" },
-            "500": { "$ref": "#/components/responses/ErrorResponse" }
           }
         },
-        "post": {
-          "summary": "Create a new API key",
-          "description": "Creates a new API key with the specified name and permissions.",
-          "tags": ["apiKeys"],
-          "operationId": "createApiKey",
-          "requestBody": {
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateAPIKeyResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/api-keys/{key}": {
+      "delete": {
+        "tags": [
+          "apiKeys"
+        ],
+        "summary": "Delete an API key",
+        "description": "Deletes the specified API key.",
+        "operationId": "deleteAPIKey",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "The API key to delete",
             "required": true,
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/CreateApiKeyRequest" }
-              }
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Key"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/bigtable/chat/{rowKey}": {
+      "get": {
+        "tags": [
+          "bigtableFunctions"
+        ],
+        "summary": "Get chat history from BigTable.",
+        "description": "Retrieves the chat history for the specified row key from BigTable.",
+        "operationId": "getChatHistory",
+        "parameters": [
+          {
+            "name": "rowKey",
+            "in": "path",
+            "description": "The row key to get chat history from",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "RowKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ChatHistoryResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "bigtableFunctions"
+        ],
+        "summary": "Create a new chat in BigTable.",
+        "description": "Creates a new chat conversation with the specified messages at the given row key.",
+        "operationId": "createChat",
+        "parameters": [
+          {
+            "name": "rowKey",
+            "in": "path",
+            "description": "The row key to create chat at",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "RowKey"
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/CreateChatResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "bigtableFunctions"
+        ],
+        "summary": "Delete a chat key from BigTable.",
+        "description": "Removes the specified row from the chat table in BigTable. The operation\nis idempotent - attempting to delete a non-existent key will still return\na successful response.",
+        "operationId": "deleteChatKey",
+        "parameters": [
+          {
+            "name": "rowKey",
+            "in": "path",
+            "description": "The row key to delete from the chat table",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "RowKey"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContentResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/current-price/{symbol}": {
+      "get": {
+        "tags": [
+          "prices"
+        ],
+        "summary": "Get current price and trading data for a stock symbol",
+        "description": "This will retrieve the most recent trade data for the specified stock symbol including\ncurrent price, bid/ask prices, trade size, and other market data from Redis.",
+        "operationId": "getLastTradePrice",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "description": "The stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Symbol"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CurrentPriceResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/darkpool-trends": {
+      "get": {
+        "tags": [
+          "priceData"
+        ],
+        "summary": "Get top K darkpool trends.",
+        "description": "Retrieves the top K darkpool trends based on the provided count and start date.\nData is fetched from cache if available, otherwise from the primary service.",
+        "operationId": "getDarkpoolTrends",
+        "parameters": [
+          {
+            "name": "k",
+            "in": "query",
+            "description": "Number of darkpool trends to return.",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           },
-          "responses": {
-            "200": { "$ref": "#/components/responses/CreateApiKey" },
-            "400": { "$ref": "#/components/responses/ErrorResponse" },
-            "500": { "$ref": "#/components/responses/ErrorResponse" }
-          }
-        }
-      },
-      "/api-keys/{key}": {
-        "delete": {
-          "summary": "Delete an API key",
-          "description": "Deletes the specified API key.",
-          "tags": ["apiKeys"],
-          "operationId": "deleteApiKeyById",
-          "parameters": [
-            {
-              "name": "key",
-              "in": "path",
-              "required": true,
-              "schema": { "type": "string" },
-              "description": "The API key to delete"
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date for fetching trends (YYYY-MM-DD).",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          ],
-          "responses": {
-            "204": { "$ref": "#/components/responses/NoContent" },
-            "400": { "$ref": "#/components/responses/ErrorResponse" },
-            "404": { "$ref": "#/components/responses/ErrorResponse" },
-            "500": { "$ref": "#/components/responses/ErrorResponse" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DarkpoolTrendsResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         }
       }
     },
-    "components": {
-      "schemas": {
-        "CreateApiKeyRequest": {
-          "type": "object",
-          "required": ["name", "user_id"],
-          "properties": {
-            "name": { "type": "string" },
-            "user_id": { "type": "string" },
-            "permissions": {
-              "type": "array",
-              "items": { "type": "string" }
+    "/darkpool/daily/{ticker}": {
+      "get": {
+        "tags": [
+          "priceData"
+        ],
+        "summary": "Get daily darkpool trends for a specific ticker.",
+        "description": "Retrieves daily darkpool trend metrics for the specified ticker within the given date range.\nIf no dates are provided, defaults to the last 30 days.",
+        "operationId": "getDailyDarkpoolTrend",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The ticker symbol to fetch trends for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for fetching trends (YYYY-MM-DD).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for fetching trends (YYYY-MM-DD).",
+            "schema": {
+              "type": "string"
             }
           }
-        },
-        "ErrorResponse": {
-          "type": "object",
-          "properties": {
-            "error": { "type": "string" }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DailyDarkpoolTrendResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         }
-      },
-      "responses": {
-        "APIKeyList": {
-          "description": "List of API keys",
+      }
+    },
+    "/darkpools": {
+      "get": {
+        "tags": [
+          "darkpool"
+        ],
+        "summary": "Get dark-pool trades for a ticker.",
+        "description": "Retrieves dark-pool trades in the requested date window with optional\nprice/size/value filters and consolidation.\nIf the query matches the pre-cached slice (last 10 days, default filters) the\nresult is served from Redis; otherwise it falls back to Bigtable.\nCurrent price is attached in parallel.",
+        "operationId": "getDarkpoolTrades",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "description": "The stock ticker symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Ticker"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date in YYYY-MM-DD format",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Start"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date in YYYY-MM-DD format",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "End"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of trades to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1000
+            },
+            "x-go-name": "Limit"
+          },
+          {
+            "name": "min_size",
+            "in": "query",
+            "description": "Minimum trade size",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-go-name": "MinSize"
+          },
+          {
+            "name": "max_size",
+            "in": "query",
+            "description": "Maximum trade size",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-go-name": "MaxSize"
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "description": "Minimum trade price",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinPrice"
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "description": "Maximum trade price",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxPrice"
+          },
+          {
+            "name": "min_value",
+            "in": "query",
+            "description": "Minimum trade value",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinValue"
+          },
+          {
+            "name": "max_value",
+            "in": "query",
+            "description": "Maximum trade value",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxValue"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DarkpoolTradeResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/darkpools/daily-summary": {
+      "get": {
+        "tags": [
+          "darkpool"
+        ],
+        "summary": "Get daily weighted average summary of dark-pool trades.",
+        "description": "Retrieves a day-by-day breakdown of darkpool trades showing weighted average price,\ntotal daily trade value, and trade volume. Data is fetched directly from Bigtable\nas we need raw unconsolidated trades for accurate calculations.",
+        "operationId": "getDarkpoolDailySummary",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "description": "The stock ticker symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Ticker"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date in YYYY-MM-DD format",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Start"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date in YYYY-MM-DD format",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "End"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DarkpoolDailySummaryResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/dashboard/watchlist/{watchlist_id}": {
+      "get": {
+        "tags": [
+          "priceData"
+        ],
+        "summary": "Fetch a dashboard watchlist.",
+        "description": "Retrieves the tickers or data associated with a specific dashboard watchlist ID.",
+        "operationId": "getDashboardWatchlist",
+        "parameters": [
+          {
+            "name": "watchlist_id",
+            "in": "path",
+            "description": "ID of the watchlist to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DashboardWatchlistResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/earnings": {
+      "get": {
+        "tags": [
+          "events-calendar"
+        ],
+        "summary": "Get earnings data for next week",
+        "description": "Retrieves earnings data for the upcoming week from the cache.",
+        "operationId": "getEarningsNextWeek",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/EarningsResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/entity-holdings": {
+      "get": {
+        "tags": [
+          "institutional-holdings"
+        ],
+        "summary": "Get entity holdings data.",
+        "description": "Retrieves holdings data for a specific entity, with optional filtering by ticker symbol and date range.\nReturns enriched holdings data including fund names, entity names, and ticker symbols.",
+        "operationId": "getEntityHoldings",
+        "parameters": [
+          {
+            "name": "fund_id",
+            "in": "query",
+            "description": "Fund ID to fetch holdings for",
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "FundID"
+          },
+          {
+            "name": "entity_id",
+            "in": "query",
+            "description": "Entity ID to fetch holdings for",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ticker",
+            "in": "query",
+            "description": "Ticker symbol to filter holdings for",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date in YYYY-MM-DD format",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date in YYYY-MM-DD format",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of records to return",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/EntityHoldingsResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/estimates/ltg/{ticker}": {
+      "get": {
+        "tags": [
+          "EstimatesData"
+        ],
+        "summary": "Get Long-Term Growth (LTG) estimates for a ticker.",
+        "description": "Retrieves Long-Term Growth (LTG) estimate data for a given stock ticker.\nAn optional cutOff date can be provided to retrieve data as of that date.",
+        "operationId": "getLongTermGrowthEstimate",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "Stock ticker symbol.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cutOff",
+            "in": "query",
+            "description": "Optional cut-off date (e.g., 'YYYY-MM-DD') to retrieve estimates as of a specific date.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/EstimatesResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/estimates/metrics/{ticker}/{period}": {
+      "get": {
+        "tags": [
+          "EstimatesData"
+        ],
+        "summary": "Get most recent estimate metrics for a ticker and period.",
+        "description": "Retrieves the most recent estimate metrics (e.g., EPS, Sales) for a given stock ticker,\nfor a specified period type (ANN, QTR, or BOTH).\nAn optional cutOff date can be provided to retrieve data as of that date.",
+        "operationId": "getEstimatesMetrics",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "Stock ticker symbol.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "path",
+            "description": "Reporting period type.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANN",
+                "QTR",
+                "BOTH"
+              ]
+            }
+          },
+          {
+            "name": "cutOff",
+            "in": "query",
+            "description": "Optional cut-off date (e.g., 'YYYY-MM-DD') to retrieve estimates as of a specific date.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/EstimatesResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/estimates/pricetarget/{ticker}": {
+      "get": {
+        "tags": [
+          "EstimatesData"
+        ],
+        "summary": "Get price target estimates for a ticker.",
+        "description": "Retrieves price target estimate data for a given stock ticker.\nAn optional cutOff date can be provided to retrieve data as of that date.",
+        "operationId": "getPriceTargetEstimate",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "Stock ticker symbol.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cutOff",
+            "in": "query",
+            "description": "Optional cut-off date (e.g., 'YYYY-MM-DD') to retrieve estimates as of a specific date.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/EstimatesResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/fear-greed": {
+      "get": {
+        "tags": [
+          "marketSentiment"
+        ],
+        "summary": "Get the Fear & Greed Index data.",
+        "description": "Retrieves the historical Fear & Greed Index data. It attempts to fetch\nthe data from the cache first (Redis). If the cache is missed or an error\noccurs during cache retrieval, it falls back to fetching the data directly\nfrom the source.",
+        "operationId": "getFearGreedIndex",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FearGreedIndexResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/fund-holdings": {
+      "get": {
+        "tags": [
+          "institutional-holdings"
+        ],
+        "summary": "Get fund holdings data.",
+        "description": "Retrieves holdings data for a specific fund, with optional filtering by ticker symbol and date range.\nReturns enriched holdings data including fund names, entity names, and ticker symbols.",
+        "operationId": "getFundHoldings",
+        "parameters": [
+          {
+            "name": "fund_id",
+            "in": "query",
+            "description": "Fund ID to fetch holdings for",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entity_id",
+            "in": "query",
+            "description": "Entity ID to fetch holdings for",
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "EntityID"
+          },
+          {
+            "name": "ticker",
+            "in": "query",
+            "description": "Ticker symbol to filter holdings for",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date in YYYY-MM-DD format",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date in YYYY-MM-DD format",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of records to return",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FundHoldingsResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/fundamentals/range": {
+      "get": {
+        "tags": [
+          "Fundamentals"
+        ],
+        "summary": "Balance-sheet, cash-flow, income & ratios for many tickers across a year span.",
+        "operationId": "getFinancialsMultiRange",
+        "parameters": [
+          {
+            "name": "tickers",
+            "in": "query",
+            "description": "CSV of symbols (e.g., AAPL,MSFT)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL,MSFT",
+            "x-go-name": "Tickers"
+          },
+          {
+            "name": "start_year",
+            "in": "query",
+            "description": "Start year for the range",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2024",
+            "x-go-name": "StartYear"
+          },
+          {
+            "name": "end_year",
+            "in": "query",
+            "description": "End year for the range",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025",
+            "x-go-name": "EndYear"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FinancialsRangeResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/fundamentals/{ticker}/period/{year}/{period}": {
+      "get": {
+        "tags": [
+          "Fundamentals"
+        ],
+        "summary": "Data for one specific year & reporting period (FY, Q1‒Q4).",
+        "operationId": "getFinancialsPeriod",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL",
+            "x-go-name": "Ticker"
+          },
+          {
+            "name": "year",
+            "in": "path",
+            "description": "Year for the period",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2024",
+            "x-go-name": "Year"
+          },
+          {
+            "name": "period",
+            "in": "path",
+            "description": "Period (FY or Q1-Q4)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "FY",
+                "Q1",
+                "Q2",
+                "Q3",
+                "Q4"
+              ]
+            },
+            "example": "Q1",
+            "x-go-name": "Period"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FinancialsPeriodResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/fundamentals/{ticker}/range/{start_year}/{end_year}": {
+      "get": {
+        "tags": [
+          "Fundamentals"
+        ],
+        "summary": "Same data as above but for one ticker.",
+        "operationId": "getFinancialsSingleRange",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL",
+            "x-go-name": "Ticker"
+          },
+          {
+            "name": "start_year",
+            "in": "path",
+            "description": "Start year for the range",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2024",
+            "x-go-name": "StartYear"
+          },
+          {
+            "name": "end_year",
+            "in": "path",
+            "description": "End year for the range",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2025",
+            "x-go-name": "EndYear"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FinancialsRangeResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/futures-data": {
+      "get": {
+        "tags": [
+          "priceData"
+        ],
+        "summary": "Get futures data for a ticker.",
+        "description": "Retrieves futures data for a specified ticker symbol within a given date range.",
+        "operationId": "getFuturesData",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "description": "Ticker symbol for the futures data.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date for the data (YYYY-MM-DD).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date for the data (YYYY-MM-DD).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FuturesDataResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/g7-events": {
+      "get": {
+        "tags": [
+          "events-calendar"
+        ],
+        "summary": "Get G7 events data for next week",
+        "description": "Retrieves G7 events data for the upcoming week from the cache.",
+        "operationId": "getG7EventsNextWeek",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/G7EventsResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/historical-data/{ticker}": {
+      "get": {
+        "tags": [
+          "options"
+        ],
+        "operationId": "getHistoricalData",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Ticker"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "description": "The time period for aggregation (e.g., \"1m\", \"1h\", \"day\")",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Period"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "The start date for historical data (YYYY-MM-DD)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Start"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "The end date for historical data (YYYY-MM-DD)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "End"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/historicalDataResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/investor-search": {
+      "get": {
+        "tags": [
+          "investors"
+        ],
+        "summary": "Search investors by name prefix",
+        "description": "Returns up to the first 100 investors whose names start with the supplied prefix.",
+        "operationId": "searchInvestors",
+        "parameters": [
+          {
+            "name": "prefix",
+            "in": "query",
+            "description": "Prefix to search for (case-insensitive)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "x-go-name": "Prefix"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/InvestorSearchResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/ipos": {
+      "get": {
+        "tags": [
+          "events-calendar"
+        ],
+        "summary": "Get IPO data for next week",
+        "description": "Retrieves IPO data for the upcoming week from the cache.",
+        "operationId": "getIPOsNextWeek",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IPOsResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/market-status": {
+      "get": {
+        "tags": [
+          "marketData"
+        ],
+        "summary": "Get Market Status",
+        "description": "Fetches the current market status from Polygon.io and returns whether the market is considered open.",
+        "operationId": "getMarketStatus",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MarketStatusResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/markets/top-stocks/{type}": {
+      "get": {
+        "tags": [
+          "marketSentiment"
+        ],
+        "summary": "Get top market stocks data.",
+        "description": "Retrieves the top market stocks data based on the specified type.\nThe type parameter determines whether to fetch top gainers, losers, or most active stocks.",
+        "operationId": "fetchTopMarketStocks",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "description": "The type of stocks to fetch (gainers, losers, or active)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "gainers",
+                "losers",
+                "active"
+              ]
+            },
+            "x-go-name": "Type"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TopMarketStocksResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/marketsnapshot": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get current market snapshot data for all available tickers",
+        "description": "This will retrieve the market snapshot for all available tickers with their current price and today's change",
+        "operationId": "getMarketSnapshot",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MarketSnapshotResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/news": {
+      "get": {
+        "tags": [
+          "marketSentiment"
+        ],
+        "summary": "Get filtered news articles.",
+        "description": "Retrieves news articles based on specified filter criteria such as date range,\nticker symbol, search text, sentiment score, market impact, and  .\nSupports pagination via the limit parameter.",
+        "operationId": "getNewsArticles",
+        "parameters": [
+          {
+            "name": "date_range",
+            "in": "query",
+            "description": "Date range \"1d, 7d, 30d, 90d\". Defaults to 7d.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number. Defaults to 0.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/NewsResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/news/sentiment/{ticker}": {
+      "get": {
+        "tags": [
+          "marketSentiment"
+        ],
+        "summary": "Get sentiment scores for a ticker.",
+        "operationId": "getTickerSentiment30D",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "Stock ticker symbol (e.g., AAPL, TSLA)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TickerSentimentResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/news/{id}": {
+      "get": {
+        "tags": [
+          "marketSentiment"
+        ],
+        "summary": "Get a news article by ID.",
+        "description": "Retrieves a news article by its unique ID.",
+        "operationId": "getNewsArticle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/NewsResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/options/chain/{ticker}": {
+      "get": {
+        "tags": [
+          "options"
+        ],
+        "operationId": "getOptionsChain",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL",
+            "x-go-name": "Ticker"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for options expiration range (YYYY-MM-DD format)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2024-01-15",
+            "x-go-name": "StartDate"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for options expiration range (YYYY-MM-DD format)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2024-04-15",
+            "x-go-name": "EndDate"
+          },
+          {
+            "name": "contract_type",
+            "in": "query",
+            "description": "Type of contracts to return: 'call', 'put', or 'both'",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "call",
+                "put",
+                "both"
+              ],
+              "default": "both"
+            },
+            "x-go-name": "ContractType"
+          },
+          {
+            "name": "money_status",
+            "in": "query",
+            "description": "Money status filter: 'ITM' (in-the-money), 'OTM' (out-of-the-money), 'ATM' (at-the-money), or 'ALL'",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ITM",
+                "OTM",
+                "ATM",
+                "ALL"
+              ],
+              "default": "ALL"
+            },
+            "x-go-name": "MoneyStatus"
+          },
+          {
+            "name": "calculate_put_call_ratio",
+            "in": "query",
+            "description": "Whether to calculate put/call ratio (true/false)",
+            "schema": {
+              "type": "string",
+              "default": "false"
+            },
+            "x-go-name": "CalculatePutCallRatio"
+          },
+          {
+            "name": "min_strike_price",
+            "in": "query",
+            "description": "Minimum strike price filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinStrikePrice"
+          },
+          {
+            "name": "max_strike_price",
+            "in": "query",
+            "description": "Maximum strike price filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxStrikePrice"
+          },
+          {
+            "name": "min_break_even_price",
+            "in": "query",
+            "description": "Minimum break-even price filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinBreakEvenPrice"
+          },
+          {
+            "name": "max_break_even_price",
+            "in": "query",
+            "description": "Maximum break-even price filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxBreakEvenPrice"
+          },
+          {
+            "name": "min_current_price",
+            "in": "query",
+            "description": "Minimum current option price filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinCurrentPrice"
+          },
+          {
+            "name": "max_current_price",
+            "in": "query",
+            "description": "Maximum current option price filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxCurrentPrice"
+          },
+          {
+            "name": "min_price_change",
+            "in": "query",
+            "description": "Minimum price change filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinPriceChange"
+          },
+          {
+            "name": "max_price_change",
+            "in": "query",
+            "description": "Maximum price change filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxPriceChange"
+          },
+          {
+            "name": "min_price_change_percentage",
+            "in": "query",
+            "description": "Minimum price change percentage filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinPriceChangePercentage"
+          },
+          {
+            "name": "max_price_change_percentage",
+            "in": "query",
+            "description": "Maximum price change percentage filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxPriceChangePercentage"
+          },
+          {
+            "name": "min_delta",
+            "in": "query",
+            "description": "Minimum delta (price sensitivity) filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinDelta"
+          },
+          {
+            "name": "max_delta",
+            "in": "query",
+            "description": "Maximum delta (price sensitivity) filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxDelta"
+          },
+          {
+            "name": "min_gamma",
+            "in": "query",
+            "description": "Minimum gamma (delta sensitivity) filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinGamma"
+          },
+          {
+            "name": "max_gamma",
+            "in": "query",
+            "description": "Maximum gamma (delta sensitivity) filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxGamma"
+          },
+          {
+            "name": "min_theta",
+            "in": "query",
+            "description": "Minimum theta (time decay) filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinTheta"
+          },
+          {
+            "name": "max_theta",
+            "in": "query",
+            "description": "Maximum theta (time decay) filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxTheta"
+          },
+          {
+            "name": "min_vega",
+            "in": "query",
+            "description": "Minimum vega (volatility sensitivity) filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinVega"
+          },
+          {
+            "name": "max_vega",
+            "in": "query",
+            "description": "Maximum vega (volatility sensitivity) filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxVega"
+          },
+          {
+            "name": "min_open_interest",
+            "in": "query",
+            "description": "Minimum open interest filter",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-go-name": "MinOpenInterest"
+          },
+          {
+            "name": "max_open_interest",
+            "in": "query",
+            "description": "Maximum open interest filter",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-go-name": "MaxOpenInterest"
+          },
+          {
+            "name": "min_volume",
+            "in": "query",
+            "description": "Minimum volume filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinVolume"
+          },
+          {
+            "name": "max_volume",
+            "in": "query",
+            "description": "Maximum volume filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxVolume"
+          },
+          {
+            "name": "min_implied_vol",
+            "in": "query",
+            "description": "Minimum implied volatility filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MinImpliedVol"
+          },
+          {
+            "name": "max_implied_vol",
+            "in": "query",
+            "description": "Maximum implied volatility filter",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "MaxImpliedVol"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/optionsChainResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/options/expiration/{ticker}": {
+      "get": {
+        "tags": [
+          "options"
+        ],
+        "operationId": "getExpirationDates",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL",
+            "x-go-name": "Ticker"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/expirationDatesResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/options/filter-ranges/{ticker}": {
+      "get": {
+        "tags": [
+          "options"
+        ],
+        "operationId": "getOptionsFilterRanges",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL",
+            "x-go-name": "Ticker"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for options expiration range (YYYY-MM-DD format)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2024-01-15",
+            "x-go-name": "StartDate"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for options expiration range (YYYY-MM-DD format)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2024-04-15",
+            "x-go-name": "EndDate"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/optionsFilterRangesResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/options/historical/{ticker}": {
+      "get": {
+        "tags": [
+          "options"
+        ],
+        "operationId": "getOptionsHistoricalData",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Ticker"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "description": "The time period for aggregation (e.g., \"1m\", \"1h\", \"day\")",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Period"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "The start date for historical data (YYYY-MM-DD)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Start"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "The end date for historical data (YYYY-MM-DD)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "End"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/historicalDataResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/price-forecasts": {
+      "get": {
+        "tags": [
+          "forecasts"
+        ],
+        "summary": "Get price forecasts for stock tickers.",
+        "description": "Returns a map where each key is a ticker symbol and the value is an array of forecast data points.",
+        "operationId": "getPriceForecasts",
+        "parameters": [
+          {
+            "name": "forecast_horizon",
+            "in": "query",
+            "description": "Number of days to forecast (1–10)",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 4,
+              "minimum": 1,
+              "maximum": 10
+            },
+            "x-go-name": "ForecastHorizon"
+          },
+          {
+            "name": "tickers",
+            "in": "query",
+            "description": "Comma-separated list of stock ticker symbols (e.g. AAPL,TSLA).\nUp to 20 tickers. If omitted we default to AAPL,TSLA,AMZN,NVDA,MSFT,GOOG.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": false,
+            "x-go-name": "Tickers"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PriceForecastResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/SwaggerErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/SwaggerErrorResponse"
+          }
+        }
+      }
+    },
+    "/risk-analysis-score": {
+      "get": {
+        "tags": [
+          "marketSentiment"
+        ],
+        "summary": "Get the Risk Analysis Score data.",
+        "description": "Retrieves the historical Risk Analysis Score data. It attempts to fetch\nthe data from the cache first (Redis). If the cache is missed or an error\noccurs during cache retrieval, it falls back to fetching the data directly\nfrom the source.",
+        "operationId": "getRiskAnalysisScore",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RiskAnalysisScoreResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/search/institutional-holdings/entities": {
+      "get": {
+        "tags": [
+          "institutional-holdings-search"
+        ],
+        "summary": "Search for entities.",
+        "description": "Searches for entities based on a query term, field, mode, and limit.",
+        "operationId": "searchEntitiesParams",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search term",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "description": "Field to search in (e.g., entity_proper_name)",
+            "schema": {
+              "type": "string",
+              "default": "entity_proper_name"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "Search mode (e.g., fuzzy, exact)",
+            "schema": {
+              "type": "string",
+              "default": "fuzzy"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SearchResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/search/institutional-holdings/funds": {
+      "get": {
+        "tags": [
+          "institutional-holdings-search"
+        ],
+        "summary": "Search for funds.",
+        "description": "Searches for funds based on a query term, field, mode, and limit.",
+        "operationId": "searchFundsParams",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search term",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "description": "Field to search in (e.g., entity_proper_name)",
+            "schema": {
+              "type": "string",
+              "default": "entity_proper_name"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "Search mode (e.g., fuzzy, exact)",
+            "schema": {
+              "type": "string",
+              "default": "fuzzy"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SearchResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/search/institutional-holdings/stock": {
+      "get": {
+        "tags": [
+          "institutional-holdings-search"
+        ],
+        "summary": "Search for Fsyms (stocks).",
+        "description": "Searches for Fsyms (stocks) based on a query term, field, mode, and limit.",
+        "operationId": "searchFsymsParams",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search term",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "description": "Field to search in (e.g., entity_proper_name)",
+            "schema": {
+              "type": "string",
+              "default": "entity_proper_name"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "Search mode (e.g., fuzzy, exact)",
+            "schema": {
+              "type": "string",
+              "default": "fuzzy"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SearchResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/stock-screener/metrics": {
+      "get": {
+        "tags": [
+          "stockScreener"
+        ],
+        "summary": "Get available financial metrics for screening.",
+        "description": "Returns a list of available financial metrics that can be used in\nscreening criteria. The list can be filtered by period type.",
+        "operationId": "getAvailableMetrics",
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "description": "Period type to filter metrics (QUARTERLY, ANNUAL, or ALL)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "QUARTERLY",
+                "ANNUAL",
+                "ALL"
+              ],
+              "default": "ALL"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MetricsResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/stock-screener/screen": {
+      "post": {
+        "tags": [
+          "stockScreener"
+        ],
+        "summary": "Screen stocks based on financial criteria.",
+        "description": "Filters stocks based on the provided financial criteria and returns\nmatching ticker symbols. The screening is performed against historical\nfinancial data up to the specified cutoff date.",
+        "operationId": "screenStocks",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ScreenResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/technical-analysis/fibonacci-carmilia/{symbol}": {
+      "get": {
+        "tags": [
+          "technicalAnalysis"
+        ],
+        "summary": "Get Fibonacci retracement levels and Camarilla pivot points",
+        "description": "This will calculate Fibonacci retracement levels and Camarilla pivot points for the specified stock symbol",
+        "operationId": "getFibonacciCarmiliaLevels",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "description": "The stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Symbol"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FibonacciCarmiliaResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/ticker/{ticker}/profile": {
+      "get": {
+        "tags": [
+          "tickers"
+        ],
+        "summary": "Retrieve ticker profile data.",
+        "description": "Returns the JSON profile for the specified symbol.",
+        "operationId": "GetTickerProfileData",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The stock ticker symbol (e.g., AAPL).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TickerProfileResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/tickers": {
+      "get": {
+        "tags": [
+          "tickers"
+        ],
+        "summary": "List all tracked tickers.",
+        "description": "Returns the full list of symbols from cache or Bigtable.",
+        "operationId": "GetTickersList",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TickersListResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/tickers-with-names": {
+      "get": {
+        "tags": [
+          "tickers"
+        ],
+        "summary": "List tickers with their names.",
+        "description": "Returns all tracked tickers and their profiles.",
+        "operationId": "GetTickersListWithNames",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TickersListWithNamesResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/tickertape": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get current market data for default tickers",
+        "description": "This will retrieve the current market data for a predefined list of popular stock tickers",
+        "operationId": "getTickertapeData",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TickertapeResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/trades/{symbol}": {
+      "get": {
+        "tags": [
+          "prices"
+        ],
+        "operationId": "getTradesData",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "description": "The stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Symbol"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of trades to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 100
+            },
+            "x-go-name": "Limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/treasury-rates": {
+      "get": {
+        "tags": [
+          "treasuryRates"
+        ],
+        "summary": "Get treasury rates data for a date range",
+        "description": "Retrieves treasury rates data from Bigtable for the specified date range.\nIf no dates are provided, returns data for the current date.",
+        "operationId": "getTreasuryRates",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for the range (YYYY-MM-DD format)",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for the range (YYYY-MM-DD format)",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TreasuryRatesResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/volume-footprint/{symbol}": {
+      "get": {
+        "tags": [
+          "prices"
+        ],
+        "summary": "Get volume footprint analysis for a stock symbol",
+        "description": "This endpoint provides detailed volume footprint analysis for all available trades including:\nPrice action analysis (OHLC, VWAP)\nVolume distribution by price level\nOrder flow imbalances between buy and sell orders\nVolume clusters indicating high activity zones\nAbsorption signals for potential exhaustion points\nPoint of Control (POC) - price level with highest volume\nValue Area High/Low for 70% of traded volume\nDelta percentage to gauge buying vs selling pressure\n\nThe analysis is based on all available trade data from Redis and calculates comprehensive\nmarket microstructure metrics useful for understanding market dynamics.",
+        "operationId": "getVolumeFootprint",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "description": "The stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Symbol"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Footprint"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/watchlist": {
+      "post": {
+        "tags": [
+          "priceData"
+        ],
+        "summary": "Fetch data for a list of tickers (watchlist).",
+        "description": "Retrieves data for a specified list of stock tickers within a given date range.\nThe request parameters are passed in the request body.",
+        "operationId": "fetchWatchlistData",
+        "requestBody": {
+          "description": "Request body containing tickers and date range.",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": { "type": "string" }
+                "$ref": "#/components/schemas/WatchlistDataRequest"
               }
             }
           }
         },
-        "CreateApiKey": {
-          "description": "Newly created API key",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/WatchlistDataResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/{ticker}/stock-splits": {
+      "get": {
+        "tags": [
+          "tickers"
+        ],
+        "summary": "Get stock split history for a specific ticker.",
+        "description": "Retrieves the stock split history for a given ticker symbol from Bigtable.",
+        "operationId": "getStockSplits",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "path",
+            "description": "The stock ticker symbol (e.g., AAPL).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/StockSplitsResponse"
+          },
+          "400": {
+            "description": "// Assuming ErrorResponse is a defined model",
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CacheStatus": {
+        "type": "string",
+        "x-go-package": "github.com/api-with-go/app/logic/services/cached/fundamentalData"
+      },
+      "ChatHistory": {
+        "description": "ChatHistory represents the full chat history",
+        "type": "object",
+        "properties": {
+          "chatName": {
+            "type": "string",
+            "x-go-name": "ChatName"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "x-go-name": "History"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/bigtableFunctionsHandler"
+      },
+      "ChatMessage": {
+        "description": "ChatMessage represents a single message in a chat conversation",
+        "type": "object",
+        "properties": {
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "key": { "type": "string" }
+            "type": "string",
+            "x-go-name": "Content"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "Files"
+          },
+          "role": {
+            "type": "string",
+            "x-go-name": "Role"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/bigtableFunctionsHandler"
+      },
+      "CreateAPIKeyRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "user_id"
+        ]
+      },
+      "CreateChatRequest": {
+        "description": "CreateChatRequest represents the request body for creating a new chat",
+        "type": "object",
+        "properties": {
+          "chatName": {
+            "type": "string",
+            "x-go-name": "ChatName"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "x-go-name": "Messages"
+          },
+          "userId": {
+            "type": "string",
+            "x-go-name": "UserId"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/bigtableFunctionsHandler"
+      },
+      "DailyVolume": {
+        "description": "DailyVolume represents daily volume data",
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "x-go-name": "Date"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Volume"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/services/base/priceData"
+      },
+      "DarkpoolMetrics": {
+        "description": "DarkpoolMetrics represents the calculated metrics",
+        "type": "object",
+        "properties": {
+          "absolute_growth": {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "AbsoluteGrowth"
+          },
+          "daily_volume": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyVolume"
+            },
+            "x-go-name": "DailyVolume"
+          },
+          "first_day": {
+            "type": "string",
+            "x-go-name": "FirstDay"
+          },
+          "growth_day_over_day": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrowthData"
+            },
+            "x-go-name": "GrowthDayOverDay"
+          },
+          "last_day": {
+            "type": "string",
+            "x-go-name": "LastDay"
+          },
+          "message": {
+            "type": "string",
+            "x-go-name": "Message"
+          },
+          "overall_growth_percent": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "OverallGrowthPercent"
+          },
+          "overall_trend": {
+            "type": "string",
+            "x-go-name": "OverallTrend"
+          },
+          "status": {
+            "type": "string",
+            "x-go-name": "Status"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/services/base/priceData"
+      },
+      "DarkpoolTrend": {
+        "description": "DarkpoolTrend represents a single ticker's darkpool activity for a day",
+        "type": "object",
+        "required": [
+          "ticker",
+          "total_volume",
+          "prev_volume",
+          "total_dollar_volume",
+          "prev_dollar_volume",
+          "darkpool_ratio",
+          "absolute_volume_change",
+          "relative_volume_change",
+          "record_date",
+          "prev_record_date",
+          "trend"
+        ],
+        "properties": {
+          "absolute_volume_change": {
+            "description": "The percentage change in volume from previous date",
+            "type": "integer",
+            "format": "int64",
+            "example": 23,
+            "x-go-name": "AbsoluteVolumeChange"
+          },
+          "darkpool_ratio": {
+            "description": "The darkpool/total volume ratio",
+            "type": "number",
+            "format": "double",
+            "example": 0.123456789,
+            "x-go-name": "DarkpoolRatio"
+          },
+          "prev_dollar_volume": {
+            "description": "The previous day's total dollar volume",
+            "type": "number",
+            "format": "double",
+            "example": 1000000,
+            "x-go-name": "PrevDollarVolume"
+          },
+          "prev_record_date": {
+            "description": "The date of the previous record",
+            "type": "string",
+            "example": "2023-03-11",
+            "x-go-name": "PrevRecordDate"
+          },
+          "prev_volume": {
+            "description": "The previous day's total volume",
+            "type": "integer",
+            "format": "int64",
+            "example": 1000000,
+            "x-go-name": "PrevVolume"
+          },
+          "record_date": {
+            "description": "The date of the record in YYYY-MM-DD format",
+            "type": "string",
+            "example": "2023-03-12",
+            "x-go-name": "RecordDate"
+          },
+          "relative_volume_change": {
+            "description": "The percentage change in volume from previous date",
+            "type": "number",
+            "format": "double",
+            "example": 23.45,
+            "x-go-name": "RelativeVolumeChange"
+          },
+          "ticker": {
+            "description": "The stock ticker symbol",
+            "type": "string",
+            "example": "AAPL",
+            "x-go-name": "Ticker"
+          },
+          "total_dollar_volume": {
+            "description": "The total dollar volume of darkpool trades",
+            "type": "number",
+            "format": "double",
+            "example": 1234567.89,
+            "x-go-name": "TotalDollarVolume"
+          },
+          "total_volume": {
+            "description": "The total volume of darkpool trades for this ticker on this date",
+            "type": "integer",
+            "format": "int64",
+            "example": 1234567,
+            "x-go-name": "TotalVolume"
+          },
+          "trend": {
+            "description": "Whether the volume trend is up, down, or flat",
+            "type": "string",
+            "example": "up",
+            "x-go-name": "Trend"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "ErrorResponse": {
+        "description": "ErrorResponse represents a standardized error response format",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "x-go-name": "Error"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/helpers"
+      },
+      "ExpirationDatesResponse": {
+        "description": "ExpirationDatesResponse represents available expiration dates",
+        "type": "object",
+        "properties": {
+          "dates": {
+            "description": "Array of available expiration dates in YYYY-MM-DD format",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "2024-01-19",
+              "2024-01-26",
+              "2024-02-02",
+              "2024-02-09"
+            ],
+            "x-go-name": "Dates"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/priceDataHandler"
+      },
+      "FilterRange": {
+        "description": "FilterRange represents min/max values for a numeric field",
+        "type": "object",
+        "properties": {
+          "max": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "Max"
+          },
+          "min": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "Min"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "FinancialsPeriodData": {
+        "type": "object",
+        "additionalProperties": {},
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/fundamentalDataHandler"
+      },
+      "FinancialsRangeData": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/fundamentalDataHandler"
+      },
+      "FinancialsRangeStatus": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/CacheStatus"
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/fundamentalDataHandler"
+      },
+      "FuturesRowData": {
+        "description": "FuturesRowData holds the data for a futures price entry",
+        "type": "object",
+        "properties": {
+          "close": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "Close"
+          },
+          "date": {
+            "type": "string",
+            "x-go-name": "Date"
+          },
+          "high": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "High"
+          },
+          "low": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "Low"
+          },
+          "name": {
+            "type": "string",
+            "x-go-name": "Name"
+          },
+          "open": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "Open"
+          },
+          "symbol": {
+            "type": "string",
+            "x-go-name": "Symbol"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Volume"
+          },
+          "vwap": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "VWAP"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "GrowthData": {
+        "description": "GrowthData represents day-over-day growth data",
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "x-go-name": "Date"
+          },
+          "growth_percent": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "GrowthPercent"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/services/base/priceData"
+      },
+      "HistoricalDataResponse": {
+        "description": "HistoricalDataResponse represents historical options data response",
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "x-go-name": "RequestID"
+          },
+          "results": {
+            "type": "array",
+            "items": {},
+            "x-go-name": "Results"
+          },
+          "results_count": {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "ResultsCount"
+          },
+          "status": {
+            "type": "string",
+            "x-go-name": "Status"
+          },
+          "ticker": {
+            "type": "string",
+            "x-go-name": "Ticker"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/priceDataHandler"
+      },
+      "NewsArticle": {
+        "type": "object",
+        "title": "NewsArticle represents a processed news article from Bigtable.",
+        "properties": {
+          "analysis": {
+            "type": "string",
+            "x-go-name": "Analysis"
+          },
+          "decisions_for_investors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "DecisionsForInvestors"
+          },
+          "financial_relevance": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "FinancialRelevance"
+          },
+          "id": {
+            "type": "string",
+            "x-go-name": "Id"
+          },
+          "image_url": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "ImageURL"
+          },
+          "ingested_at": {
+            "type": "string",
+            "x-go-name": "IngestedAt"
+          },
+          "market_impact_score": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "MarketImpact"
+          },
+          "published_at": {
+            "type": "string",
+            "x-go-name": "PublishedAt"
+          },
+          "publisher_impact": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "PublisherImpact"
+          },
+          "sentiment_details": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-go-name": "SentimentDetails"
+          },
+          "sentiment_label": {
+            "type": "string",
+            "x-go-name": "SentimentLabel"
+          },
+          "sentiment_score": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "SentimentScore"
+          },
+          "source": {
+            "type": "string",
+            "x-go-name": "Source"
+          },
+          "summary": {
+            "type": "string",
+            "x-go-name": "Summary"
+          },
+          "themes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "Themes"
+          },
+          "tickers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TickerItem"
+            },
+            "x-go-name": "Tickers"
+          },
+          "title": {
+            "type": "string",
+            "x-go-name": "Title"
+          },
+          "tone": {
+            "type": "string",
+            "x-go-name": "Tone"
+          },
+          "url": {
+            "type": "string",
+            "x-go-name": "URL"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "OptionsChainResponse": {
+        "description": "OptionsChainResponse represents the complete options chain data response",
+        "type": "object",
+        "properties": {
+          "contracts": {
+            "type": "array",
+            "items": {},
+            "x-go-name": "Contracts"
+          },
+          "current_price": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "CurrentPrice"
+          },
+          "expiration_dates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "ExpirationDates"
+          },
+          "fetch_time": {
+            "type": "string",
+            "x-go-name": "FetchTime"
+          },
+          "max_pain": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "MaxPain"
+          },
+          "put_call_ratio": {
+            "$ref": "#/components/schemas/PutCallRatio"
+          },
+          "ticker": {
+            "type": "string",
+            "x-go-name": "Ticker"
+          },
+          "total_contracts": {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "TotalContracts"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/handlers/priceDataHandler"
+      },
+      "OptionsFilterRanges": {
+        "description": "OptionsFilterRanges contains min/max values for all filterable fields",
+        "type": "object",
+        "properties": {
+          "breakEvenPrice": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "currentPrice": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "delta": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "gamma": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "impliedVolatility": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "maxExpirationDate": {
+            "type": "string",
+            "x-go-name": "MaxExpirationDate"
+          },
+          "minExpirationDate": {
+            "type": "string",
+            "x-go-name": "MinExpirationDate"
+          },
+          "openInterest": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "priceChange": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "priceChangePercentage": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "strikePrice": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "theta": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "totalContracts": {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "TotalContracts"
+          },
+          "vega": {
+            "$ref": "#/components/schemas/FilterRange"
+          },
+          "volume": {
+            "$ref": "#/components/schemas/FilterRange"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "PriceForecastItem": {
+        "type": "object",
+        "title": "PriceForecastItem represents a single price forecast for a ticker.",
+        "properties": {
+          "current_price": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "CurrentPrice"
+          },
+          "current_price_timestamp": {
+            "type": "string",
+            "x-go-name": "CurrentPriceTimestamp"
+          },
+          "date": {
+            "type": "string",
+            "x-go-name": "Date"
+          },
+          "date_of_price_used": {
+            "type": "string",
+            "x-go-name": "DateOfPriceUsed"
+          },
+          "predicted_price": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "PredictedPrice"
+          },
+          "prediction_percent_diff": {
+            "type": "string",
+            "x-go-name": "PredictionPercentDiff"
+          },
+          "price_used_for_prediction": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "PriceUsedForPrediction"
+          },
+          "ticker": {
+            "type": "string",
+            "x-go-name": "Ticker"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "PutCallRatio": {
+        "type": "object",
+        "properties": {
+          "open_interest_ratio": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "OpenInterestRatio"
+          },
+          "volume_ratio": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "VolumeRatio"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "StockSplitData": {
+        "type": "object",
+        "title": "StockSplitData represents the data for a stock split.",
+        "properties": {
+          "execution_date": {
+            "description": "The date of the stock split.",
+            "type": "string",
+            "example": "\"2020-08-31\"",
+            "x-go-name": "ExecutionDate"
+          },
+          "split_from": {
+            "description": "The number of shares the stock was split from.",
+            "type": "integer",
+            "format": "int64",
+            "example": 1000,
+            "x-go-name": "SplitFrom"
+          },
+          "split_to": {
+            "description": "The number of shares the stock was split to.",
+            "type": "integer",
+            "format": "int64",
+            "example": 1398,
+            "x-go-name": "SplitTo"
+          },
+          "ticker": {
+            "description": "The ticker of the stock.",
+            "type": "string",
+            "example": "\"A\"",
+            "x-go-name": "Ticker"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "TickerForecasts": {
+        "description": "The map key is the ticker symbol, and the value is a slice of forecast items.",
+        "type": "object",
+        "title": "TickerForecasts represents forecast data for each ticker symbol.",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/PriceForecastItem"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "TickerInfo": {
+        "type": "object",
+        "properties": {
+          "avgPrice": {
+            "type": "number",
+            "format": "double",
+            "x-go-name": "AvgPrice"
+          },
+          "isIndex": {
+            "type": "boolean",
+            "x-go-name": "IsIndex"
+          },
+          "numShares": {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "NumShares"
+          },
+          "ticker": {
+            "type": "string",
+            "x-go-name": "Ticker"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/services/base/priceData"
+      },
+      "TickerItem": {
+        "type": "object",
+        "properties": {
+          "company_name": {
+            "type": "string",
+            "x-go-name": "CompanyName"
+          },
+          "ticker": {
+            "type": "string",
+            "x-go-name": "Ticker"
+          }
+        },
+        "x-go-package": "github.com/api-with-go/app/logic/models"
+      },
+      "WatchlistDataRequest": {
+        "type": "object",
+        "description": "Inferred schema for the watchlist request body.",
+        "properties": {
+          "tickers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "APIKeyResponseSchema": {
+        "type": "object",
+        "description": "Schema for APIKeyResponse, not defined in original Swagger 2.0 document."
+      },
+      "CreateAPIKeyResponseSchema": {
+        "type": "object",
+        "description": "Schema for CreateAPIKeyResponse, not defined in original Swagger 2.0 document."
+      },
+      "CurrentPriceResponseSchema": {
+        "type": "object",
+        "description": "Schema for CurrentPriceResponse, not defined in original Swagger 2.0 document."
+      },
+      "DarkpoolTrendsResponseSchema": {
+        "type": "object",
+        "description": "Schema for DarkpoolTrendsResponse, not defined in original Swagger 2.0 document."
+      },
+      "DarkpoolTradeResponseSchema": {
+        "type": "object",
+        "description": "Schema for DarkpoolTradeResponse, not defined in original Swagger 2.0 document."
+      },
+      "DarkpoolDailySummaryResponseSchema": {
+        "type": "object",
+        "description": "Schema for DarkpoolDailySummaryResponse, not defined in original Swagger 2.0 document."
+      },
+      "DashboardWatchlistResponseSchema": {
+        "type": "object",
+        "description": "Schema for DashboardWatchlistResponse, not defined in original Swagger 2.0 document."
+      },
+      "EarningsResponseSchema": {
+        "type": "object",
+        "description": "Schema for EarningsResponse, not defined in original Swagger 2.0 document."
+      },
+      "EntityHoldingsResponseSchema": {
+        "type": "object",
+        "description": "Schema for EntityHoldingsResponse, not defined in original Swagger 2.0 document."
+      },
+      "FearGreedIndexResponseSchema": {
+        "type": "object",
+        "description": "Schema for FearGreedIndexResponse, not defined in original Swagger 2.0 document."
+      },
+      "FundHoldingsResponseSchema": {
+        "type": "object",
+        "description": "Schema for FundHoldingsResponse, not defined in original Swagger 2.0 document."
+      },
+      "G7EventsResponseSchema": {
+        "type": "object",
+        "description": "Schema for G7EventsResponse, not defined in original Swagger 2.0 document."
+      },
+      "InvestorSearchResponseSchema": {
+        "type": "object",
+        "description": "Schema for InvestorSearchResponse, not defined in original Swagger 2.0 document."
+      },
+      "IPOsResponseSchema": {
+        "type": "object",
+        "description": "Schema for IPOsResponse, not defined in original Swagger 2.0 document."
+      },
+      "MarketStatusResponseSchema": {
+        "type": "object",
+        "description": "Schema for MarketStatusResponse, not defined in original Swagger 2.0 document."
+      },
+      "TopMarketStocksResponseSchema": {
+        "type": "object",
+        "description": "Schema for TopMarketStocksResponse, not defined in original Swagger 2.0 document."
+      },
+      "MarketSnapshotResponseSchema": {
+        "type": "object",
+        "description": "Schema for MarketSnapshotResponse, not defined in original Swagger 2.0 document."
+      },
+      "MetricsResponseSchema": {
+        "type": "object",
+        "description": "Schema for MetricsResponse, not defined in original Swagger 2.0 document."
+      },
+      "ScreenResponseSchema": {
+        "type": "object",
+        "description": "Schema for ScreenResponse, not defined in original Swagger 2.0 document."
+      },
+      "FibonacciCarmiliaResponseSchema": {
+        "type": "object",
+        "description": "Schema for FibonacciCarmiliaResponse, not defined in original Swagger 2.0 document."
+      },
+      "TickerProfileResponseSchema": {
+        "type": "object",
+        "description": "Schema for TickerProfileResponse, not defined in original Swagger 2.0 document."
+      },
+      "TickersListResponseSchema": {
+        "type": "object",
+        "description": "Schema for TickersListResponse, not defined in original Swagger 2.0 document."
+      },
+      "TickersListWithNamesResponseSchema": {
+        "type": "object",
+        "description": "Schema for TickersListWithNamesResponse, not defined in original Swagger 2.0 document."
+      },
+      "TickertapeResponseSchema": {
+        "type": "object",
+        "description": "Schema for TickertapeResponse, not defined in original Swagger 2.0 document."
+      },
+      "TreasuryRatesResponseSchema": {
+        "type": "object",
+        "description": "Schema for TreasuryRatesResponse, not defined in original Swagger 2.0 document."
+      },
+      "FootprintSchema": {
+        "type": "object",
+        "description": "Schema for Footprint, not defined in original Swagger 2.0 document."
+      },
+      "WatchlistDataResponseSchema": {
+        "type": "object",
+        "description": "Schema for WatchlistDataResponse, not defined in original Swagger 2.0 document."
+      },
+      "StockSplitsResponseSchema": {
+        "type": "object",
+        "description": "Schema for StockSplitsResponse, not defined in original Swagger 2.0 document."
+      },
+      "SearchResponseSchema": {
+        "type": "object",
+        "description": "Schema for SearchResponse, not defined in original Swagger 2.0 document."
+      },
+      "RiskAnalysisScoreResponseSchema": {
+        "type": "object",
+        "description": "Schema for RiskAnalysisScoreResponse, not defined in original Swagger 2.0 document."
+      }
+    },
+    "responses": {
+      "APIKeyResponse": {
+        "description": "A successful response containing a list of API keys.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/APIKeyResponseSchema"
+            }
+          }
+        }
+      },
+      "CreateAPIKeyResponse": {
+        "description": "A successful response containing the newly created API key.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateAPIKeyResponseSchema"
+            }
+          }
+        }
+      },
+      "NoContent": {
+        "description": "The item was deleted successfully."
+      },
+      "ChatHistoryResponse": {
+        "description": "ChatHistoryResponse represents the successful response for getting chat history",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ChatHistory"
+            }
+          }
+        }
+      },
+      "CreateChatResponse": {
+        "description": "CreateChatResponse represents the successful response for creating a chat",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ChatHistory"
+            }
+          }
+        }
+      },
+      "CurrentPriceResponse": {
+        "description": "A successful response containing the current price data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CurrentPriceResponseSchema"
+            }
+          }
+        }
+      },
+      "DarkpoolTrendsResponse": {
+        "description": "A successful response containing darkpool trends.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DarkpoolTrendsResponseSchema"
+            }
+          }
+        }
+      },
+      "DailyDarkpoolTrendResponse": {
+        "description": "DailyDarkpoolTrendResponse represents the response for daily darkpool trends",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DarkpoolMetrics"
+            }
+          }
+        },
+        "headers": {
+          "data": {
+            "description": "The daily darkpool trend metrics",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DarkpoolTradeResponse": {
+        "description": "A successful response containing darkpool trades.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DarkpoolTradeResponseSchema"
+            }
+          }
+        }
+      },
+      "DarkpoolDailySummaryResponse": {
+        "description": "A successful response containing the daily summary of darkpool trades.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DarkpoolDailySummaryResponseSchema"
+            }
+          }
+        }
+      },
+      "DashboardWatchlistResponse": {
+        "description": "A successful response containing the dashboard watchlist data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DashboardWatchlistResponseSchema"
+            }
+          }
+        }
+      },
+      "EarningsResponse": {
+        "description": "A successful response containing earnings data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EarningsResponseSchema"
+            }
+          }
+        }
+      },
+      "EntityHoldingsResponse": {
+        "description": "A successful response containing entity holdings data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EntityHoldingsResponseSchema"
+            }
+          }
+        }
+      },
+      "FearGreedIndexResponse": {
+        "description": "A successful response containing Fear & Greed Index data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FearGreedIndexResponseSchema"
+            }
+          }
+        }
+      },
+      "FundHoldingsResponse": {
+        "description": "A successful response containing fund holdings data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FundHoldingsResponseSchema"
+            }
+          }
+        }
+      },
+      "G7EventsResponse": {
+        "description": "A successful response containing G7 events data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/G7EventsResponseSchema"
+            }
+          }
+        }
+      },
+      "InvestorSearchResponse": {
+        "description": "A successful response containing a list of investors.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/InvestorSearchResponseSchema"
+            }
+          }
+        }
+      },
+      "IPOsResponse": {
+        "description": "A successful response containing IPO data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IPOsResponseSchema"
+            }
+          }
+        }
+      },
+      "MarketStatusResponse": {
+        "description": "A successful response containing the current market status.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MarketStatusResponseSchema"
+            }
+          }
+        }
+      },
+      "TopMarketStocksResponse": {
+        "description": "A successful response containing the top market stocks.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TopMarketStocksResponseSchema"
+            }
+          }
+        }
+      },
+      "MarketSnapshotResponse": {
+        "description": "A successful response containing the market snapshot.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MarketSnapshotResponseSchema"
+            }
+          }
+        }
+      },
+      "MetricsResponse": {
+        "description": "A successful response containing a list of available metrics.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetricsResponseSchema"
+            }
+          }
+        }
+      },
+      "ScreenResponse": {
+        "description": "A successful response containing the screener results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ScreenResponseSchema"
+            }
+          }
+        }
+      },
+      "FibonacciCarmiliaResponse": {
+        "description": "A successful response containing Fibonacci and Carmilia levels.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FibonacciCarmiliaResponseSchema"
+            }
+          }
+        }
+      },
+      "TickerProfileResponse": {
+        "description": "A successful response containing the ticker profile.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TickerProfileResponseSchema"
+            }
+          }
+        }
+      },
+      "TickersListResponse": {
+        "description": "A successful response containing a list of all tickers.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TickersListResponseSchema"
+            }
+          }
+        }
+      },
+      "TickersListWithNamesResponse": {
+        "description": "A successful response containing a list of all tickers with their names.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TickersListWithNamesResponseSchema"
+            }
+          }
+        }
+      },
+      "TickertapeResponse": {
+        "description": "A successful response containing the tickertape data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TickertapeResponseSchema"
+            }
+          }
+        }
+      },
+      "TreasuryRatesResponse": {
+        "description": "A successful response containing treasury rates data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TreasuryRatesResponseSchema"
+            }
+          }
+        }
+      },
+      "Footprint": {
+        "description": "A successful response containing volume footprint analysis.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FootprintSchema"
+            }
+          }
+        }
+      },
+      "WatchlistDataResponse": {
+        "description": "A successful response containing data for the requested watchlist.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/WatchlistDataResponseSchema"
+            }
+          }
+        }
+      },
+      "StockSplitsResponse": {
+        "description": "A successful response containing stock split history.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/StockSplitsResponseSchema"
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "description": "ErrorResponse is a generic error response structure.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "EstimatesResponse": {
+        "description": "EstimatesResponseWrapper defines the standard wrapper for successful estimate API responses.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "description": "Data field containing the actual estimate data.\nThe structure of Data can vary (e.g., object for single estimate, array for multiple).",
+                  "x-go-name": "Data"
                 }
               }
             }
           }
+        }
+      },
+      "FinancialsPeriodResponse": {
+        "description": "Successful response containing financial data for a specific period.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FinancialsPeriodData"
+            }
+          }
+        }
+      },
+      "FinancialsRangeResponse": {
+        "description": "Successful response containing financial data for a range of years.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FinancialsRangeStatus"
+            }
+          }
+        }
+      },
+      "FuturesDataResponse": {
+        "description": "Successful response containing futures data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FuturesRowData"
+              }
+            }
+          }
+        }
+      },
+      "NewsResponse": {
+        "description": "A successful response containing a list of news articles.",
+        "headers": {
+          "X-News-Cache-Status": {
+            "description": "X-News-Cache-Status header indicating cache HIT or MISS",
+            "schema": {
+              "type": "string"
+            }
+          }
         },
-        "NoContent": {
-          "description": "Successful deletion, no content"
-        },
-        "ErrorResponse": {
-          "description": "API error response",
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NewsArticle"
+                  },
+                  "x-go-name": "Data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NoContentResponse": {
+        "description": "NoContentResponse represents a successful deletion with no content returned."
+      },
+      "PriceForecastResponse": {
+        "description": "A successful response containing price forecasts.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TickerForecasts"
+            }
+          }
+        }
+      },
+      "RiskAnalysisScoreResponse": {
+        "description": "Successful response containing risk analysis score data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RiskAnalysisScoreResponseSchema"
+            }
+          }
+        }
+      },
+      "SearchResponse": {
+        "description": "Successful response containing search results.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SearchResponseSchema"
+            }
+          }
+        }
+      },
+      "SwaggerErrorResponse": {
+        "description": "A generic error response.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "x-go-name": "Message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TickerSentimentResponse": {
+        "description": "A successful response containing ticker sentiment data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "percent_change_90d_to_1d": {
+                      "type": "number",
+                      "format": "double",
+                      "x-go-name": "PercentChange"
+                    },
+                    "sentiment_1d": {
+                      "type": "number",
+                      "format": "double",
+                      "x-go-name": "Sentiment1D"
+                    },
+                    "sentiment_30d": {
+                      "type": "number",
+                      "format": "double",
+                      "x-go-name": "Sentiment30D"
+                    },
+                    "sentiment_7d": {
+                      "type": "number",
+                      "format": "double",
+                      "x-go-name": "Sentiment7D"
+                    },
+                    "sentiment_90d": {
+                      "type": "number",
+                      "format": "double",
+                      "x-go-name": "Sentiment90D"
+                    }
+                  },
+                  "x-go-name": "Data"
+                }
+              }
+            }
+          }
+        }
+      },
+      "errorResponse": {
+        "description": "A generic error response.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "expirationDatesResponse": {
+        "description": "A successful response containing expiration dates.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ExpirationDatesResponse"
+            }
+          }
+        }
+      },
+      "historicalDataResponse": {
+        "description": "A successful response containing historical data.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HistoricalDataResponse"
+            }
+          }
+        }
+      },
+      "optionsChainResponse": {
+        "description": "A successful response containing the options chain.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OptionsChainResponse"
+            }
+          }
+        }
+      },
+      "optionsFilterRangesResponse": {
+        "description": "A successful response containing the filter ranges for options.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OptionsFilterRanges"
             }
           }
         }
       }
     }
   }
-  
+}
