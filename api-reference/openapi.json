@@ -1433,7 +1433,7 @@
                 "tags": [
                     "options"
                 ],
-                "summary": "Get options chain",
+                "summary": "Options chain",
                 "operationId": "getOptionsChain",
                 "parameters": [
                     {
@@ -1761,7 +1761,7 @@
                 "tags": [
                     "options"
                 ],
-                "summary": "Get historical options data",
+                "summary": "Historical options",
                 "operationId": "getHistoricalOptionsData",
                 "parameters": [
                     {
@@ -1838,7 +1838,7 @@
                 "tags": [
                     "forecasts"
                 ],
-                "summary": "Get price forecasts",
+                "summary": "Price forecasts",
                 "operationId": "getPriceForecasts",
                 "parameters": [
                     {
@@ -1879,7 +1879,7 @@
                 "tags": [
                     "risk-analysis"
                 ],
-                "summary": "Get the Risk Analysis Score",
+                "summary": "Risk Analysis Score",
                 "operationId": "getRiskAnalysisScore",
                 "responses": {
                     "200": {
@@ -1897,7 +1897,7 @@
                 "tags": [
                     "search"
                 ],
-                "summary": "Search for entities",
+                "summary": "Entity search",
                 "operationId": "searchEntitiesParams",
                 "parameters": [
                     {
@@ -1956,7 +1956,7 @@
                 "tags": [
                     "search"
                 ],
-                "summary": "Search for funds",
+                "summary": "Fund search",
                 "operationId": "searchFundsParams",
                 "parameters": [
                     {
@@ -2015,7 +2015,7 @@
                 "tags": [
                     "search"
                 ],
-                "summary": "Search for stocks",
+                "summary": "Stock search",
                 "operationId": "searchFsymsParams",
                 "parameters": [
                     {
@@ -2074,7 +2074,7 @@
                 "tags": [
                     "stock-screener"
                 ],
-                "summary": "Screen stocks based on financial criteria.",
+                "summary": "Screen stocks",
                 "operationId": "screenStocks",
                 "requestBody": {
                     "content": {
@@ -2107,7 +2107,7 @@
                 "tags": [
                     "technical-analysis"
                 ],
-                "summary": "Get Fibonacci levels and Camarilla points",
+                "summary": "Fibonacci levels & Camarilla points",
                 "operationId": "getFibonacciCarmiliaLevels",
                 "parameters": [
                     {
@@ -2598,7 +2598,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/AnalysisResults"
+                            "$ref": "#/components/schemas/FibonacciCarmiliaResponse"
                         }
                     }
                 }
@@ -2799,7 +2799,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/TickerForecasts"
+                            "$ref": "#/components/schemas/PriceForecastResponse"
                         }
                     }
                 }
@@ -2809,7 +2809,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/RiskAnalysisScores"
+                            "$ref": "#/components/schemas/RiskAnalysisScoreResponse"
                         }
                     }
                 }
@@ -2931,10 +2931,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/TreasuryRatesData"
-                            }
+                            "$ref": "#/components/schemas/TreasuryRatesResponse"
                         }
                     }
                 }
@@ -3878,6 +3875,15 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "FibonacciCarmiliaResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/AnalysisResults"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "FibonacciRetractmentLevel": {
                 "description": "FibonacciRetractmentLevel stores a Fibonacci retracement level with its ratio and value",
                 "type": "object",
@@ -4405,8 +4411,7 @@
                         "items": {
                             "$ref": "#/components/schemas/AggregatedData"
                         },
-                        "x-go-name": "Results",
-                        "example": "["
+                        "x-go-name": "Results"
                     },
                     "results_count": {
                         "type": "integer",
@@ -5075,6 +5080,24 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "PriceForecastResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/TickerForecasts"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "RiskAnalysisScoreResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/RiskAnalysisScores"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "RiskAnalysisScores": {
                 "type": "object",
                 "properties": {
@@ -5649,6 +5672,19 @@
                         "format": "double",
                         "x-go-name": "Year7",
                         "example": 4.21
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TreasuryRatesResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TreasuryRatesData"
+                        },
+                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
