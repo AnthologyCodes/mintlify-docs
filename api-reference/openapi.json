@@ -540,70 +540,6 @@
                 }
             }
         },
-        "/dashboard/watchlist/{watchlist_id}": {
-            "get": {
-                "description": "Retrieves the tickers or data associated with a specific dashboard watchlist ID.",
-                "tags": [
-                    "watchlist"
-                ],
-                "summary": "Dashboard watchlist",
-                "operationId": "getDashboardWatchlist",
-                "parameters": [
-                    {
-                        "description": "ID of the watchlist to retrieve.",
-                        "name": "watchlist_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/DashboardWatchlistResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/dashboard/watchlist/{watchlist_id}/predictions": {
-            "get": {
-                "description": "Retrieves the predictions for a specific dashboard watchlist ID.",
-                "tags": [
-                    "watchlist"
-                ],
-                "summary": "Dashboard watchlist predictions",
-                "operationId": "getWatchlistPredictions",
-                "parameters": [
-                    {
-                        "description": "ID of the watchlist to retrieve predictions for.",
-                        "name": "watchlist_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/WatchlistPredictionsResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/earnings": {
             "get": {
                 "description": "Retrieves earnings data for the upcoming week from the cache.",
@@ -1128,6 +1064,65 @@
                         "$ref": "#/components/responses/G7EventsResponse"
                     },
                     "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/grades/{symbol}": {
+            "get": {
+                "description": "This will retrieve historical grades data for the specified stock symbol from Bigtable.\nReturns an array of grade objects with analyst ratings breakdown.",
+                "tags": [
+                    "grades"
+                ],
+                "summary": "Stock Grades",
+                "operationId": "getGrades",
+                "parameters": [
+                    {
+                        "description": "The stock symbol to get grades for",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of grades to return (default: 100, max: 1000)",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "description": "Start date filter in YYYY-MM-DD format (optional)",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "End date filter in YYYY-MM-DD format (optional)",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GradesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "413": {
                         "$ref": "#/components/responses/ErrorResponse"
                     }
                 }
@@ -1873,6 +1868,65 @@
                 }
             }
         },
+        "/ratings/{symbol}": {
+            "get": {
+                "description": "This will retrieve historical ratings data for the specified stock symbol from Bigtable.\nReturns an array of rating objects with scores and recommendations.",
+                "tags": [
+                    "ratings"
+                ],
+                "summary": "Stock Ratings",
+                "operationId": "getRatings",
+                "parameters": [
+                    {
+                        "description": "The stock symbol to get ratings for",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of ratings to return (default: 100, max: 1000)",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "description": "Start date filter in YYYY-MM-DD format (optional)",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "End date filter in YYYY-MM-DD format (optional)",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RatingsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "413": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/risk-analysis-score": {
             "get": {
                 "description": "Retrieves the historical Risk Analysis Score data.",
@@ -2395,6 +2449,70 @@
                     }
                 }
             }
+        },
+        "/watchlist/{watchlist_id}": {
+            "get": {
+                "description": "Retrieves the tickers or data associated with a specific dashboard watchlist ID.",
+                "tags": [
+                    "watchlist"
+                ],
+                "summary": "Dashboard watchlist",
+                "operationId": "getDashboardWatchlist",
+                "parameters": [
+                    {
+                        "description": "ID of the watchlist to retrieve.",
+                        "name": "watchlist_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DashboardWatchlistResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/watchlist/{watchlist_id}/predictions": {
+            "get": {
+                "description": "Retrieves the predictions for a specific watchlist ID.",
+                "tags": [
+                    "watchlist"
+                ],
+                "summary": "Dashboard watchlist predictions",
+                "operationId": "getWatchlistPredictions",
+                "parameters": [
+                    {
+                        "description": "ID of the watchlist to retrieve predictions for.",
+                        "name": "watchlist_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/WatchlistPredictionsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
         }
     },
     "servers": [
@@ -2672,6 +2790,19 @@
                     }
                 }
             },
+            "GradesResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/GradeData"
+                            }
+                        }
+                    }
+                }
+            },
             "HistoricalDataResponse": {
                 "description": "",
                 "content": {
@@ -2800,6 +2931,19 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/PriceForecastResponse"
+                        }
+                    }
+                }
+            },
+            "RatingsResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/RatingData"
+                            }
                         }
                     }
                 }
@@ -4356,6 +4500,46 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "GradeData": {
+                "description": "GradeData represents a single grade entry",
+                "type": "object",
+                "properties": {
+                    "analystRatingsBuy": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "AnalystRatingsBuy"
+                    },
+                    "analystRatingsHold": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "AnalystRatingsHold"
+                    },
+                    "analystRatingsSell": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "AnalystRatingsSell"
+                    },
+                    "analystRatingsStrongBuy": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "AnalystRatingsStrongBuy"
+                    },
+                    "analystRatingsStrongSell": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "AnalystRatingsStrongSell"
+                    },
+                    "date": {
+                        "type": "string",
+                        "x-go-name": "Date"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "GrowthData": {
                 "description": "GrowthData represents day-over-day growth data",
                 "type": "object",
@@ -5073,6 +5257,60 @@
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/TickerForecasts"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "RatingData": {
+                "description": "RatingData represents a single rating entry",
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "x-go-name": "Date"
+                    },
+                    "debtToEquityScore": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "DebtToEquityScore"
+                    },
+                    "discountedCashFlowScore": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "DiscountedCashFlowScore"
+                    },
+                    "overallScore": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "OverallScore"
+                    },
+                    "priceToBookScore": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PriceToBookScore"
+                    },
+                    "priceToEarningsScore": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PriceToEarningsScore"
+                    },
+                    "rating": {
+                        "type": "string",
+                        "x-go-name": "Rating"
+                    },
+                    "returnOnAssetsScore": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "ReturnOnAssetsScore"
+                    },
+                    "returnOnEquityScore": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "ReturnOnEquityScore"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
