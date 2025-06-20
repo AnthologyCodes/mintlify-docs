@@ -117,7 +117,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": " No Content"
+                        "$ref": "#/components/responses/EmptyResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -215,7 +215,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": " No Content"
+                        "$ref": "#/components/responses/EmptyResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -1327,7 +1327,7 @@
                         "$ref": "#/components/responses/NewsResponse"
                     },
                     "204": {
-                        "description": " No Content"
+                        "$ref": "#/components/responses/EmptyResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2389,10 +2389,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/APIKey"
-                            }
+                            "$ref": "#/components/schemas/APIKeyResponse"
                         }
                     }
                 }
@@ -2412,20 +2409,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "object",
-                            "properties": {
-                                "api_key": {
-                                    "type": "string",
-                                    "x-go-name": "APIKey",
-                                    "example": "123e4567-e89b-12d3-a456-426614174000"
-                                },
-                                "created_at": {
-                                    "type": "string",
-                                    "format": "date-time",
-                                    "x-go-name": "CreatedAt",
-                                    "example": "2021-01-01T00:00:00Z"
-                                }
-                            }
+                            "$ref": "#/components/schemas/CreateAPIKeyResponse"
                         }
                     }
                 }
@@ -2501,11 +2485,17 @@
             },
             "DeleteAPIKeyResponse": {
                 "description": "",
-                "headers": {
-                    "message": {
-                        "description": "Success message",
+                "content": {
+                    "application/json": {
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "x-go-name": "Message",
+                                    "example": "API key deleted successfully"
+                                }
+                            }
                         }
                     }
                 }
@@ -2519,6 +2509,16 @@
                             "items": {
                                 "$ref": "#/components/schemas/EarningsData"
                             }
+                        }
+                    }
+                }
+            },
+            "EmptyResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/EmptyResponse"
                         }
                     }
                 }
@@ -2991,6 +2991,19 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "APIKeyResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/APIKey"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "AggregatedData": {
                 "type": "object",
                 "title": "AggregatedData represents aggregated historical data.",
@@ -3167,6 +3180,23 @@
                     "ticker": {
                         "type": "string",
                         "x-go-name": "Ticker"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "CreateAPIKeyResponse": {
+                "type": "object",
+                "properties": {
+                    "api_key": {
+                        "type": "string",
+                        "x-go-name": "APIKey",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "x-go-name": "CreatedAt",
+                        "example": "2021-01-01T00:00:00Z"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -3592,6 +3622,10 @@
                         "example": "CUK"
                     }
                 },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "EmptyResponse": {
+                "type": "object",
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
             "EntityHoldingResponse": {
