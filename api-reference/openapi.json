@@ -1198,7 +1198,7 @@
                 "tags": [
                     "investors"
                 ],
-                "summary": "Search investors",
+                "summary": "Investors search",
                 "operationId": "searchInvestors",
                 "parameters": [
                     {
@@ -1248,7 +1248,7 @@
                 "tags": [
                     "market-status"
                 ],
-                "summary": "Get market status",
+                "summary": "Market status",
                 "operationId": "getMarketStatus",
                 "responses": {
                     "200": {
@@ -1266,7 +1266,7 @@
                 "tags": [
                     "markets"
                 ],
-                "summary": "Get top market stocks",
+                "summary": "Top market stocks",
                 "operationId": "fetchTopMarketStocks",
                 "parameters": [
                     {
@@ -1303,7 +1303,7 @@
                 "tags": [
                     "markets"
                 ],
-                "summary": "Get current market snapshot data",
+                "summary": "Market snapshot",
                 "operationId": "getMarketSnapshot",
                 "responses": {
                     "200": {
@@ -2707,10 +2707,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/HolderInfo"
-                            }
+                            "$ref": "#/components/schemas/InvestorSearchResponse"
                         }
                     }
                 }
@@ -2720,10 +2717,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/MarketSnapshotItem"
-                            }
+                            "$ref": "#/components/schemas/MarketSnapshotResponse"
                         }
                     }
                 }
@@ -2909,10 +2903,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/SymbolOhlcvStats"
-                            }
+                            "$ref": "#/components/schemas/TopMarketStocksResponse"
                         }
                     }
                 }
@@ -4523,6 +4514,19 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "InvestorSearchResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HolderInfo"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "MarketSnapshotItem": {
                 "description": "MarketSnapshotItem represents a single ticker item in the market snapshot",
                 "type": "object",
@@ -4591,6 +4595,19 @@
                         "format": "double",
                         "x-go-name": "TodaysChange",
                         "example": 0.05059999999999931
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "MarketSnapshotResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MarketSnapshotItem"
+                        },
+                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -5328,6 +5345,19 @@
                         "format": "int64",
                         "x-go-name": "WeightedSharesOutstanding",
                         "example": 14935826000
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TopMarketStocksResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SymbolOhlcvStats"
+                        },
+                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
