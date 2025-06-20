@@ -261,7 +261,7 @@
                 "tags": [
                     "darkpool"
                 ],
-                "summary": "Daily Darkpool trends",
+                "summary": "Daily darkpool trends",
                 "operationId": "getDarkpoolTrends",
                 "parameters": [
                     {
@@ -496,12 +496,11 @@
                 "tags": [
                     "darkpool"
                 ],
-                "summary": "Darkpool daily summary",
+                "summary": "Ticker darkpool summary",
                 "operationId": "getDarkpoolDailySummary",
                 "parameters": [
                     {
-                        "x-go-name": "Ticker",
-                        "description": "The stock ticker symbol",
+                        "description": "The ticker symbol to fetch summary for",
                         "name": "ticker",
                         "in": "query",
                         "required": true,
@@ -510,8 +509,7 @@
                         }
                     },
                     {
-                        "x-go-name": "Start",
-                        "description": "Start date in YYYY-MM-DD format",
+                        "description": "The start date to fetch summary for",
                         "name": "start",
                         "in": "query",
                         "required": true,
@@ -520,8 +518,7 @@
                         }
                     },
                     {
-                        "x-go-name": "End",
-                        "description": "End date in YYYY-MM-DD format",
+                        "description": "The end date to fetch summary for",
                         "name": "end",
                         "in": "query",
                         "required": true,
@@ -2474,7 +2471,10 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/DarkpoolData"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/DarkpoolTrade"
+                            }
                         }
                     }
                 }
@@ -3441,14 +3441,6 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "DarkpoolData": {
-                "description": "DarkpoolData represents the structure of darkpool data",
-                "type": "object",
-                "additionalProperties": {
-                    "$ref": "#/components/schemas/DarkpoolRecord"
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "DarkpoolMetrics": {
                 "description": "DarkpoolMetrics represents the calculated metrics",
                 "type": "object",
@@ -3500,40 +3492,55 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "DarkpoolRecord": {
-                "description": "DarkpoolRecord represents a single darkpool data record",
+            "DarkpoolTrade": {
                 "type": "object",
+                "title": "DarkpoolTrade represents a dark pool trade data record.",
                 "properties": {
-                    "prev_record_date": {
-                        "type": "string",
-                        "x-go-name": "PrevRecordDate"
+                    "current_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "CurrentPrice",
+                        "example": 688.04
                     },
-                    "prev_volume": {
+                    "flags": {
+                        "type": "string",
+                        "x-go-name": "Flags",
+                        "example": "LAST"
+                    },
+                    "movement_since_trade": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MovementSinceTrade",
+                        "example": -0.20267589511045483
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Price",
+                        "example": 689.4373232661552
+                    },
+                    "size": {
                         "type": "integer",
                         "format": "int64",
-                        "x-go-name": "PrevVolume"
-                    },
-                    "record_date": {
-                        "type": "string",
-                        "x-go-name": "RecordDate"
+                        "x-go-name": "Size",
+                        "example": 24065
                     },
                     "ticker": {
                         "type": "string",
-                        "x-go-name": "Ticker"
+                        "x-go-name": "Ticker",
+                        "example": "META"
                     },
-                    "total_volume": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "TotalVolume"
-                    },
-                    "trend": {
+                    "time_of_trade": {
                         "type": "string",
-                        "x-go-name": "Trend"
+                        "format": "date-time",
+                        "x-go-name": "TimeOfTrade",
+                        "example": "2025-06-20T12:46:12.736331719-04:00"
                     },
-                    "volume_change_percentage": {
+                    "trade_value": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "VolumeChangePercentage"
+                        "x-go-name": "TradeValue",
+                        "example": 16591309.184400026
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
