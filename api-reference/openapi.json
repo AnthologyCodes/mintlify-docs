@@ -2408,7 +2408,27 @@
                 }
             },
             "CreateAPIKeyResponse": {
-                "description": "CreateAPIKeyResponse represents the response structure when creating a new API key. It contains the generated API key value and the timestamp when it was created."
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "api_key": {
+                                    "type": "string",
+                                    "x-go-name": "APIKey",
+                                    "example": "123e4567-e89b-12d3-a456-426614174000"
+                                },
+                                "created_at": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "x-go-name": "CreatedAt",
+                                    "example": "2021-01-01T00:00:00Z"
+                                }
+                            }
+                        }
+                    }
+                }
             },
             "CurrentPriceResponse": {
                 "description": "",
