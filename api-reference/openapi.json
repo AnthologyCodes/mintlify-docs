@@ -2101,6 +2101,41 @@
                 }
             }
         },
+        "/stock-splits/{ticker}": {
+            "get": {
+                "description": "Retrieves the stock split history for a given ticker symbol from Bigtable.",
+                "tags": [
+                    "stock-splits"
+                ],
+                "summary": "Stock splits",
+                "operationId": "getStockSplits",
+                "parameters": [
+                    {
+                        "description": "The stock ticker symbol (e.g., AAPL).",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/StockSplitsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/technical-analysis/fibonacci-carmilia/{symbol}": {
             "get": {
                 "description": "This will calculate Fibonacci retracement levels and Camarilla pivot points for the specified stock symbol",
@@ -2207,7 +2242,7 @@
                 "tags": [
                     "tickertape"
                 ],
-                "summary": "Get data on popular stocks",
+                "summary": "Tickertape data",
                 "operationId": "getTickertapeData",
                 "responses": {
                     "200": {
@@ -2225,7 +2260,7 @@
                 "tags": [
                     "trades"
                 ],
-                "summary": "Get trades data",
+                "summary": "Trades data",
                 "operationId": "getTradesData",
                 "parameters": [
                     {
@@ -2263,7 +2298,7 @@
                 "tags": [
                     "treasury-rates"
                 ],
-                "summary": "Get treasury rates",
+                "summary": "Treasury rates",
                 "operationId": "getTreasuryRates",
                 "parameters": [
                     {
@@ -2307,7 +2342,7 @@
                 "tags": [
                     "volume-footprint"
                 ],
-                "summary": "Get volume footprint analysis",
+                "summary": "Volume footprint",
                 "operationId": "getVolumeFootprint",
                 "parameters": [
                     {
@@ -2353,41 +2388,6 @@
                         "$ref": "#/components/responses/WatchlistDataResponse"
                     },
                     "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/{ticker}/stock-splits": {
-            "get": {
-                "description": "Retrieves the stock split history for a given ticker symbol from Bigtable.",
-                "tags": [
-                    "stock-splits"
-                ],
-                "summary": "Get stock split history",
-                "operationId": "getStockSplits",
-                "parameters": [
-                    {
-                        "description": "The stock ticker symbol (e.g., AAPL).",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/StockSplitsResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
                         "$ref": "#/components/responses/ErrorResponse"
                     },
                     "500": {
@@ -2839,10 +2839,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/StockSplitsData"
-                            }
+                            "$ref": "#/components/schemas/StockSplitsResponse"
                         }
                     }
                 }
@@ -2892,10 +2889,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "$ref": "#/components/schemas/StockData"
-                            }
+                            "$ref": "#/components/schemas/TickertapeResponse"
                         }
                     }
                 }
@@ -5348,6 +5342,19 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "StockSplitsResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/StockSplitsData"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "SymbolOhlcvStats": {
                 "type": "object",
                 "title": "NewTopMarketStocksService creates a new instance of TopMarketStocksService.",
@@ -5586,6 +5593,19 @@
                             "NVDA": "NVIDIA Corporation",
                             "TSLA": "Tesla Inc."
                         }
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TickertapeResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/StockData"
+                        },
+                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
