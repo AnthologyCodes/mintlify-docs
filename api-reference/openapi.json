@@ -14,6 +14,941 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api-keys": {
+            "get": {
+                "description": "Retrieves all API keys associated with the specified user ID.",
+                "tags": [
+                    "api-keys"
+                ],
+                "summary": "List API keys",
+                "operationId": "listAPIKeys",
+                "parameters": [
+                    {
+                        "description": "The user ID to list API keys for",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/APIKeyResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new API key with the specified name and permissions for the given user.",
+                "tags": [
+                    "api-keys"
+                ],
+                "summary": "Create an API key",
+                "operationId": "createAPIKey",
+                "parameters": [
+                    {
+                        "x-go-name": "Name",
+                        "name": "name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "x-go-name": "UserID",
+                        "name": "user_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "x-go-name": "Permissions",
+                        "name": "permissions",
+                        "in": "query",
+                        "style": "form",
+                        "explode": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/CreateAPIKeyResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/api-keys/{key}": {
+            "delete": {
+                "description": "Deletes the specified API key.",
+                "tags": [
+                    "api-keys"
+                ],
+                "summary": "Delete an API key",
+                "operationId": "deleteAPIKey",
+                "parameters": [
+                    {
+                        "description": "The API key to delete",
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": " No Content"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/bigtable/chat/{rowKey}": {
+            "get": {
+                "description": "Retrieves the chat history for the specified row key from BigTable.",
+                "tags": [
+                    "bigtable"
+                ],
+                "summary": "Get chat history",
+                "operationId": "getChatHistory",
+                "parameters": [
+                    {
+                        "description": "The row key to get chat history from",
+                        "name": "rowKey",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ChatHistoryResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new chat conversation with the specified messages at the given row key.",
+                "tags": [
+                    "bigtable"
+                ],
+                "summary": "Create chat",
+                "operationId": "createChat",
+                "parameters": [
+                    {
+                        "description": "The row key to create the chat at",
+                        "name": "rowKey",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/ChatHistoryResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Removes the specified row from the chat table in BigTable.",
+                "tags": [
+                    "bigtable"
+                ],
+                "summary": "Delete chat",
+                "operationId": "deleteChatKey",
+                "parameters": [
+                    {
+                        "description": "The row key to delete from the chat table",
+                        "name": "rowKey",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": " No Content"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/current-price/{symbol}": {
+            "get": {
+                "description": "This will retrieve the most recent trade data for the specified stock symbol including\ncurrent price, bid/ask prices, trade size, and other market data from Redis.",
+                "tags": [
+                    "current-price"
+                ],
+                "summary": "Get last trade price",
+                "operationId": "getLastTradePrice",
+                "parameters": [
+                    {
+                        "description": "The stock symbol to get the current price for",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/CurrentPriceResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/darkpool-trends": {
+            "get": {
+                "description": "Retrieves the top K darkpool trends based on the provided count and start date.\nData is fetched from cache if available, otherwise from the primary service.",
+                "tags": [
+                    "darkpool"
+                ],
+                "summary": "Get top darkpool trends",
+                "operationId": "getDarkpoolTrends",
+                "parameters": [
+                    {
+                        "description": "Number of darkpool trends to return.",
+                        "name": "k",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Start date for fetching trends (YYYY-MM-DD).",
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DarkpoolTrendsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/darkpool/daily/{ticker}": {
+            "get": {
+                "description": "Retrieves daily darkpool trend metrics for the specified ticker within the given date range.\nIf no dates are provided, defaults to the last 30 days.",
+                "tags": [
+                    "darkpool"
+                ],
+                "summary": "Get daily darkpool trends",
+                "operationId": "getDailyDarkpoolTrend",
+                "parameters": [
+                    {
+                        "description": "The ticker symbol to fetch trends for.",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date for fetching trends (YYYY-MM-DD).",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date for fetching trends (YYYY-MM-DD).",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DailyDarkpoolTrendResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/darkpools": {
+            "get": {
+                "description": "Retrieves dark-pool trades in the requested date window with optional\nprice/size/value filters and consolidation.\nIf the query matches the pre-cached slice (last 10 days, default filters) the\nresult is served from Redis; otherwise it falls back to Bigtable.\nCurrent price is attached in parallel.",
+                "tags": [
+                    "darkpool"
+                ],
+                "summary": "Get darkpool trades",
+                "operationId": "getDarkpoolTrades",
+                "parameters": [
+                    {
+                        "x-go-name": "Ticker",
+                        "description": "The stock ticker symbol",
+                        "name": "ticker",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "x-go-name": "Start",
+                        "description": "Start date in YYYY-MM-DD format",
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "x-go-name": "End",
+                        "description": "End date in YYYY-MM-DD format",
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "x-go-name": "Limit",
+                        "description": "Maximum number of trades to return",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "default": 1000
+                        }
+                    },
+                    {
+                        "x-go-name": "MinSize",
+                        "description": "Minimum trade size",
+                        "name": "min_size",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "x-go-name": "MaxSize",
+                        "description": "Maximum trade size",
+                        "name": "max_size",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "x-go-name": "MinPrice",
+                        "description": "Minimum trade price",
+                        "name": "min_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    },
+                    {
+                        "x-go-name": "MaxPrice",
+                        "description": "Maximum trade price",
+                        "name": "max_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    },
+                    {
+                        "x-go-name": "MinValue",
+                        "description": "Minimum trade value",
+                        "name": "min_value",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    },
+                    {
+                        "x-go-name": "MaxValue",
+                        "description": "Maximum trade value",
+                        "name": "max_value",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DarkpoolTradeResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/darkpools/daily-summary": {
+            "get": {
+                "description": "Retrieves a day-by-day breakdown of darkpool trades showing weighted average price,\ntotal daily trade value, and trade volume. Data is fetched directly from Bigtable\nas we need raw unconsolidated trades for accurate calculations.",
+                "tags": [
+                    "darkpool"
+                ],
+                "summary": "Get daily summary",
+                "operationId": "getDarkpoolDailySummary",
+                "parameters": [
+                    {
+                        "x-go-name": "Ticker",
+                        "description": "The stock ticker symbol",
+                        "name": "ticker",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "x-go-name": "Start",
+                        "description": "Start date in YYYY-MM-DD format",
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "x-go-name": "End",
+                        "description": "End date in YYYY-MM-DD format",
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DarkpoolDailySummaryResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/dashboard/watchlist/{watchlist_id}": {
+            "get": {
+                "description": "Retrieves the tickers or data associated with a specific dashboard watchlist ID.",
+                "tags": [
+                    "watchlist"
+                ],
+                "summary": "Fetch a dashboard watchlist",
+                "operationId": "getDashboardWatchlist",
+                "parameters": [
+                    {
+                        "description": "ID of the watchlist to retrieve.",
+                        "name": "watchlist_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DashboardWatchlistResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/dashboard/watchlist/{watchlist_id}/predictions": {
+            "get": {
+                "description": "Retrieves the predictions for a specific dashboard watchlist ID.",
+                "tags": [
+                    "watchlist"
+                ],
+                "summary": "Fetch predictions for a dashboard watchlist",
+                "operationId": "getWatchlistPredictions",
+                "parameters": [
+                    {
+                        "description": "ID of the watchlist to retrieve predictions for.",
+                        "name": "watchlist_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/WatchlistPredictionsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/earnings": {
+            "get": {
+                "description": "Retrieves earnings data for the upcoming week from the cache.",
+                "tags": [
+                    "events"
+                ],
+                "summary": "Get earnings data",
+                "operationId": "getEarningsNextWeek",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/EarningsResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/entity-holdings": {
+            "get": {
+                "description": "Retrieves holdings data for a specific entity, with optional filtering by ticker symbol and date range.\nReturns enriched holdings data including fund names, entity names, and ticker symbols.",
+                "tags": [
+                    "holdings"
+                ],
+                "summary": "Get entity holdings",
+                "operationId": "getEntityHoldings",
+                "parameters": [
+                    {
+                        "description": "Entity ID to fetch holdings for",
+                        "name": "entity_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Ticker symbol to filter holdings for",
+                        "name": "ticker",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date in YYYY-MM-DD format",
+                        "name": "start",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "End date in YYYY-MM-DD format",
+                        "name": "end",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of records to return",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/EntityHoldingsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/estimates/ltg/{ticker}": {
+            "get": {
+                "description": "Retrieves Long-Term Growth (LTG) estimate data for a given stock ticker.\nAn optional cutOff date can be provided to retrieve data as of that date.",
+                "tags": [
+                    "estimates"
+                ],
+                "summary": "Get LTG estimates",
+                "operationId": "getLongTermGrowthEstimate",
+                "parameters": [
+                    {
+                        "description": "Stock ticker symbol.",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Optional cut-off date (e.g., 'YYYY-MM-DD') to retrieve estimates as of a specific date.",
+                        "name": "cutOff",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/EstimatesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/estimates/metrics/{ticker}/{period}": {
+            "get": {
+                "description": "Retrieves the most recent estimate metrics (e.g., EPS, Sales) for a given stock ticker,\nfor a specified period type (ANN, QTR, or BOTH).\nAn optional cutOff date can be provided to retrieve data as of that date.",
+                "tags": [
+                    "estimates"
+                ],
+                "summary": "Get estimate metrics",
+                "operationId": "getEstimatesMetrics",
+                "parameters": [
+                    {
+                        "description": "Stock ticker symbol.",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Reporting period type.",
+                        "name": "period",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ANN",
+                                "QTR",
+                                "BOTH"
+                            ]
+                        }
+                    },
+                    {
+                        "description": "Optional cut-off date (e.g., 'YYYY-MM-DD') to retrieve estimates as of a specific date.",
+                        "name": "cutOff",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/EstimatesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/estimates/pricetarget/{ticker}": {
+            "get": {
+                "description": "Retrieves price target estimate data for a given stock ticker.\nAn optional cutOff date can be provided to retrieve data as of that date.",
+                "tags": [
+                    "estimates"
+                ],
+                "summary": "Get price target estimates",
+                "operationId": "getPriceTargetEstimate",
+                "parameters": [
+                    {
+                        "description": "Stock ticker symbol.",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Optional cut-off date (e.g., 'YYYY-MM-DD') to retrieve estimates as of a specific date.",
+                        "name": "cutOff",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/EstimatesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/fear-greed": {
+            "get": {
+                "description": "Retrieves the historical Fear & Greed Index data.",
+                "tags": [
+                    "fear-greed"
+                ],
+                "summary": "Get the Fear & Greed Index",
+                "operationId": "getFearGreedIndex",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FearGreedIndexResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/fund-holdings": {
+            "get": {
+                "description": "Retrieves holdings data for a specific fund, with optional filtering by ticker symbol and date range.\nReturns enriched holdings data including fund names, entity names, and ticker symbols.",
+                "tags": [
+                    "holdings"
+                ],
+                "summary": "Get fund holdings",
+                "operationId": "getFundHoldings",
+                "parameters": [
+                    {
+                        "description": "Fund ID to fetch holdings for",
+                        "name": "fund_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Ticker symbol to filter holdings for",
+                        "name": "ticker",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date in YYYY-MM-DD format",
+                        "name": "start",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "End date in YYYY-MM-DD format",
+                        "name": "end",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of records to return",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FundHoldingsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/fundamentals/range": {
+            "get": {
+                "description": "Balance-sheet, cash-flow, income & ratios for many tickers across a year span.",
+                "tags": [
+                    "fundamentals"
+                ],
+                "summary": "Get financials for multiple tickers across several years",
+                "operationId": "getFinancialsMultiRange",
+                "parameters": [
+                    {
+                        "description": "The tickers to fetch",
+                        "name": "tickers",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start year",
+                        "name": "start_year",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end year",
+                        "name": "end_year",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FinancialsRangeResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/fundamentals/{ticker}/period/{year}/{period}": {
             "get": {
                 "description": "Balance-sheet, cash-flow, income & ratios for one specific year & reporting period (FY, Q1‒Q4).",
@@ -64,10 +999,349 @@
                 }
             }
         },
+        "/fundamentals/{ticker}/range/{start_year}/{end_year}": {
+            "get": {
+                "description": "Balance-sheet, cash-flow, income & ratios for one ticker across a year span.",
+                "tags": [
+                    "fundamentals"
+                ],
+                "summary": "Get financials for a single ticker across several years",
+                "operationId": "getFinancialsSingleRange",
+                "parameters": [
+                    {
+                        "description": "The ticker to fetch",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start year",
+                        "name": "start_year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end year",
+                        "name": "end_year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FinancialsRangeResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures-data": {
+            "get": {
+                "description": "Retrieves futures data for a specified ticker symbol within a given date range.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get futures data",
+                "operationId": "getFuturesData",
+                "parameters": [
+                    {
+                        "description": "Ticker symbol for the futures data.",
+                        "name": "ticker",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date for the data (YYYY-MM-DD).",
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date for the data (YYYY-MM-DD).",
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FuturesDataResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/g7-events": {
+            "get": {
+                "description": "Retrieves G7 events data for the upcoming week from the cache.",
+                "tags": [
+                    "events"
+                ],
+                "summary": "Get G7 events data",
+                "operationId": "getG7EventsNextWeek",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/G7EventsResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/historical-data/{ticker}": {
+            "get": {
+                "description": "This will retrieve historical price data for the specified stock symbol, aggregated by the given period,\nwithin the specified start and end dates.",
+                "tags": [
+                    "historical-data"
+                ],
+                "summary": "Get historical prices",
+                "operationId": "getHistoricalData",
+                "parameters": [
+                    {
+                        "description": "The stock symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The time period for aggregation (e.g., \"1m\", \"1h\", \"day\")",
+                        "name": "period",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start date for historical data (YYYY-MM-DD)",
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end date for historical data (YYYY-MM-DD)",
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/HistoricalDataResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/investor-search": {
+            "get": {
+                "description": "Returns up to the first 100 investors whose names start with the supplied prefix.",
+                "tags": [
+                    "investors"
+                ],
+                "summary": "Search investors",
+                "operationId": "searchInvestors",
+                "parameters": [
+                    {
+                        "description": "The prefix to search for",
+                        "name": "prefix",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/InvestorSearchResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/ipos": {
+            "get": {
+                "description": "Retrieves IPO data for the upcoming week from the cache.",
+                "tags": [
+                    "events"
+                ],
+                "summary": "Get IPO data",
+                "operationId": "getIPOsNextWeek",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/IPOsResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/market-status": {
+            "get": {
+                "description": "Fetches the current market status from Polygon.io and returns whether the market is considered open.",
+                "tags": [
+                    "market-status"
+                ],
+                "summary": "Get market status",
+                "operationId": "getMarketStatus",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/MarketStatusResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/markets/top-stocks/{type}": {
+            "get": {
+                "description": "Retrieves the top market stocks data based on the specified type.\nThe type parameter determines whether to fetch top gainers, losers, or most active stocks.",
+                "tags": [
+                    "markets"
+                ],
+                "summary": "Get top market stocks",
+                "operationId": "fetchTopMarketStocks",
+                "parameters": [
+                    {
+                        "description": "The type of stocks to fetch (gainers, losers, or active)",
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "gainers",
+                                "losers",
+                                "active"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TopMarketStocksResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/marketsnapshot": {
+            "get": {
+                "description": "This will retrieve the market snapshot for all available tickers\nwith their current price and today's change",
+                "tags": [
+                    "markets"
+                ],
+                "summary": "Get current market snapshot data",
+                "operationId": "getMarketSnapshot",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/MarketSnapshotResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/news": {
+            "get": {
+                "description": "Retrieves news articles based on specified filter criteria such as date range,\nticker symbol, search text, sentiment score, market impact, and  .\nSupports pagination via the limit parameter.",
+                "tags": [
+                    "news"
+                ],
+                "summary": "Get news articles",
+                "operationId": "getNewsArticles",
+                "parameters": [
+                    {
+                        "description": "Date range \"1d, 7d, 30d, 90d\". Defaults to 7d.",
+                        "name": "date_range",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Page number. Defaults to 0.",
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/NewsResponse"
+                    },
+                    "204": {
+                        "description": " No Content"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/news/sentiment/{ticker}": {
             "get": {
                 "tags": [
-                    "marketSentiment"
+                    "news"
                 ],
                 "summary": "Get sentiment scores for a ticker.",
                 "operationId": "getTickerSentiment30D",
@@ -102,7 +1376,7 @@
             "get": {
                 "description": "Retrieves a news article by its unique ID.",
                 "tags": [
-                    "marketSentiment"
+                    "news"
                 ],
                 "summary": "Get a news article by ID.",
                 "operationId": "getNewsArticle",
@@ -133,11 +1407,652 @@
                 }
             }
         },
+        "/options/chain/{ticker}": {
+            "get": {
+                "description": "Retrieves comprehensive options chain data for a given underlying ticker symbol.\nWhen calculate_put_call_ratio is set to true and contract_type is 'both', the response\nwill include put/call ratio analysis which is useful for market sentiment analysis.",
+                "tags": [
+                    "options"
+                ],
+                "summary": "Get options chain",
+                "operationId": "getOptionsChain",
+                "parameters": [
+                    {
+                        "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date for options expiration range (YYYY-MM-DD format)",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date for options expiration range (YYYY-MM-DD format)",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Type of contracts to return",
+                        "name": "contract_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "call",
+                                "put",
+                                "both"
+                            ],
+                            "default": "both"
+                        }
+                    },
+                    {
+                        "description": "Money status filter",
+                        "name": "money_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ITM",
+                                "OTM",
+                                "ATM",
+                                "ALL"
+                            ],
+                            "default": "ALL"
+                        }
+                    },
+                    {
+                        "description": "Whether to calculate put/call ratio",
+                        "name": "calculate_put_call_ratio",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    {
+                        "description": "Minimum strike price filter",
+                        "name": "min_strike_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum strike price filter",
+                        "name": "max_strike_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum break-even price filter",
+                        "name": "min_break_even_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum break-even price filter",
+                        "name": "max_break_even_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum current option price filter",
+                        "name": "min_current_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum current option price filter",
+                        "name": "max_current_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum price change filter",
+                        "name": "min_price_change",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum price change filter",
+                        "name": "max_price_change",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum price change percentage filter",
+                        "name": "min_price_change_percentage",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum price change percentage filter",
+                        "name": "max_price_change_percentage",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum delta (price sensitivity) filter",
+                        "name": "min_delta",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum delta (price sensitivity) filter",
+                        "name": "max_delta",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum gamma (delta sensitivity) filter",
+                        "name": "min_gamma",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum gamma (delta sensitivity) filter",
+                        "name": "max_gamma",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum theta (time decay) filter",
+                        "name": "min_theta",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum theta (time decay) filter",
+                        "name": "max_theta",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum vega (volatility sensitivity) filter",
+                        "name": "min_vega",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum vega (volatility sensitivity) filter",
+                        "name": "max_vega",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum open interest filter",
+                        "name": "min_open_interest",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Maximum open interest filter",
+                        "name": "max_open_interest",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Minimum volume filter",
+                        "name": "min_volume",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum volume filter",
+                        "name": "max_volume",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum implied volatility filter",
+                        "name": "min_implied_vol",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum implied volatility filter",
+                        "name": "max_implied_vol",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/OptionsChainResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/options/filter-ranges/{ticker}": {
+            "get": {
+                "description": "Returns the minimum and maximum values for all filterable fields in the options chain data.",
+                "tags": [
+                    "options"
+                ],
+                "summary": "Get options filter ranges",
+                "operationId": "getOptionsFilterRanges",
+                "parameters": [
+                    {
+                        "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date for options expiration range (YYYY-MM-DD format)",
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date for options expiration range (YYYY-MM-DD format)",
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/OptionsFilterRangesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/options/historical/{ticker}": {
+            "get": {
+                "description": "Retrieves historical aggregate price data (OHLCV bars) for a specific options contract.\nBoth start_date and end_date are required parameters and should be provided in YYYY-MM-DD format.",
+                "tags": [
+                    "options"
+                ],
+                "summary": "Get historical options data",
+                "operationId": "getHistoricalOptionsData",
+                "parameters": [
+                    {
+                        "description": "The options contract ticker (e.g., O:AAPL240119C00150000)",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date for historical data (YYYY-MM-DD format)",
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date for historical data (YYYY-MM-DD format)",
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Time interval for aggregation",
+                        "name": "interval",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "minute",
+                                "hour",
+                                "day",
+                                "week",
+                                "month",
+                                "quarter",
+                                "year"
+                            ],
+                            "default": "day"
+                        }
+                    },
+                    {
+                        "description": "Time multiplier for the interval (e.g., 5 for 5-minute bars)",
+                        "name": "time_break",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/HistoricalOptionsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/price-forecasts": {
+            "get": {
+                "description": "Returns a map where each key is a ticker symbol and the value is an array of forecast data points.",
+                "tags": [
+                    "forecasts"
+                ],
+                "summary": "Get price forecasts",
+                "operationId": "getPriceForecasts",
+                "parameters": [
+                    {
+                        "description": "The number of days to forecast (1–10)",
+                        "name": "forecast_horizon",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 4
+                        }
+                    },
+                    {
+                        "description": "Comma-separated list of stock ticker symbols",
+                        "name": "tickers",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "AAPL,TSLA,AMZN,NVDA,MSFT,GOOG"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PriceForecastResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/risk-analysis-score": {
+            "get": {
+                "description": "Retrieves the historical Risk Analysis Score data.",
+                "tags": [
+                    "risk-analysis"
+                ],
+                "summary": "Get the Risk Analysis Score",
+                "operationId": "getRiskAnalysisScore",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RiskAnalysisScoreResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/search/institutional-holdings/entities": {
+            "get": {
+                "description": "Searches for entities based on a query term, field, mode, and limit.",
+                "tags": [
+                    "search"
+                ],
+                "summary": "Search for entities",
+                "operationId": "searchEntitiesParams",
+                "parameters": [
+                    {
+                        "description": "Search term",
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Field to search in (e.g., entity_proper_name)",
+                        "name": "field",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "entity_proper_name"
+                        }
+                    },
+                    {
+                        "description": "Search mode (e.g., fuzzy, exact)",
+                        "name": "mode",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "fuzzy"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of results to return",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SearchResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/search/institutional-holdings/funds": {
+            "get": {
+                "description": "Searches for funds based on a query term, field, mode, and limit.",
+                "tags": [
+                    "search"
+                ],
+                "summary": "Search for funds",
+                "operationId": "searchFundsParams",
+                "parameters": [
+                    {
+                        "description": "Search term",
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Field to search in (e.g., entity_proper_name)",
+                        "name": "field",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "entity_proper_name"
+                        }
+                    },
+                    {
+                        "description": "Search mode (e.g., fuzzy, exact)",
+                        "name": "mode",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "fuzzy"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of results to return",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SearchResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/search/institutional-holdings/stock": {
+            "get": {
+                "description": "Searches for Fsyms (stocks) based on a query term, field, mode, and limit.",
+                "tags": [
+                    "search"
+                ],
+                "summary": "Search for stocks",
+                "operationId": "searchFsymsParams",
+                "parameters": [
+                    {
+                        "description": "Search term",
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Field to search in (e.g., entity_proper_name)",
+                        "name": "field",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "entity_proper_name"
+                        }
+                    },
+                    {
+                        "description": "Search mode (e.g., fuzzy, exact)",
+                        "name": "mode",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "fuzzy"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of results to return",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SearchResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/stock-screener/screen": {
             "post": {
                 "description": "Filters stocks based on the provided financial criteria and returns\nmatching ticker symbols. The screening is performed against historical\nfinancial data up to the specified cutoff date.",
                 "tags": [
-                    "stockScreener"
+                    "stock-screener"
                 ],
                 "summary": "Screen stocks based on financial criteria.",
                 "operationId": "screenStocks",
@@ -158,6 +2073,301 @@
                         "$ref": "#/components/responses/ScreenResponse"
                     },
                     "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/technical-analysis/fibonacci-carmilia/{symbol}": {
+            "get": {
+                "description": "This will calculate Fibonacci retracement levels and Camarilla pivot points for the specified stock symbol",
+                "tags": [
+                    "technical-analysis"
+                ],
+                "summary": "Get Fibonacci levels and Camarilla points",
+                "operationId": "getFibonacciCarmiliaLevels",
+                "parameters": [
+                    {
+                        "description": "The stock symbol to analyze",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FibonacciCarmiliaResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/ticker/{ticker}/profile": {
+            "get": {
+                "description": "Returns the JSON profile for the specified symbol.",
+                "tags": [
+                    "tickers"
+                ],
+                "summary": "Retrieve ticker profile data",
+                "operationId": "GetTickerProfileData",
+                "parameters": [
+                    {
+                        "description": "The stock ticker symbol (e.g., AAPL).",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TickerProfileResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/tickers": {
+            "get": {
+                "description": "Returns the full list of symbols from cache or Bigtable.",
+                "tags": [
+                    "tickers"
+                ],
+                "summary": "List all tracked tickers",
+                "operationId": "GetTickersList",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TickersListResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/tickers-with-names": {
+            "get": {
+                "description": "Returns all tracked tickers and their profiles.",
+                "tags": [
+                    "tickers"
+                ],
+                "summary": "List tickers with their names",
+                "operationId": "GetTickersListWithNames",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TickersListWithNamesResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/tickertape": {
+            "get": {
+                "description": "This will retrieve the current market data for a predefined list of popular stock tickers",
+                "tags": [
+                    "tickertape"
+                ],
+                "summary": "Get data on popular stocks",
+                "operationId": "getTickertapeData",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TickertapeResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/trades/{symbol}": {
+            "get": {
+                "description": "This will retrieve recent trades data for the specified stock symbol from Redis\nusing the TICKER_TRADES sorted set key pattern. Each trade is decompressed if stored as gzip.\nReturns an array of trade objects with pricing, volume, and market data.",
+                "tags": [
+                    "trades"
+                ],
+                "summary": "Get trades data",
+                "operationId": "getTradesData",
+                "parameters": [
+                    {
+                        "description": "The stock symbol to get trades for",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of trades to return (default: 100)",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TradesDataResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/treasury-rates": {
+            "get": {
+                "description": "Retrieves treasury rates data from Bigtable for the specified date range.\nIf no dates are provided, returns data for the current date.",
+                "tags": [
+                    "treasury-rates"
+                ],
+                "summary": "Get treasury rates",
+                "operationId": "getTreasuryRates",
+                "parameters": [
+                    {
+                        "description": "Start date for the range (YYYY-MM-DD format)",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "End date for the range (YYYY-MM-DD format)",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TreasuryRatesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/volume-footprint/{symbol}": {
+            "get": {
+                "description": "This endpoint provides detailed volume footprint analysis for all available trades including:\nPrice action analysis (OHLC, VWAP)\nVolume distribution by price level\nOrder flow imbalances between buy and sell orders\nVolume clusters indicating high activity zones\nAbsorption signals for potential exhaustion points\nPoint of Control (POC) - price level with highest volume\nValue Area High/Low for 70% of traded volume\nDelta percentage to gauge buying vs selling pressure\n\nThe analysis is based on all available trade data from Redis and calculates comprehensive\nmarket microstructure metrics useful for understanding market dynamics.",
+                "tags": [
+                    "volume-footprint"
+                ],
+                "summary": "Get volume footprint analysis",
+                "operationId": "getVolumeFootprint",
+                "parameters": [
+                    {
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FootprintResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/watchlist": {
+            "post": {
+                "description": "Retrieves data for a specified list of stock tickers within a given date range.\nThe request parameters are passed in the request body.",
+                "tags": [
+                    "watchlist"
+                ],
+                "summary": "Fetch data for a watchlist",
+                "operationId": "fetchWatchlistData",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FetchWatchlistDataRequest"
+                            }
+                        }
+                    },
+                    "required": true,
+                    "x-go-name": "Body"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/WatchlistDataResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/{ticker}/stock-splits": {
+            "get": {
+                "description": "Retrieves the stock split history for a given ticker symbol from Bigtable.",
+                "tags": [
+                    "stock-splits"
+                ],
+                "summary": "Get stock split history",
+                "operationId": "getStockSplits",
+                "parameters": [
+                    {
+                        "description": "The stock ticker symbol (e.g., AAPL).",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/StockSplitsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
                         "$ref": "#/components/responses/ErrorResponse"
                     },
                     "500": {
