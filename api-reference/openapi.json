@@ -281,6 +281,28 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "description": "Sort by field.",
+                        "name": "sortBy",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "total_volume",
+                                "relative_volume_change",
+                                "absolute_volume_change",
+                                "darkpool_ratio"
+                            ]
+                        }
+                    },
+                    {
+                        "description": "Use dollar weighed volumes instead of raw volumes.",
+                        "name": "useDollar",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
                     }
                 ],
                 "responses": {
