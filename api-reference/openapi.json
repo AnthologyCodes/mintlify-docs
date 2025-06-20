@@ -2435,7 +2435,7 @@
                 }
             },
             "DarkpoolDailySummaryResponse": {
-                "description": "DarkpoolDailySummaryResponse represents the response for darkpool daily summary data",
+                "description": "",
                 "content": {
                     "application/json": {
                         "schema": {
