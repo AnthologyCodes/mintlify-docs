@@ -232,7 +232,7 @@
                 "tags": [
                     "current-price"
                 ],
-                "summary": "Get last trade price",
+                "summary": "Last trade price",
                 "operationId": "getLastTradePrice",
                 "parameters": [
                     {
@@ -261,7 +261,7 @@
                 "tags": [
                     "darkpool"
                 ],
-                "summary": "Get top darkpool trends",
+                "summary": "Daily Darkpool trends",
                 "operationId": "getDarkpoolTrends",
                 "parameters": [
                     {
@@ -302,7 +302,7 @@
                 "tags": [
                     "darkpool"
                 ],
-                "summary": "Get daily darkpool trends",
+                "summary": "Ticker darkpool trends",
                 "operationId": "getDailyDarkpoolTrend",
                 "parameters": [
                     {
@@ -350,7 +350,7 @@
                 "tags": [
                     "darkpool"
                 ],
-                "summary": "Get darkpool trades",
+                "summary": "Darkpool trades",
                 "operationId": "getDarkpoolTrades",
                 "parameters": [
                     {
@@ -474,7 +474,7 @@
                 "tags": [
                     "darkpool"
                 ],
-                "summary": "Get daily summary",
+                "summary": "Darkpool daily summary",
                 "operationId": "getDarkpoolDailySummary",
                 "parameters": [
                     {
