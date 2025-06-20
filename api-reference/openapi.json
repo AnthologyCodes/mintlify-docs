@@ -1139,7 +1139,7 @@
                 "tags": [
                     "historical-data"
                 ],
-                "summary": "Get historical prices",
+                "summary": "Historical prices",
                 "operationId": "getHistoricalData",
                 "parameters": [
                     {
@@ -3181,23 +3181,11 @@
             "CombinedOutput": {
                 "type": "object",
                 "properties": {
-                    "date_estimate_published": {
-                        "type": "string",
-                        "x-go-name": "DateEstimatePublished",
-                        "example": "2021-01-01"
+                    "annual": {
+                        "$ref": "#/components/schemas/PeriodBlock"
                     },
-                    "metrics": {
-                        "type": "object",
-                        "additionalProperties": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "object",
-                                "additionalProperties": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "x-go-name": "Metrics"
+                    "quarterly": {
+                        "$ref": "#/components/schemas/PeriodBlock"
                     },
                     "ticker": {
                         "type": "string",
@@ -4836,6 +4824,30 @@
                     "ticker": {
                         "type": "string",
                         "x-go-name": "Ticker"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "PeriodBlock": {
+                "type": "object",
+                "properties": {
+                    "date_estimate_published": {
+                        "type": "string",
+                        "x-go-name": "DateEstimatePublished",
+                        "example": "2021-01-01"
+                    },
+                    "metrics": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "x-go-name": "Metrics"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
