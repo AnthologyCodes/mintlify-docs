@@ -2136,7 +2136,7 @@
                 "tags": [
                     "tickers"
                 ],
-                "summary": "Retrieve ticker profile data",
+                "summary": "Ticker profile",
                 "operationId": "GetTickerProfileData",
                 "parameters": [
                     {
@@ -2171,7 +2171,7 @@
                 "tags": [
                     "tickers"
                 ],
-                "summary": "List all tracked tickers",
+                "summary": "Tickers list",
                 "operationId": "GetTickersList",
                 "responses": {
                     "200": {
@@ -2189,7 +2189,7 @@
                 "tags": [
                     "tickers"
                 ],
-                "summary": "List tickers with their names",
+                "summary": "Tickers list with names",
                 "operationId": "GetTickersListWithNames",
                 "responses": {
                     "200": {
@@ -2852,7 +2852,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/TickerProfile"
+                            "$ref": "#/components/schemas/TickerProfileResponse"
                         }
                     }
                 }
@@ -2872,10 +2872,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                            "$ref": "#/components/schemas/TickersListResponse"
                         }
                     }
                 }
@@ -2885,10 +2882,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/components/schemas/TickersListWithNamesResponse"
                         }
                     }
                 }
@@ -5528,11 +5522,70 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "TickerProfileResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/TickerProfile"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "TickerSentimentResponse": {
                 "type": "object",
                 "properties": {
                     "Data": {
                         "$ref": "#/components/schemas/MultiPeriodSentimentMetrics"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TickersListResponse": {
+                "type": "object",
+                "properties": {
+                    "tickers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Data",
+                        "example": [
+                            "AAPL",
+                            "GOOGL",
+                            "AMZN",
+                            "GOOG",
+                            "NVDA",
+                            "TSLA",
+                            "META",
+                            "NFLX",
+                            "DIS",
+                            "BRK.B"
+                        ]
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TickersListWithNamesResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Data",
+                        "example": {
+                            "AAPL": "Apple Inc.",
+                            "AMZN": "Amazon.com Inc.",
+                            "BRK.B": "Berkshire Hathaway Inc.",
+                            "DIS": "The Walt Disney Company",
+                            "GOOG": "Alphabet Inc.",
+                            "GOOGL": "Alphabet Inc.",
+                            "META": "Meta Platforms Inc.",
+                            "NFLX": "Netflix Inc.",
+                            "NVDA": "NVIDIA Corporation",
+                            "TSLA": "Tesla Inc."
+                        }
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
