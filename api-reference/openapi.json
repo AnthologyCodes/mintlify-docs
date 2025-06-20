@@ -1321,7 +1321,7 @@
                 "tags": [
                     "news"
                 ],
-                "summary": "Get news articles",
+                "summary": "News articles",
                 "operationId": "getNewsArticles",
                 "parameters": [
                     {
@@ -1359,10 +1359,11 @@
         },
         "/news/sentiment/{ticker}": {
             "get": {
+                "description": "Retrieves sentiment scores for a ticker over the past 30 days.",
                 "tags": [
                     "news"
                 ],
-                "summary": "Get sentiment scores for a ticker.",
+                "summary": "Ticker sentiment",
                 "operationId": "getTickerSentiment30D",
                 "parameters": [
                     {
@@ -1397,7 +1398,7 @@
                 "tags": [
                     "news"
                 ],
-                "summary": "Get a news article by ID.",
+                "summary": "News article by ID",
                 "operationId": "getNewsArticle",
                 "parameters": [
                     {
@@ -1412,7 +1413,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/NewsResponse"
+                        "$ref": "#/components/responses/NewsArticleResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2753,15 +2754,22 @@
                     }
                 }
             },
+            "NewsArticleResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/NewsArticleResponse"
+                        }
+                    }
+                }
+            },
             "NewsResponse": {
                 "description": "",
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/SkeletonNewsArticle"
-                            }
+                            "$ref": "#/components/schemas/NewsResponse"
                         }
                     }
                 }
@@ -2854,7 +2862,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/MultiPeriodSentimentMetrics"
+                            "$ref": "#/components/schemas/TickerSentimentResponse"
                         }
                     }
                 }
@@ -4659,6 +4667,154 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "NewsArticle": {
+                "type": "object",
+                "properties": {
+                    "analysis": {
+                        "type": "string",
+                        "x-go-name": "Analysis",
+                        "example": "The International Atomic Energy Agency (IAEA) has reported an inability to currently verify the location of Iran's significant 409-kilogram stockpile of near-bomb-grade enriched uranium..."
+                    },
+                    "decisions_for_investors": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "DecisionsForInvestors",
+                        "example": "[\"Investors should anticipate heightened volatility, particularly in energy markets and assets sensitive to Middle Eastern geopolitical risk...\", ]"
+                    },
+                    "financial_relevance": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "FinancialRelevance",
+                        "example": 0.925
+                    },
+                    "id": {
+                        "type": "string",
+                        "x-go-name": "Id",
+                        "example": "f229ecb06b0c32b98e52519c51ee6ec1a01279e2a62f2288399f5a59ed8177b6"
+                    },
+                    "image_url": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "ImageURL",
+                        "example": [
+                            "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iNPdNm9msB_k/v0/1200x800.jpg"
+                        ]
+                    },
+                    "ingested_at": {
+                        "type": "string",
+                        "x-go-name": "IngestedAt",
+                        "example": "2025-06-18T14:05:20.029986"
+                    },
+                    "market_impact_score": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MarketImpact",
+                        "example": 0.9
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "x-go-name": "PublishedAt",
+                        "example": "2025-06-18 13:40:48"
+                    },
+                    "publisher_impact": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PublisherImpact",
+                        "example": 0.975
+                    },
+                    "sentiment_details": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "x-go-name": "SentimentDetails"
+                    },
+                    "sentiment_label": {
+                        "type": "string",
+                        "x-go-name": "SentimentLabel",
+                        "example": "extremely negative"
+                    },
+                    "sentiment_score": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "SentimentScore",
+                        "example": -0.9
+                    },
+                    "source": {
+                        "type": "string",
+                        "x-go-name": "Source",
+                        "example": "Bloomberg"
+                    },
+                    "summary": {
+                        "type": "string",
+                        "x-go-name": "Summary",
+                        "example": "The UN nuclear watchdog, IAEA, reports that the location of Iran's 409-kilogram stockpile of near-bomb-grade enriched uranium..."
+                    },
+                    "themes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Themes",
+                        "example": [
+                            "Geopolitics & War",
+                            "Sanctions & Export Controls",
+                            "Energy Markets & Prices"
+                        ]
+                    },
+                    "tickers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TickerItem"
+                        },
+                        "x-go-name": "Tickers",
+                        "example": null
+                    },
+                    "title": {
+                        "type": "string",
+                        "x-go-name": "Title",
+                        "example": "Iran Near-Bomb-Grade Uranium's Location Uncertain, UN Watchdog Says"
+                    },
+                    "tone": {
+                        "type": "string",
+                        "x-go-name": "Tone",
+                        "example": "uncertain"
+                    },
+                    "url": {
+                        "type": "string",
+                        "x-go-name": "URL",
+                        "example": "https://www.bloomberg.com/news/articles/2025-06-18/iran-nuclear-infrastructure-location-of-enriched-uranium-stocks-uncertain"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "NewsArticleResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/NewsArticle"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "NewsResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SkeletonNewsArticle"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "OptionsChain": {
                 "type": "object",
                 "properties": {
@@ -5345,6 +5501,15 @@
                         "format": "int64",
                         "x-go-name": "WeightedSharesOutstanding",
                         "example": 14935826000
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TickerSentimentResponse": {
+                "type": "object",
+                "properties": {
+                    "Data": {
+                        "$ref": "#/components/schemas/MultiPeriodSentimentMetrics"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
