@@ -5137,9 +5137,7 @@
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
             "TickerForecasts": {
-                "description": "The map key is the ticker symbol, and the value is a slice of forecast items.",
                 "type": "object",
-                "title": "TickerForecasts represents forecast data for each ticker symbol.",
                 "additionalProperties": {
                     "type": "array",
                     "items": {
