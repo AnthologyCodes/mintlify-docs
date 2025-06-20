@@ -610,7 +610,7 @@
                 "tags": [
                     "events"
                 ],
-                "summary": "Get earnings data",
+                "summary": "Earnings calendar",
                 "operationId": "getEarningsNextWeek",
                 "responses": {
                     "200": {
@@ -628,7 +628,7 @@
                 "tags": [
                     "holdings"
                 ],
-                "summary": "Get entity holdings",
+                "summary": "Entity holdings",
                 "operationId": "getEntityHoldings",
                 "parameters": [
                     {
@@ -858,7 +858,7 @@
                 "tags": [
                     "holdings"
                 ],
-                "summary": "Get fund holdings",
+                "summary": "Fund holdings",
                 "operationId": "getFundHoldings",
                 "parameters": [
                     {
@@ -1121,7 +1121,7 @@
                 "tags": [
                     "events"
                 ],
-                "summary": "Get G7 events data",
+                "summary": "G7 events",
                 "operationId": "getG7EventsNextWeek",
                 "responses": {
                     "200": {
@@ -1230,7 +1230,7 @@
                 "tags": [
                     "events"
                 ],
-                "summary": "Get IPO data",
+                "summary": "IPO data",
                 "operationId": "getIPOsNextWeek",
                 "responses": {
                     "200": {
