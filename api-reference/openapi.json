@@ -840,7 +840,7 @@
                 "tags": [
                     "fear-greed"
                 ],
-                "summary": "Get the Fear & Greed Index",
+                "summary": "Fear & Greed Index",
                 "operationId": "getFearGreedIndex",
                 "responses": {
                     "200": {
@@ -927,7 +927,7 @@
                 "tags": [
                     "fundamentals"
                 ],
-                "summary": "Get financials for multiple tickers across several years",
+                "summary": "Financials (multiple tickers)",
                 "operationId": "getFinancialsMultiRange",
                 "parameters": [
                     {
@@ -974,7 +974,7 @@
                 "tags": [
                     "fundamentals"
                 ],
-                "summary": "Get financials for a single ticker for a specific period",
+                "summary": "Financials (single ticker, specific period)",
                 "operationId": "getFinancialsPeriod",
                 "parameters": [
                     {
@@ -1024,7 +1024,7 @@
                 "tags": [
                     "fundamentals"
                 ],
-                "summary": "Get financials for a single ticker across several years",
+                "summary": "Financials (single ticker, multi-year)",
                 "operationId": "getFinancialsSingleRange",
                 "parameters": [
                     {
@@ -2587,10 +2587,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/FearGreedRecord"
-                            }
+                            "$ref": "#/components/schemas/FearGreedIndexResponse"
                         }
                     }
                 }
@@ -3804,6 +3801,19 @@
                         "type": "number",
                         "format": "double",
                         "x-go-name": "MarketCap"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "FearGreedIndexResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FearGreedRecord"
+                        },
+                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
