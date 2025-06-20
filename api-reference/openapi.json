@@ -1872,7 +1872,7 @@
             "get": {
                 "description": "This will retrieve historical ratings data for the specified stock symbol from Bigtable.\nReturns an array of rating objects with scores and recommendations.",
                 "tags": [
-                    "ratings"
+                    "grades"
                 ],
                 "summary": "Stock Ratings",
                 "operationId": "getRatings",
@@ -4501,41 +4501,47 @@
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
             "GradeData": {
-                "description": "GradeData represents a single grade entry",
                 "type": "object",
                 "properties": {
                     "analystRatingsBuy": {
                         "type": "integer",
                         "format": "int64",
-                        "x-go-name": "AnalystRatingsBuy"
+                        "x-go-name": "AnalystRatingsBuy",
+                        "example": 16
                     },
                     "analystRatingsHold": {
                         "type": "integer",
                         "format": "int64",
-                        "x-go-name": "AnalystRatingsHold"
+                        "x-go-name": "AnalystRatingsHold",
+                        "example": 16
                     },
                     "analystRatingsSell": {
                         "type": "integer",
                         "format": "int64",
-                        "x-go-name": "AnalystRatingsSell"
+                        "x-go-name": "AnalystRatingsSell",
+                        "example": 3
                     },
                     "analystRatingsStrongBuy": {
                         "type": "integer",
                         "format": "int64",
-                        "x-go-name": "AnalystRatingsStrongBuy"
+                        "x-go-name": "AnalystRatingsStrongBuy",
+                        "example": 3
                     },
                     "analystRatingsStrongSell": {
                         "type": "integer",
                         "format": "int64",
-                        "x-go-name": "AnalystRatingsStrongSell"
+                        "x-go-name": "AnalystRatingsStrongSell",
+                        "example": 2
                     },
                     "date": {
                         "type": "string",
-                        "x-go-name": "Date"
+                        "x-go-name": "Date",
+                        "example": "2025-06-01"
                     },
                     "symbol": {
                         "type": "string",
-                        "x-go-name": "Symbol"
+                        "x-go-name": "Symbol",
+                        "example": "LULU"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -5262,55 +5268,64 @@
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
             "RatingData": {
-                "description": "RatingData represents a single rating entry",
                 "type": "object",
                 "properties": {
                     "date": {
                         "type": "string",
-                        "x-go-name": "Date"
+                        "x-go-name": "Date",
+                        "example": "2025-06-01"
                     },
                     "debtToEquityScore": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "DebtToEquityScore"
+                        "x-go-name": "DebtToEquityScore",
+                        "example": 2
                     },
                     "discountedCashFlowScore": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "DiscountedCashFlowScore"
+                        "x-go-name": "DiscountedCashFlowScore",
+                        "example": 4
                     },
                     "overallScore": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "OverallScore"
+                        "x-go-name": "OverallScore",
+                        "example": 4
                     },
                     "priceToBookScore": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "PriceToBookScore"
+                        "x-go-name": "PriceToBookScore",
+                        "example": 1
                     },
                     "priceToEarningsScore": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "PriceToEarningsScore"
+                        "x-go-name": "PriceToEarningsScore",
+                        "example": 3
                     },
                     "rating": {
                         "type": "string",
-                        "x-go-name": "Rating"
+                        "x-go-name": "Rating",
+                        "example": "A-"
                     },
                     "returnOnAssetsScore": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "ReturnOnAssetsScore"
+                        "x-go-name": "ReturnOnAssetsScore",
+                        "example": 5
                     },
                     "returnOnEquityScore": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "ReturnOnEquityScore"
+                        "x-go-name": "ReturnOnEquityScore",
+                        "example": 5
                     },
                     "symbol": {
                         "type": "string",
-                        "x-go-name": "Symbol"
+                        "x-go-name": "Symbol",
+                        "example": "LULU"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
