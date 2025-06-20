@@ -546,7 +546,7 @@
                 "tags": [
                     "watchlist"
                 ],
-                "summary": "Fetch a dashboard watchlist",
+                "summary": "Dashboard watchlist",
                 "operationId": "getDashboardWatchlist",
                 "parameters": [
                     {
@@ -578,7 +578,7 @@
                 "tags": [
                     "watchlist"
                 ],
-                "summary": "Fetch predictions for a dashboard watchlist",
+                "summary": "Dashboard watchlist predictions",
                 "operationId": "getWatchlistPredictions",
                 "parameters": [
                     {
@@ -2334,7 +2334,7 @@
                 "tags": [
                     "watchlist"
                 ],
-                "summary": "Fetch data for a watchlist",
+                "summary": "Fetch watchlist data",
                 "operationId": "fetchWatchlistData",
                 "requestBody": {
                     "content": {
@@ -2458,10 +2458,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/DarkpoolDailySummary"
-                            }
+                            "$ref": "#/components/schemas/DarkpoolDailySummaryResponse"
                         }
                     }
                 }
@@ -2484,10 +2481,7 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/DarkpoolTrend"
-                            }
+                            "$ref": "#/components/schemas/DarkpoolTrendsResponse"
                         }
                     }
                 }
@@ -3412,31 +3406,51 @@
                     "date": {
                         "type": "string",
                         "format": "date-time",
-                        "x-go-name": "Date"
+                        "x-go-name": "Date",
+                        "example": "2025-05-20T00:00:00Z"
                     },
                     "ticker": {
                         "type": "string",
-                        "x-go-name": "Ticker"
+                        "x-go-name": "Ticker",
+                        "example": "T"
                     },
                     "total_daily_value": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "TotalDailyValue"
+                        "x-go-name": "TotalDailyValue",
+                        "example": 314491780.3681218
                     },
                     "total_daily_volume": {
                         "type": "integer",
                         "format": "int64",
-                        "x-go-name": "TotalDailyVolume"
+                        "x-go-name": "TotalDailyVolume",
+                        "example": 11273982
                     },
                     "trade_count": {
                         "type": "integer",
                         "format": "int64",
-                        "x-go-name": "TradeCount"
+                        "x-go-name": "TradeCount",
+                        "example": 55535
                     },
                     "weighted_average_price": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "WeightedAveragePrice"
+                        "x-go-name": "WeightedAveragePrice",
+                        "example": 27.895359454017385
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "DarkpoolDailySummaryResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "description": "in: body",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DarkpoolDailySummary"
+                        },
+                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -3633,6 +3647,19 @@
                         "type": "string",
                         "x-go-name": "Trend",
                         "example": "up"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "DarkpoolTrendsResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DarkpoolTrend"
+                        },
+                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
