@@ -368,7 +368,7 @@
         },
         "/darkpools": {
             "get": {
-                "description": "Retrieves dark-pool trades in the requested date window with optional\nprice/size/value filters and consolidation.\nIf the query matches the pre-cached slice (last 10 days, default filters) the\nresult is served from Redis; otherwise it falls back to Bigtable.\nCurrent price is attached in parallel.",
+                "description": "Retrieves dark-pool trades in the requested date window with optional\nprice/size/value filters and consolidation.\nThe system uses a two-tier cache (ST for last 2 days, LT for last 60 days)\nand falls back to Bigtable when cache misses or filters don't match.\nCurrent price is attached in parallel.",
                 "tags": [
                     "darkpool"
                 ],
@@ -1043,6 +1043,604 @@
                         "$ref": "#/components/responses/FuturesDataResponse"
                     },
                     "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contract-naming": {
+            "get": {
+                "description": "Retrieves all contract naming information from the globex futures ID mapping table.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Fetch all futures contract naming data",
+                "operationId": "fetchContractNaming",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FetchContractNamingResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contract-naming/by-code/{code}": {
+            "get": {
+                "description": "Retrieves contract naming information for a single futures contract by its code (e.g., \"ES\").",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get a specific futures contract by its code",
+                "operationId": "getContractByCode",
+                "parameters": [
+                    {
+                        "description": "The futures contract code (e.g., \"ES\").",
+                        "name": "code",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GetContractByCodeResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contract-naming/search": {
+            "get": {
+                "description": "Performs fuzzy search on futures contract naming data with optional filters.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Search futures contract naming data",
+                "operationId": "searchContractNaming",
+                "parameters": [
+                    {
+                        "description": "General search query",
+                        "name": "query",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by asset class",
+                        "name": "asset_class",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by exchange",
+                        "name": "exchange",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by product group",
+                        "name": "product_group",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Limit number of results",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "description": "Offset for pagination",
+                        "name": "offset",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FuturesContractNamingSearchResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contract-naming/suggestions": {
+            "get": {
+                "description": "Returns autocomplete suggestions for a given field and prefix.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get autocomplete suggestions",
+                "operationId": "getContractNamingSuggestions",
+                "parameters": [
+                    {
+                        "description": "Field to get suggestions for (asset_class, exchange, product_group, product_name)",
+                        "name": "field",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Prefix to search for",
+                        "name": "prefix",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FuturesContractNamingSuggestionsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contract-naming/unique": {
+            "get": {
+                "description": "Returns unique values for specified field or all fields.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get unique values for contract naming fields",
+                "operationId": "getContractNamingUniqueValues",
+                "parameters": [
+                    {
+                        "description": "Field to get unique values for (asset_class, cleared_as, exchange, product_group, all)",
+                        "name": "field",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FuturesContractNamingUniqueValuesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contracts/all": {
+            "get": {
+                "description": "Retrieves all available futures contracts (security type = FUT).",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get all futures contracts",
+                "operationId": "getAllFuturesContracts",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ContractsSearchResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contracts/asset/{asset}": {
+            "get": {
+                "description": "Retrieves all contracts (both futures and options) for a specific underlying asset.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get contracts by asset",
+                "operationId": "getContractsByAsset",
+                "parameters": [
+                    {
+                        "description": "The underlying asset symbol (e.g., \"ES\", \"CL\", \"GC\")",
+                        "name": "asset",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ContractsByAssetResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contracts/asset/{asset}/futures": {
+            "get": {
+                "description": "Retrieves only futures contracts (security type = FUT) for a specific underlying asset.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get futures contracts by asset",
+                "operationId": "getFuturesByAsset",
+                "parameters": [
+                    {
+                        "description": "The underlying asset symbol (e.g., \"ES\", \"CL\", \"GC\")",
+                        "name": "asset",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ContractsByAssetResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contracts/asset/{asset}/options": {
+            "get": {
+                "description": "Retrieves only options on futures contracts (security type = OOF) for a specific underlying asset.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get options contracts by asset",
+                "operationId": "getOptionsByAsset",
+                "parameters": [
+                    {
+                        "description": "The underlying asset symbol (e.g., \"ES\", \"CL\", \"GC\")",
+                        "name": "asset",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ContractsByAssetResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contracts/id/{symbol}": {
+            "get": {
+                "description": "Retrieves the instrument ID for a given futures contract symbol.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Contract ID by symbol",
+                "operationId": "getContractIDBySymbol",
+                "parameters": [
+                    {
+                        "description": "The futures contract symbol (e.g., \"ESZ3\", \"CLF4\")",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ContractIDResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/contracts/search": {
+            "get": {
+                "description": "Searches for futures contracts based on various criteria including asset, security type, and instrument class.\nAt least one search criterion must be provided.\n\nNote: When searching by instrumentClass alone, securityType is required. However, instrumentClass\nfiltering is supported in all search combinations and will be applied as a post-filter when necessary.",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Search futures contracts",
+                "operationId": "searchFuturesContracts",
+                "parameters": [
+                    {
+                        "description": "Filter by underlying asset (e.g., \"ES\", \"CL\", \"GC\")",
+                        "name": "asset",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by security type (\"FUT\" for futures, \"OOF\" for options on futures)",
+                        "name": "securityType",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by instrument class (e.g., \"F\" for futures, \"S\" for spreads, \"C\" for calls, \"P\" for puts)",
+                        "name": "instrumentClass",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Alias for instrumentClass (for backward compatibility)",
+                        "name": "InstrumentClass",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ContractsSearchResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/last-trade": {
+            "get": {
+                "tags": [
+                    "futuresFunctionsHandler"
+                ],
+                "summary": "Last trade",
+                "operationId": "fetchFuturesLastTrade",
+                "parameters": [
+                    {
+                        "description": "The asset of the futures contract",
+                        "name": "asset",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The raw symbol of the futures contract",
+                        "name": "raw_symbol",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FetchFuturesLastTradeResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/ohlcv": {
+            "get": {
+                "tags": [
+                    "futuresFunctionsHandler"
+                ],
+                "summary": "OHLCV",
+                "operationId": "fetchFuturesOHLCV",
+                "parameters": [
+                    {
+                        "description": "The asset of the futures contract",
+                        "name": "asset",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The raw symbol of the futures contract",
+                        "name": "raw_symbol",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start date of the trades",
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end date of the trades",
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The interval of the trades",
+                        "name": "interval",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The limit of the trades",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FetchFuturesOHLCVResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/options/all": {
+            "get": {
+                "description": "Retrieves all available options on futures contracts (security type = OOF).",
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Get all options on futures",
+                "operationId": "getAllOptionsOnFutures",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ContractsSearchResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/futures/trades": {
+            "get": {
+                "tags": [
+                    "futuresFunctionsHandler"
+                ],
+                "summary": "Futures trades",
+                "operationId": "fetchFuturesTrades",
+                "parameters": [
+                    {
+                        "description": "The asset of the futures contract",
+                        "name": "asset",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The raw symbol of the futures contract",
+                        "name": "raw_symbol",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start date of the trades",
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end date of the trades",
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The limit of the trades",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FetchFuturesTradesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
                         "$ref": "#/components/responses/ErrorResponse"
                     },
                     "500": {
@@ -2542,6 +3140,36 @@
                     }
                 }
             },
+            "ContractIDResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ContractIDResponse"
+                        }
+                    }
+                }
+            },
+            "ContractsByAssetResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ContractsByAssetResponse"
+                        }
+                    }
+                }
+            },
+            "ContractsSearchResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ContractsSearchResponse"
+                        }
+                    }
+                }
+            },
             "CreateAPIKeyResponse": {
                 "description": "",
                 "content": {
@@ -2711,6 +3339,52 @@
                     }
                 }
             },
+            "FetchContractNamingResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/FetchContractNamingResponse"
+                        }
+                    }
+                }
+            },
+            "FetchFuturesLastTradeResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/FuturesTrade"
+                        }
+                    }
+                }
+            },
+            "FetchFuturesOHLCVResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/FuturesOHLCV"
+                            }
+                        }
+                    }
+                }
+            },
+            "FetchFuturesTradesResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/FuturesTrade"
+                            }
+                        }
+                    }
+                }
+            },
             "FibonacciCarmiliaResponse": {
                 "description": "",
                 "content": {
@@ -2764,6 +3438,76 @@
                     }
                 }
             },
+            "FuturesContractNamingSearchResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/FuturesContractNamingSearchResponse"
+                        }
+                    }
+                }
+            },
+            "FuturesContractNamingSuggestionsResponse": {
+                "description": "",
+                "headers": {
+                    "suggestions": {
+                        "description": "The suggestions for the given field and prefix",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "simple"
+                    }
+                }
+            },
+            "FuturesContractNamingUniqueValuesResponse": {
+                "description": "",
+                "headers": {
+                    "asset_class": {
+                        "description": "Unique asset classes",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "simple"
+                    },
+                    "cleared_as": {
+                        "description": "Unique cleared as values",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "simple"
+                    },
+                    "exchange": {
+                        "description": "Unique exchanges",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "simple"
+                    },
+                    "product_group": {
+                        "description": "Unique product groups",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "simple"
+                    }
+                }
+            },
             "FuturesDataResponse": {
                 "description": "",
                 "content": {
@@ -2786,6 +3530,16 @@
                             "items": {
                                 "$ref": "#/components/schemas/G7EventsData"
                             }
+                        }
+                    }
+                }
+            },
+            "GetContractByCodeResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/GetContractByCodeResponse"
                         }
                     }
                 }
@@ -3319,6 +4073,156 @@
                         "type": "string",
                         "x-go-name": "Ticker",
                         "example": "AAPL"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "ContractIDResponse": {
+                "type": "object",
+                "properties": {
+                    "instrumentId": {
+                        "description": "The instrument ID for the contract",
+                        "type": "string",
+                        "x-go-name": "InstrumentID",
+                        "example": "42258567"
+                    },
+                    "symbol": {
+                        "description": "The contract symbol that was searched",
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "4EU"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "ContractInfo": {
+                "type": "object",
+                "title": "ContractInfo represents parsed contract information from a Redis key.",
+                "properties": {
+                    "asset": {
+                        "type": "string",
+                        "x-go-name": "Asset",
+                        "example": "4EUM5"
+                    },
+                    "expiration": {
+                        "type": "string",
+                        "x-go-name": "Expiration",
+                        "example": "1751032800000000000"
+                    },
+                    "instrumentClass": {
+                        "type": "string",
+                        "x-go-name": "InstrumentClass",
+                        "example": "P"
+                    },
+                    "instrumentId": {
+                        "type": "string",
+                        "x-go-name": "InstrumentID",
+                        "example": "4EU"
+                    },
+                    "key": {
+                        "type": "string",
+                        "x-go-name": "Key",
+                        "example": "00#4EU#4EUM5 P1147#07472922436854775807"
+                    },
+                    "rawSymbol": {
+                        "type": "string",
+                        "x-go-name": "RawSymbol",
+                        "example": "4EUM5 P1147"
+                    },
+                    "securityType": {
+                        "type": "string",
+                        "x-go-name": "SecurityType",
+                        "example": "OOF"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "ContractNaming": {
+                "type": "object",
+                "properties": {
+                    "asset_class": {
+                        "type": "string",
+                        "x-go-name": "AssetClass",
+                        "example": "futures"
+                    },
+                    "cleared_as": {
+                        "type": "string",
+                        "x-go-name": "ClearedAs",
+                        "example": "cleared"
+                    },
+                    "exchange": {
+                        "type": "string",
+                        "x-go-name": "Exchange",
+                        "example": "CME"
+                    },
+                    "product_group": {
+                        "type": "string",
+                        "x-go-name": "ProductGroup",
+                        "example": "futures"
+                    },
+                    "product_name": {
+                        "type": "string",
+                        "x-go-name": "ProductName",
+                        "example": "E-Mini S&P 500"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "4EU"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "ContractsByAssetResponse": {
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "description": "The asset that was searched",
+                        "type": "string",
+                        "x-go-name": "Asset",
+                        "example": "4EU"
+                    },
+                    "contracts": {
+                        "description": "The matching contracts",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ContractInfo"
+                        },
+                        "x-go-name": "Contracts"
+                    },
+                    "count": {
+                        "description": "Number of contracts found",
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Count",
+                        "example": 1
+                    },
+                    "type": {
+                        "description": "Type of contracts (only included for futures/options specific endpoints)",
+                        "type": "string",
+                        "x-go-name": "Type",
+                        "example": "futures"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "ContractsSearchResponse": {
+                "type": "object",
+                "properties": {
+                    "contracts": {
+                        "description": "The matching contracts",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ContractInfo"
+                        },
+                        "x-go-name": "Contracts"
+                    },
+                    "count": {
+                        "description": "Number of contracts found",
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Count",
+                        "example": 1
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -3980,6 +4884,20 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "FetchContractNamingResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "description": "The contract naming data mapped by row key",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ContractNaming"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "FetchWatchlistDataRequest": {
                 "type": "object",
                 "required": [
@@ -4400,6 +5318,122 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "FuturesContractNamingSearchResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "description": "The matching contract naming data",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ContractNaming"
+                        },
+                        "x-go-name": "Data"
+                    },
+                    "total": {
+                        "description": "Total number of results found",
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Total"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "FuturesOHLCV": {
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "type": "string",
+                        "x-go-name": "Asset",
+                        "example": "4EU"
+                    },
+                    "close": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Close",
+                        "example": 0.0015
+                    },
+                    "expiration": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "Expiration",
+                        "example": 1751032800000000000
+                    },
+                    "frequency": {
+                        "type": "string",
+                        "x-go-name": "Frequency",
+                        "example": "1h"
+                    },
+                    "high": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "High",
+                        "example": 0.0015
+                    },
+                    "instrument_class": {
+                        "type": "string",
+                        "x-go-name": "InstrumentClass",
+                        "example": "P"
+                    },
+                    "instrument_id": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "InstrumentID",
+                        "example": 42258567
+                    },
+                    "low": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Low",
+                        "example": 0.0015
+                    },
+                    "open": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Open",
+                        "example": 0.0015
+                    },
+                    "publisher_id": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "PublisherID",
+                        "example": 1
+                    },
+                    "raw_symbol": {
+                        "type": "string",
+                        "x-go-name": "RawSymbol",
+                        "example": "4EUM5 P1147"
+                    },
+                    "row_key": {
+                        "type": "string",
+                        "x-go-name": "RowKey",
+                        "example": "00#4EU#4EUM5 P1147#07472922436854775807"
+                    },
+                    "security_type": {
+                        "type": "string",
+                        "x-go-name": "SecurityType",
+                        "example": "OOF"
+                    },
+                    "strike_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "StrikePrice",
+                        "example": 0
+                    },
+                    "ts_event": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "TsEvent",
+                        "example": 1750449600000000000
+                    },
+                    "volume": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "Volume",
+                        "example": 1
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "FuturesRowData": {
                 "type": "object",
                 "properties": {
@@ -4457,6 +5491,95 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "FuturesTrade": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "type": "string",
+                        "x-go-name": "Action",
+                        "example": "T"
+                    },
+                    "asset": {
+                        "type": "string",
+                        "x-go-name": "Asset",
+                        "example": "EW2"
+                    },
+                    "expiration": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "Expiration",
+                        "example": 1752264000000000000
+                    },
+                    "instrument_class": {
+                        "type": "string",
+                        "x-go-name": "InstrumentClass",
+                        "example": "P"
+                    },
+                    "instrument_id": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "InstrumentID",
+                        "example": 42559206
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Price",
+                        "example": 14.75
+                    },
+                    "publisher_id": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "PublisherID",
+                        "example": 1
+                    },
+                    "raw_symbol": {
+                        "type": "string",
+                        "x-go-name": "RawSymbol",
+                        "example": "EW2N5 P5550"
+                    },
+                    "row_key": {
+                        "type": "string",
+                        "x-go-name": "RowKey",
+                        "example": "01#EW2#EW2N5 P5550"
+                    },
+                    "security_type": {
+                        "type": "string",
+                        "x-go-name": "SecurityType",
+                        "example": "OOF"
+                    },
+                    "sequence": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "Sequence",
+                        "example": 865950674
+                    },
+                    "side": {
+                        "type": "string",
+                        "x-go-name": "Side",
+                        "example": "B"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "Size",
+                        "example": 1
+                    },
+                    "strike_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "StrikePrice",
+                        "example": 0.000006
+                    },
+                    "ts_event": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "TsEvent",
+                        "example": 1750452046257253400
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "G7EventsData": {
                 "type": "object",
                 "properties": {
@@ -4496,6 +5619,15 @@
                         "type": "string",
                         "x-go-name": "Unit",
                         "example": "%"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "GetContractByCodeResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ContractNaming"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
