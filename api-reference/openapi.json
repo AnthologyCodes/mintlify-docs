@@ -1159,6 +1159,22 @@
                             "type": "integer",
                             "default": 0
                         }
+                    },
+                    {
+                        "description": "Sort results by field",
+                        "name": "sort",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "relevance",
+                                "product_name",
+                                "asset_class",
+                                "exchange",
+                                "product_group"
+                            ],
+                            "default": "relevance"
+                        }
                     }
                 ],
                 "responses": {
@@ -1425,6 +1441,21 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Sort results by field",
+                        "name": "sort",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "securityType",
+                                "instrumentClass",
+                                "rawSymbol",
+                                "expiration"
+                            ],
+                            "default": "relevance"
                         }
                     }
                 ],
@@ -4720,6 +4751,11 @@
                         "type": "string",
                         "x-go-name": "Symbol",
                         "example": "CUK"
+                    },
+                    "time": {
+                        "type": "string",
+                        "x-go-name": "Time",
+                        "example": "bmp"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -5353,10 +5389,9 @@
                         "example": 0.0015
                     },
                     "expiration": {
-                        "type": "integer",
-                        "format": "uint64",
+                        "type": "string",
                         "x-go-name": "Expiration",
-                        "example": 1751032800000000000
+                        "example": "2025-01-27"
                     },
                     "frequency": {
                         "type": "string",
@@ -5420,10 +5455,9 @@
                         "example": 0
                     },
                     "ts_event": {
-                        "type": "integer",
-                        "format": "uint64",
+                        "type": "string",
                         "x-go-name": "TsEvent",
-                        "example": 1750449600000000000
+                        "example": "2025-01-27 15:04:05"
                     },
                     "volume": {
                         "type": "integer",
@@ -5505,10 +5539,9 @@
                         "example": "EW2"
                     },
                     "expiration": {
-                        "type": "integer",
-                        "format": "uint64",
+                        "type": "string",
                         "x-go-name": "Expiration",
-                        "example": 1752264000000000000
+                        "example": "2025-01-27"
                     },
                     "instrument_class": {
                         "type": "string",
@@ -5572,10 +5605,9 @@
                         "example": 0.000006
                     },
                     "ts_event": {
-                        "type": "integer",
-                        "format": "uint64",
+                        "type": "string",
                         "x-go-name": "TsEvent",
-                        "example": 1750452046257253400
+                        "example": "2025-01-27 15:04:05"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
