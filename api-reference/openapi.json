@@ -1444,7 +1444,7 @@
         "/futures/last-trade": {
             "get": {
                 "tags": [
-                    "futuresFunctionsHandler"
+                    "futures"
                 ],
                 "summary": "Last trade",
                 "operationId": "fetchFuturesLastTrade",
@@ -1487,7 +1487,7 @@
         "/futures/ohlcv": {
             "get": {
                 "tags": [
-                    "futuresFunctionsHandler"
+                    "futures"
                 ],
                 "summary": "OHLCV",
                 "operationId": "fetchFuturesOHLCV",
@@ -1583,7 +1583,7 @@
         "/futures/trades": {
             "get": {
                 "tags": [
-                    "futuresFunctionsHandler"
+                    "futures"
                 ],
                 "summary": "Futures trades",
                 "operationId": "fetchFuturesTrades",
