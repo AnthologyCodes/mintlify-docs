@@ -4275,47 +4275,6 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "CurrentDayInfo": {
-                "type": "object",
-                "properties": {
-                    "close": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Close"
-                    },
-                    "high": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "High"
-                    },
-                    "low": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Low"
-                    },
-                    "open": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Open"
-                    },
-                    "todays_change": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "TodaysChange"
-                    },
-                    "todays_change_perc": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "TodaysChangePerc"
-                    },
-                    "volume": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Volume"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "CurrentPrice": {
                 "type": "object",
                 "properties": {
@@ -4852,11 +4811,6 @@
                         "type": "number",
                         "format": "double",
                         "x-go-name": "LowestPrice"
-                    },
-                    "market_cap": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "MarketCap"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -7228,9 +7182,6 @@
                         "format": "double",
                         "x-go-name": "AverageCost"
                     },
-                    "current_day_info": {
-                        "$ref": "#/components/schemas/CurrentDayInfo"
-                    },
                     "current_price": {
                         "type": "number",
                         "format": "double",
@@ -7248,10 +7199,6 @@
                     },
                     "extra_info": {
                         "$ref": "#/components/schemas/ExtraInfo"
-                    },
-                    "full_name": {
-                        "type": "string",
-                        "x-go-name": "FullName"
                     },
                     "historical_data": {
                         "type": "array",
