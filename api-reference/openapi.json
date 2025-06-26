@@ -2389,7 +2389,7 @@
                 "operationId": "getHistoricalOptionsData",
                 "parameters": [
                     {
-                        "description": "The options contract ticker (e.g., AAPL 240119C00150000)",
+                        "description": "The options contract ticker (e.g., O:AAPL240119C00150000)",
                         "name": "ticker",
                         "in": "path",
                         "required": true,
@@ -2424,9 +2424,22 @@
                             "enum": [
                                 "minute",
                                 "hour",
-                                "day"
+                                "day",
+                                "week",
+                                "month",
+                                "quarter",
+                                "year"
                             ],
                             "default": "day"
+                        }
+                    },
+                    {
+                        "description": "Time multiplier for the interval (e.g., 5 for 5-minute bars)",
+                        "name": "time_break",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
                         }
                     }
                 ],
