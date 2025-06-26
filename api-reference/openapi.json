@@ -3481,16 +3481,11 @@
             },
             "FuturesContractNamingSuggestionsResponse": {
                 "description": "",
-                "headers": {
-                    "suggestions": {
-                        "description": "The suggestions for the given field and prefix",
+                "content": {
+                    "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "simple"
+                            "$ref": "#/components/schemas/FuturesContractNamingSuggestionsResponse"
+                        }
                     }
                 }
             },
@@ -5317,6 +5312,39 @@
                         "type": "integer",
                         "format": "int64",
                         "x-go-name": "Total"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "FuturesContractNamingSuggestionsResponse": {
+                "type": "object",
+                "properties": {
+                    "suggestions": {
+                        "description": "The suggestions for the given field and prefix",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Suggestions",
+                        "example": [
+                            "4EU",
+                            "4EUM5",
+                            "4EUM6",
+                            "4EUM7",
+                            "4EUM8",
+                            "4EUM9",
+                            "4EUM10",
+                            "4EUM11",
+                            "4EUM12",
+                            "4EUM13",
+                            "4EUM14",
+                            "4EUM15",
+                            "4EUM16",
+                            "4EUM17",
+                            "4EUM18",
+                            "4EUM19",
+                            "4EUM20"
+                        ]
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
