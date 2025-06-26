@@ -3491,46 +3491,11 @@
             },
             "FuturesContractNamingUniqueValuesResponse": {
                 "description": "",
-                "headers": {
-                    "asset_class": {
-                        "description": "Unique asset classes",
+                "content": {
+                    "application/json": {
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "simple"
-                    },
-                    "cleared_as": {
-                        "description": "Unique cleared as values",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "simple"
-                    },
-                    "exchange": {
-                        "description": "Unique exchanges",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "simple"
-                    },
-                    "product_group": {
-                        "description": "Unique product groups",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "simple"
+                            "$ref": "#/components/schemas/FuturesContractNamingUniqueValuesResponse"
+                        }
                     }
                 }
             },
@@ -5345,6 +5310,44 @@
                             "4EUM19",
                             "4EUM20"
                         ]
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "FuturesContractNamingUniqueValuesResponse": {
+                "type": "object",
+                "properties": {
+                    "asset_class": {
+                        "description": "Unique asset classes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "AssetClass"
+                    },
+                    "cleared_as": {
+                        "description": "Unique cleared as values",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "ClearedAs"
+                    },
+                    "exchange": {
+                        "description": "Unique exchanges",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Exchange"
+                    },
+                    "product_group": {
+                        "description": "Unique product groups",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "ProductGroup"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
