@@ -1057,7 +1057,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Fetch all futures contract naming data",
+                "summary": "All futures contract naming data",
                 "operationId": "fetchContractNaming",
                 "responses": {
                     "200": {
@@ -1075,7 +1075,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Get a specific futures contract by its code",
+                "summary": "Contract by code",
                 "operationId": "getContractByCode",
                 "parameters": [
                     {
@@ -1196,7 +1196,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Get autocomplete suggestions",
+                "summary": "Autocomplete suggestions",
                 "operationId": "getContractNamingSuggestions",
                 "parameters": [
                     {
@@ -1236,7 +1236,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Get unique values for contract naming fields",
+                "summary": "Unique values for contract naming fields",
                 "operationId": "getContractNamingUniqueValues",
                 "parameters": [
                     {
@@ -1268,7 +1268,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Get all futures contracts",
+                "summary": "All futures contracts",
                 "operationId": "getAllFuturesContracts",
                 "responses": {
                     "200": {
@@ -1286,7 +1286,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Get contracts by asset",
+                "summary": "Contracts by asset",
                 "operationId": "getContractsByAsset",
                 "parameters": [
                     {
@@ -1315,7 +1315,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Get futures contracts by asset",
+                "summary": "Futures contracts by asset",
                 "operationId": "getFuturesByAsset",
                 "parameters": [
                     {
@@ -1344,7 +1344,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Get options contracts by asset",
+                "summary": "Options contracts by asset",
                 "operationId": "getOptionsByAsset",
                 "parameters": [
                     {
@@ -1599,7 +1599,7 @@
                 "tags": [
                     "futures"
                 ],
-                "summary": "Get all options on futures",
+                "summary": "All options on futures",
                 "operationId": "getAllOptionsOnFutures",
                 "responses": {
                     "200": {
