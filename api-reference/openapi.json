@@ -6275,10 +6275,41 @@
                     "best_performer": {
                         "$ref": "#/components/schemas/PerformerInfo"
                     },
+                    "cagr": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "CAGR"
+                    },
+                    "calmar_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "CalmarRatio"
+                    },
+                    "conditional_value_at_risk_95": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "ConditionalValueAtRisk95"
+                    },
+                    "correlation_matrix": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "number",
+                                "format": "double"
+                            }
+                        },
+                        "x-go-name": "CorrelationMatrix"
+                    },
                     "daily_standard_deviation": {
                         "type": "number",
                         "format": "double",
                         "x-go-name": "StandardDeviation"
+                    },
+                    "max_drawdown": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MaxDrawdown"
                     },
                     "other_performers": {
                         "type": "array",
@@ -6286,6 +6317,21 @@
                             "$ref": "#/components/schemas/PerformerInfo"
                         },
                         "x-go-name": "OtherPerformers"
+                    },
+                    "portfolio_beta": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PortfolioBeta"
+                    },
+                    "sharpe_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "SharpeRatio"
+                    },
+                    "sortino_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "SortinoRatio"
                     },
                     "total_daily_gain": {
                         "type": "number",
@@ -6311,6 +6357,16 @@
                         "type": "number",
                         "format": "double",
                         "x-go-name": "TotalValue"
+                    },
+                    "treynor_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "TreynorRatio"
+                    },
+                    "value_at_risk_95": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "ValueAtRisk95"
                     },
                     "volatility": {
                         "type": "number",
