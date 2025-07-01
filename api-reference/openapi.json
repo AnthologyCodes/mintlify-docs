@@ -6290,6 +6290,11 @@
                         "format": "double",
                         "x-go-name": "ConditionalValueAtRisk95"
                     },
+                    "conditional_value_at_risk_99": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "ConditionalValueAtRisk99"
+                    },
                     "correlation_matrix": {
                         "type": "object",
                         "additionalProperties": {
@@ -6305,6 +6310,16 @@
                         "type": "number",
                         "format": "double",
                         "x-go-name": "StandardDeviation"
+                    },
+                    "hhi": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "HHI"
+                    },
+                    "information_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "InformationRatio"
                     },
                     "max_drawdown": {
                         "type": "number",
@@ -6332,6 +6347,14 @@
                         "type": "number",
                         "format": "double",
                         "x-go-name": "SortinoRatio"
+                    },
+                    "time_windowed_returns": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "x-go-name": "TimeWindowedReturns"
                     },
                     "total_daily_gain": {
                         "type": "number",
@@ -6367,6 +6390,11 @@
                         "type": "number",
                         "format": "double",
                         "x-go-name": "ValueAtRisk95"
+                    },
+                    "value_at_risk_99": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "ValueAtRisk99"
                     },
                     "volatility": {
                         "type": "number",
