@@ -3088,7 +3088,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/SearchResponse"
+                        "$ref": "#/components/responses/SearchNewsResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -4106,6 +4106,39 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/ScreenResponse"
+                        }
+                    }
+                }
+            },
+            "SearchNewsResponse": {
+                "description": "SearchNewsResponse is the response for the news search endpoint.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "x-go-name": "Count"
+                                },
+                                "metadata": {
+                                    "$ref": "#/components/schemas/SearchMetadata"
+                                },
+                                "query": {
+                                    "$ref": "#/components/schemas/SearchQuery"
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SearchNewsResult"
+                                    },
+                                    "x-go-name": "Results"
+                                },
+                                "suggestions": {
+                                    "$ref": "#/components/schemas/SearchSuggestions"
+                                }
+                            }
                         }
                     }
                 }
@@ -7275,6 +7308,154 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "SearchMetadata": {
+                "type": "object",
+                "properties": {
+                    "search_duration_ms": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "SearchDurationMs"
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "x-go-name": "Timestamp"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "SearchNewsResult": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "x-go-name": "Id"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "x-go-name": "ImageURL"
+                    },
+                    "market_impact_score": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MarketImpact"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "x-go-name": "PublishedAt"
+                    },
+                    "sentiment_label": {
+                        "type": "string",
+                        "x-go-name": "SentimentLabel"
+                    },
+                    "sentiment_score": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "SentimentScore"
+                    },
+                    "source": {
+                        "type": "string",
+                        "x-go-name": "Source"
+                    },
+                    "summary": {
+                        "type": "string",
+                        "x-go-name": "Summary"
+                    },
+                    "themes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Themes"
+                    },
+                    "tickers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Tickers"
+                    },
+                    "title": {
+                        "type": "string",
+                        "x-go-name": "Title"
+                    },
+                    "url": {
+                        "type": "string",
+                        "x-go-name": "URL"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "SearchQuery": {
+                "type": "object",
+                "properties": {
+                    "end_date": {
+                        "type": "string",
+                        "x-go-name": "EndDate"
+                    },
+                    "field": {
+                        "type": "string",
+                        "x-go-name": "Field"
+                    },
+                    "filter_market_impact_max": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "FilterMarketImpactMax"
+                    },
+                    "filter_market_impact_min": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "FilterMarketImpactMin"
+                    },
+                    "filter_sentiment_label": {
+                        "type": "string",
+                        "x-go-name": "FilterSentimentLabel"
+                    },
+                    "filter_sentiment_score_max": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "FilterSentimentScoreMax"
+                    },
+                    "filter_sentiment_score_min": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "FilterSentimentScoreMin"
+                    },
+                    "filter_source": {
+                        "type": "string",
+                        "x-go-name": "FilterSource"
+                    },
+                    "filter_themes": {
+                        "type": "string",
+                        "x-go-name": "FilterThemes"
+                    },
+                    "filter_tickers": {
+                        "type": "string",
+                        "x-go-name": "FilterTickers"
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Limit"
+                    },
+                    "mode": {
+                        "type": "string",
+                        "x-go-name": "Mode"
+                    },
+                    "source_fuzzy_match": {
+                        "type": "boolean",
+                        "x-go-name": "SourceFuzzyMatch"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "x-go-name": "StartDate"
+                    },
+                    "term": {
+                        "type": "string",
+                        "x-go-name": "Term"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "SearchResponse": {
                 "type": "object",
                 "properties": {
@@ -7294,6 +7475,20 @@
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
             "SearchResultItem": {
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "SearchSuggestions": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "x-go-name": "Message"
+                    },
+                    "try_mode": {
+                        "type": "string",
+                        "x-go-name": "TryMode"
+                    }
+                },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
             "SkeletonNewsArticle": {
