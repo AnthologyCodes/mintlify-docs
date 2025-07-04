@@ -540,6 +540,69 @@
                 }
             }
         },
+        "/dividends-calendar": {
+            "get": {
+                "description": "Retrieves dividends calendar data for the upcoming week from the cache.",
+                "tags": [
+                    "events"
+                ],
+                "summary": "Dividends calendar",
+                "operationId": "getDividendsCalendarNextWeek",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DividendsCalendarResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/dividends/{symbol}": {
+            "get": {
+                "description": "Dividends for a single symbol.",
+                "tags": [
+                    "fundamentals"
+                ],
+                "summary": "Dividends",
+                "operationId": "getDividends",
+                "parameters": [
+                    {
+                        "description": "The symbol to fetch",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start date",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end date",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DividendsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/earnings": {
             "get": {
                 "description": "Retrieves earnings data for the upcoming week from the cache.",
@@ -1981,6 +2044,24 @@
                 }
             }
         },
+        "/news/metadata/filters": {
+            "get": {
+                "description": "Returns available filter values for news articles including sources, tickers, themes, and sentiment labels.",
+                "tags": [
+                    "news"
+                ],
+                "summary": "Get available news metadata filters",
+                "operationId": "getNewsMetadataFilters",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/NewsMetadataFiltersResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/news/sentiment/{ticker}": {
             "get": {
                 "description": "Retrieves sentiment scores for a ticker over the past 30 days.",
@@ -2556,6 +2637,124 @@
                 }
             }
         },
+        "/revenue-segmentation/geographic/{symbol}": {
+            "get": {
+                "description": "Revenue geographic segmentation data for a single symbol.",
+                "tags": [
+                    "fundamentals"
+                ],
+                "summary": "Revenue Geographic Segmentation",
+                "operationId": "getRevenueGeographicSegmentation",
+                "parameters": [
+                    {
+                        "description": "The symbol to fetch",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start date",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end date",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The period type (FY for annual, Q for quarters, or ALL for all periods)",
+                        "name": "period",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "[FY",
+                                "Q",
+                                "ALL]"
+                            ],
+                            "default": "ALL"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RevenueSegmentationResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/revenue-segmentation/product/{symbol}": {
+            "get": {
+                "description": "Revenue product segmentation data for a single symbol.",
+                "tags": [
+                    "fundamentals"
+                ],
+                "summary": "Revenue Product Segmentation",
+                "operationId": "getRevenueProductSegmentation",
+                "parameters": [
+                    {
+                        "description": "The symbol to fetch",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start date",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end date",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The period type (FY for annual, Q for quarters, or ALL for all periods)",
+                        "name": "period",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "[FY",
+                                "Q",
+                                "ALL]"
+                            ],
+                            "default": "ALL"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RevenueSegmentationResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/risk-analysis-score": {
             "get": {
                 "description": "Retrieves the historical Risk Analysis Score data.",
@@ -2735,6 +2934,155 @@
                         "schema": {
                             "type": "integer",
                             "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SearchResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/search/news": {
+            "get": {
+                "description": "Searches for news articles based on a query term, field, mode, and limit.",
+                "tags": [
+                    "search"
+                ],
+                "summary": "News article search",
+                "operationId": "searchNewsParams",
+                "parameters": [
+                    {
+                        "description": "Search term (optional - if not provided, filters will be used)",
+                        "name": "q",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Field to search in (e.g., all, title, summary, analysis, tickers, themes, source, sentiment_label, url)",
+                        "name": "field",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "all"
+                        }
+                    },
+                    {
+                        "description": "Start date for the search range (YYYY-MM-DD)",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "End date for the search range (YYYY-MM-DD)",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "description": "Search mode (smart=intelligent multi-strategy search, fuzzy=flexible matching, and/strict=all words required, exact=phrase match, wildcard=contains with OR, or/any=any word matches, prefix=starts with, semantic-vector-search=AI-powered semantic search)",
+                        "name": "mode",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "smart"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of results to return",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 50
+                        }
+                    },
+                    {
+                        "description": "Minimum market impact score filter",
+                        "name": "filter_market_impact_min",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum market impact score filter",
+                        "name": "filter_market_impact_max",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Minimum sentiment score filter",
+                        "name": "filter_sentiment_score_min",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum sentiment score filter",
+                        "name": "filter_sentiment_score_max",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Comma-separated sentiment labels to filter by (e.g., positive,neutral)",
+                        "name": "filter_sentiment_label",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Comma-separated themes to filter by. Articles must contain at least one of the specified themes. URL encode & symbols as %26",
+                        "name": "filter_themes",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Comma-separated tickers to filter by. Articles must contain at least one of the specified tickers",
+                        "name": "filter_tickers",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Source/publisher to filter by (supports fuzzy matching for variations like \"Goldman Sachs\" vs \"GoldmanSachs\")",
+                        "name": "filter_source",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Enable fuzzy matching for source names (default: true)",
+                        "name": "source_fuzzy_match",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
                         }
                     }
                 ],
@@ -3294,6 +3642,32 @@
                     }
                 }
             },
+            "DividendsCalendarResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/DividendsCalendarData"
+                            }
+                        }
+                    }
+                }
+            },
+            "DividendsResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/DividendsData"
+                            }
+                        }
+                    }
+                }
+            },
             "EarningsResponse": {
                 "description": "",
                 "content": {
@@ -3640,6 +4014,16 @@
                     }
                 }
             },
+            "NewsMetadataFiltersResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/NewsMetadataFiltersResponse"
+                        }
+                    }
+                }
+            },
             "NewsResponse": {
                 "description": "",
                 "content": {
@@ -3688,6 +4072,19 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/components/schemas/RatingData"
+                            }
+                        }
+                    }
+                }
+            },
+            "RevenueSegmentationResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/RevenueSegmentationData"
                             }
                         }
                     }
@@ -3887,6 +4284,19 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "AgentScore": {
+                "type": "object",
+                "properties": {
+                    "field_scores": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FieldScore"
+                        },
+                        "x-go-name": "FieldScores"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "AggregatedData": {
                 "type": "object",
                 "title": "AggregatedData represents aggregated historical data.",
@@ -3930,32 +4340,6 @@
                         "format": "double",
                         "x-go-name": "Volume",
                         "example": 35423294
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "Analysis": {
-                "type": "object",
-                "properties": {
-                    "current_events_analysis": {
-                        "type": "string",
-                        "x-go-name": "CurrentEventsAnalysis",
-                        "example": "The current events landscape for 2025-06-18 is dominated by high-impact communications from the Federal Reserve, ..."
-                    },
-                    "news_analysis": {
-                        "type": "string",
-                        "x-go-name": "NewsAnalysis",
-                        "example": "The news summary for 2025-06-18 underscores a market environment characterized by uncertainty and a high potential for volatility, primarily driven by the scheduled FOMC monetary policy decision and Chair Powell's press conference..."
-                    },
-                    "overall_risk_analysis": {
-                        "type": "string",
-                        "x-go-name": "OverallRiskAnalysis",
-                        "example": "The overall market risk for 2025-06-18 is assessed as 75, placing it in the 'High Risk / Volatile' category..."
-                    },
-                    "price_data_analysis": {
-                        "type": "string",
-                        "x-go-name": "PriceDataAnalysis",
-                        "example": "No explicit price data (Dark Pools, Options, Treasuries, Tickers) was provided for 2025-06-18..."
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -4651,6 +5035,114 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "DividendsCalendarData": {
+                "type": "object",
+                "properties": {
+                    "adjDividend": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "AdjDividend",
+                        "example": 0.62395
+                    },
+                    "date": {
+                        "type": "string",
+                        "x-go-name": "Date",
+                        "example": "2025-07-01"
+                    },
+                    "declarationDate": {
+                        "type": "string",
+                        "x-go-name": "DeclarationDate",
+                        "example": "2025-04-17"
+                    },
+                    "dividend": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Dividend",
+                        "example": 0.62395
+                    },
+                    "frequency": {
+                        "type": "string",
+                        "x-go-name": "Frequency",
+                        "example": "Quarterly"
+                    },
+                    "paymentDate": {
+                        "type": "string",
+                        "x-go-name": "PaymentDate",
+                        "example": "2025-07-15"
+                    },
+                    "recordDate": {
+                        "type": "string",
+                        "x-go-name": "RecordDate",
+                        "example": "2025-07-01"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "DX-PC"
+                    },
+                    "yield": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Yield",
+                        "example": 7.517444139553116
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "DividendsData": {
+                "type": "object",
+                "properties": {
+                    "adjDividend": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "AdjDividend",
+                        "example": 0.000536
+                    },
+                    "date": {
+                        "type": "string",
+                        "x-go-name": "Date",
+                        "example": "2024-09-28"
+                    },
+                    "declarationDate": {
+                        "type": "string",
+                        "x-go-name": "DeclarationDate",
+                        "example": "2024-09-28"
+                    },
+                    "dividend": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Dividend",
+                        "example": 0.12
+                    },
+                    "frequency": {
+                        "type": "string",
+                        "x-go-name": "Frequency",
+                        "example": "Quarterly"
+                    },
+                    "paymentDate": {
+                        "type": "string",
+                        "x-go-name": "PaymentDate",
+                        "example": "2024-09-28"
+                    },
+                    "recordDate": {
+                        "type": "string",
+                        "x-go-name": "RecordDate",
+                        "example": "2024-09-28"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "AAPL"
+                    },
+                    "yield": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Yield",
+                        "example": 0.155844
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "EarningsData": {
                 "type": "object",
                 "properties": {
@@ -4891,6 +5383,24 @@
                         "format": "double",
                         "x-go-name": "Value",
                         "example": 204.871
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "FieldScore": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "x-go-name": "Name"
+                    },
+                    "reason": {
+                        "type": "string",
+                        "x-go-name": "Reason"
+                    },
+                    "score": {
+                        "type": "string",
+                        "x-go-name": "Score"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -6139,6 +6649,68 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "NewsMetadataFilter": {
+                "type": "object",
+                "title": "NewsMetadataFilter represents the structure for a single filter's metadata.",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Count"
+                    },
+                    "fuzzy_match": {
+                        "type": "boolean",
+                        "x-go-name": "FuzzyMatch"
+                    },
+                    "values": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Values"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "NewsMetadataFilters": {
+                "type": "object",
+                "title": "NewsMetadataFilters provides a structured way to represent all available filters.",
+                "properties": {
+                    "sentiment_labels": {
+                        "$ref": "#/components/schemas/NewsMetadataFilter"
+                    },
+                    "sources": {
+                        "$ref": "#/components/schemas/NewsMetadataFilter"
+                    },
+                    "themes": {
+                        "$ref": "#/components/schemas/NewsMetadataFilter"
+                    },
+                    "tickers": {
+                        "$ref": "#/components/schemas/NewsMetadataFilter"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "NewsMetadataFiltersResponse": {
+                "type": "object",
+                "title": "NewsMetadataFiltersResponse is the top-level response structure for the news metadata filters endpoint.",
+                "properties": {
+                    "filters": {
+                        "$ref": "#/components/schemas/NewsMetadataFilters"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "properties": {
+                            "description": {
+                                "type": "string",
+                                "x-go-name": "Description"
+                            }
+                        },
+                        "x-go-name": "Metadata"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "NewsResponse": {
                 "type": "object",
                 "properties": {
@@ -6568,6 +7140,44 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "RevenueSegmentationData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "x-go-name": "Data",
+                        "example": "{\"Mac\": 29984000000, \"Service\": 96169000000, ...}"
+                    },
+                    "date": {
+                        "type": "string",
+                        "x-go-name": "Date",
+                        "example": "2024-09-28"
+                    },
+                    "fiscalYear": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "FiscalYear",
+                        "example": 2024
+                    },
+                    "period": {
+                        "type": "string",
+                        "x-go-name": "Period",
+                        "example": "FY"
+                    },
+                    "reportedCurrency": {
+                        "type": "string",
+                        "x-go-name": "ReportedCurrency",
+                        "example": "USD"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "AAPL"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "RiskAnalysisScoreResponse": {
                 "type": "object",
                 "properties": {
@@ -6580,28 +7190,17 @@
             "RiskAnalysisScores": {
                 "type": "object",
                 "properties": {
-                    "analysis": {
-                        "$ref": "#/components/schemas/Analysis"
+                    "indexes_commodities_agent": {
+                        "$ref": "#/components/schemas/AgentScore"
                     },
-                    "current_events_risk_factors": {
-                        "type": "string",
-                        "x-go-name": "CurrentEventsRiskFactors",
-                        "example": "75"
+                    "institutional_trades_agent": {
+                        "$ref": "#/components/schemas/AgentScore"
                     },
-                    "news_risk_factor": {
-                        "type": "string",
-                        "x-go-name": "NewsRiskFactor",
-                        "example": "70"
+                    "macro_news_agent": {
+                        "$ref": "#/components/schemas/AgentScore"
                     },
-                    "overall_risk": {
-                        "type": "string",
-                        "x-go-name": "OverallRisk",
-                        "example": "75"
-                    },
-                    "price_movement_risk_factors": {
-                        "type": "string",
-                        "x-go-name": "PriceMovementRiskFactors",
-                        "example": "65"
+                    "summary_agent": {
+                        "$ref": "#/components/schemas/AgentScore"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
