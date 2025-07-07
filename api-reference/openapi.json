@@ -6720,6 +6720,9 @@
                     },
                     "tickers": {
                         "$ref": "#/components/schemas/NewsMetadataFilter"
+                    },
+                    "trending_tags": {
+                        "$ref": "#/components/schemas/NewsMetadataFilter"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
