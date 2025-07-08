@@ -7176,6 +7176,22 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "RelatedTicker": {
+                "type": "object",
+                "properties": {
+                    "companyName": {
+                        "type": "string",
+                        "x-go-name": "CompanyName",
+                        "example": "Apple Inc."
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "AAPL"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "RevenueSegmentationData": {
                 "type": "object",
                 "properties": {
@@ -7730,25 +7746,15 @@
             "TickerProfile": {
                 "type": "object",
                 "properties": {
-                    "active": {
-                        "type": "boolean",
-                        "x-go-name": "Active",
-                        "example": true
-                    },
-                    "cik": {
+                    "country": {
                         "type": "string",
-                        "x-go-name": "CIK",
-                        "example": "0000320193"
+                        "x-go-name": "Country",
+                        "example": "United States"
                     },
-                    "currency": {
+                    "exchange": {
                         "type": "string",
-                        "x-go-name": "Currency",
-                        "example": "usd"
-                    },
-                    "description": {
-                        "type": "string",
-                        "x-go-name": "Description",
-                        "example": "Apple is among the largest companies in the world, ...."
+                        "x-go-name": "Exchange",
+                        "example": "NASDAQ"
                     },
                     "future_earnings": {
                         "type": "array",
@@ -7763,56 +7769,78 @@
                             "2025-08-07"
                         ]
                     },
-                    "locale": {
+                    "image": {
                         "type": "string",
-                        "x-go-name": "Locale",
-                        "example": "us"
+                        "x-go-name": "Image",
+                        "example": "https://example.com/image.png"
                     },
-                    "market": {
+                    "industry": {
                         "type": "string",
-                        "x-go-name": "Market",
-                        "example": "stocks"
+                        "x-go-name": "Industry",
+                        "example": "Technology"
+                    },
+                    "is_actively_trading": {
+                        "type": "boolean",
+                        "x-go-name": "IsActivelyTrading",
+                        "example": true
+                    },
+                    "is_adr": {
+                        "type": "boolean",
+                        "x-go-name": "IsAdr",
+                        "example": true
+                    },
+                    "is_etf": {
+                        "type": "boolean",
+                        "x-go-name": "IsEtf",
+                        "example": true
+                    },
+                    "is_fund": {
+                        "type": "boolean",
+                        "x-go-name": "IsFund",
+                        "example": true
+                    },
+                    "market_cap": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MarketCap",
+                        "example": 14935826000
                     },
                     "name": {
                         "type": "string",
                         "x-go-name": "Name",
                         "example": "Apple Inc."
                     },
+                    "range": {
+                        "type": "string",
+                        "x-go-name": "Range",
+                        "example": "100-500"
+                    },
                     "related_tickers": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "$ref": "#/components/schemas/RelatedTicker"
                         },
                         "x-go-name": "RelatedTickers",
                         "example": [
-                            "MSFT",
-                            "GOOGL",
-                            "AMZN",
-                            "GOOG",
-                            "NVDA",
-                            "TSLA",
-                            "META",
-                            "NFLX",
-                            "DIS",
-                            "BRK.B"
+                            {
+                                "companyName": "Microsoft Corporation",
+                                "symbol": "MSFT"
+                            },
+                            {
+                                "companyName": "Alphabet Inc.",
+                                "symbol": "GOOGL"
+                            }
                         ]
                     },
-                    "share_class_shares_outstanding": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "ShareClassSharesOutstanding",
-                        "example": 0
+                    "sector": {
+                        "type": "string",
+                        "x-go-name": "Sector",
+                        "example": "Consumer Electronics"
                     },
                     "ticker": {
                         "type": "string",
                         "x-go-name": "Ticker",
                         "example": "AAPL"
-                    },
-                    "weighted_shares_outstanding": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "WeightedSharesOutstanding",
-                        "example": 14935826000
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
