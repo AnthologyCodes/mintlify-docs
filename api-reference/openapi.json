@@ -336,6 +336,54 @@
                 }
             }
         },
+        "/darkpool/daily/{ticker}": {
+            "get": {
+                "description": "Retrieves daily darkpool trend metrics for the specified ticker within the given date range.\nIf no dates are provided, defaults to the last 30 days.",
+                "tags": [
+                    "darkpool"
+                ],
+                "summary": "Ticker darkpool trends",
+                "operationId": "getDailyDarkpoolTrend",
+                "parameters": [
+                    {
+                        "description": "The ticker symbol to fetch trends for.",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date for fetching trends (YYYY-MM-DD).",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date for fetching trends (YYYY-MM-DD).",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DailyDarkpoolTrendResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/darkpools": {
             "get": {
                 "description": "Retrieves dark-pool trades in the requested date window with optional\nprice/size/value filters and consolidation.\nThe system uses a two-tier cache (ST for last 2 days, LT for last 60 days)\nand falls back to QuestDB when cache misses or filters don't match.\nCurrent price is attached in parallel.",
