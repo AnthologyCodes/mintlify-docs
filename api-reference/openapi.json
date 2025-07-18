@@ -1834,7 +1834,7 @@
         },
         "/historical-data/{ticker}": {
             "get": {
-                "description": "This will retrieve historical price data for the specified stock symbol, aggregated by the given period,\nwithin the specified start and end dates.",
+                "description": "This will retrieve historical price data for the specified stock symbol, aggregated by the given period,\nwithin the specified start and end dates. All prices are automatically adjusted for stock splits to ensure\nhistorical comparability with current prices.",
                 "tags": [
                     "historical-data"
                 ],
@@ -3334,7 +3334,7 @@
         },
         "/stock-splits/{ticker}": {
             "get": {
-                "description": "Retrieves the stock split history for a given ticker symbol from Bigtable.",
+                "description": "Retrieves the stock split history for a given ticker symbol from Redis cache.",
                 "tags": [
                     "stock-splits"
                 ],
