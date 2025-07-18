@@ -131,6 +131,24 @@
                 }
             }
         },
+        "/available-years": {
+            "get": {
+                "description": "Returns the years for which industry and sector mean data are available.",
+                "tags": [
+                    "industry-means"
+                ],
+                "summary": "Available Years",
+                "operationId": "getAvailableYears",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AvailableYearsResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/bigtable/chat/{rowKey}": {
             "get": {
                 "description": "Retrieves the chat history for the specified row key from BigTable.",
@@ -318,57 +336,9 @@
                 }
             }
         },
-        "/darkpool/daily/{ticker}": {
-            "get": {
-                "description": "Retrieves daily darkpool trend metrics for the specified ticker within the given date range.\nIf no dates are provided, defaults to the last 30 days.",
-                "tags": [
-                    "darkpool"
-                ],
-                "summary": "Ticker darkpool trends",
-                "operationId": "getDailyDarkpoolTrend",
-                "parameters": [
-                    {
-                        "description": "The ticker symbol to fetch trends for.",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for fetching trends (YYYY-MM-DD).",
-                        "name": "start_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "End date for fetching trends (YYYY-MM-DD).",
-                        "name": "end_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/DailyDarkpoolTrendResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/darkpools": {
             "get": {
-                "description": "Retrieves dark-pool trades in the requested date window with optional\nprice/size/value filters and consolidation.\nThe system uses a two-tier cache (ST for last 2 days, LT for last 60 days)\nand falls back to Bigtable when cache misses or filters don't match.\nCurrent price is attached in parallel.",
+                "description": "Retrieves dark-pool trades in the requested date window with optional\nprice/size/value filters and consolidation.\nThe system uses a two-tier cache (ST for last 2 days, LT for last 60 days)\nand falls back to QuestDB when cache misses or filters don't match.\nCurrent price is attached in parallel.",
                 "tags": [
                     "darkpool"
                 ],
@@ -376,8 +346,7 @@
                 "operationId": "getDarkpoolTrades",
                 "parameters": [
                     {
-                        "x-go-name": "Ticker",
-                        "description": "The stock ticker symbol",
+                        "description": "The ticker symbol to fetch trades for.",
                         "name": "ticker",
                         "in": "query",
                         "required": true,
@@ -386,8 +355,7 @@
                         }
                     },
                     {
-                        "x-go-name": "Start",
-                        "description": "Start date in YYYY-MM-DD format",
+                        "description": "Start date for fetching trades (YYYY-MM-DD).",
                         "name": "start",
                         "in": "query",
                         "required": true,
@@ -396,8 +364,7 @@
                         }
                     },
                     {
-                        "x-go-name": "End",
-                        "description": "End date in YYYY-MM-DD format",
+                        "description": "End date for fetching trades (YYYY-MM-DD).",
                         "name": "end",
                         "in": "query",
                         "required": true,
@@ -406,54 +373,43 @@
                         }
                     },
                     {
-                        "x-go-name": "Limit",
-                        "description": "Maximum number of trades to return",
+                        "description": "Maximum number of trades to return.",
                         "name": "limit",
                         "in": "query",
                         "schema": {
-                            "type": "integer",
-                            "format": "int64",
-                            "default": 1000
+                            "type": "integer"
                         }
                     },
                     {
-                        "x-go-name": "MinSize",
-                        "description": "Minimum trade size",
+                        "description": "Minimum size of trades to return.",
                         "name": "min_size",
                         "in": "query",
                         "schema": {
-                            "type": "integer",
-                            "format": "int64"
+                            "type": "integer"
                         }
                     },
                     {
-                        "x-go-name": "MaxSize",
-                        "description": "Maximum trade size",
+                        "description": "Maximum size of trades to return.",
                         "name": "max_size",
                         "in": "query",
                         "schema": {
-                            "type": "integer",
-                            "format": "int64"
+                            "type": "integer"
                         }
                     },
                     {
-                        "x-go-name": "MinPrice",
-                        "description": "Minimum trade price",
+                        "description": "Minimum price of trades to return.",
                         "name": "min_price",
                         "in": "query",
                         "schema": {
-                            "type": "number",
-                            "format": "double"
+                            "type": "number"
                         }
                     },
                     {
-                        "x-go-name": "MaxPrice",
-                        "description": "Maximum trade price",
+                        "description": "Maximum price of trades to return.",
                         "name": "max_price",
                         "in": "query",
                         "schema": {
-                            "type": "number",
-                            "format": "double"
+                            "type": "number"
                         }
                     },
                     {
@@ -475,61 +431,19 @@
                             "type": "number",
                             "format": "double"
                         }
+                    },
+                    {
+                        "description": "Consolidation interval",
+                        "name": "consolidation_interval",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/DarkpoolTradeResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/darkpools/daily-summary": {
-            "get": {
-                "description": "Retrieves a day-by-day breakdown of darkpool trades showing weighted average price,\ntotal daily trade value, and trade volume. Data is fetched directly from Bigtable\nas we need raw unconsolidated trades for accurate calculations.",
-                "tags": [
-                    "darkpool"
-                ],
-                "summary": "Ticker darkpool summary",
-                "operationId": "getDarkpoolDailySummary",
-                "parameters": [
-                    {
-                        "description": "The ticker symbol to fetch summary for",
-                        "name": "ticker",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The start date to fetch summary for",
-                        "name": "start",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The end date to fetch summary for",
-                        "name": "end",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/DarkpoolDailySummaryResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -682,6 +596,56 @@
                         "$ref": "#/components/responses/ErrorResponse"
                     },
                     "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/estimates": {
+            "get": {
+                "description": "Retrieves estimate data for multiple tickers, metrics, and financial periods.\nFinancial periods must be in format YYYY_Q[1-4] or YYYY_FY (e.g., 2025_Q1, 2025_FY).\nMetrics include standard estimates (EPS, SAL, etc.), price targets (PTG), and long-term growth (LTG).",
+                "tags": [
+                    "estimates"
+                ],
+                "summary": "Unified estimates endpoint",
+                "operationId": "getUnifiedEstimates",
+                "parameters": [
+                    {
+                        "description": "Comma-separated list of stock ticker symbols (e.g., \"AAPL,NVDA,META\").",
+                        "name": "tickers",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Comma-separated list of financial periods in format YYYY_Q[1-4] or YYYY_FY (e.g., \"2025_Q1,2025_Q2,2025_FY,2026_FY\").",
+                        "name": "financial_periods",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Comma-separated list of metrics to retrieve (e.g., \"EPS,SAL,ROE,PTG,LTG\").",
+                        "name": "metrics",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/MultiMetricEstimatesResponse"
+                    },
+                    "400": {
                         "$ref": "#/components/responses/ErrorResponse"
                     },
                     "500": {
@@ -1869,6 +1833,100 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/HistoricalDataResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/industry-means/{industry}/{year}/{period}": {
+            "get": {
+                "description": "Returns the calculated mean values for all financial metrics for a specific industry, year, and period.",
+                "tags": [
+                    "industry-means"
+                ],
+                "summary": "Industry Mean Data",
+                "operationId": "getIndustryMean",
+                "parameters": [
+                    {
+                        "description": "The industry name (e.g., \"Technology\", \"Healthcare\")",
+                        "name": "industry",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The year for the data",
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The period (FY, Q1, Q2, Q3, Q4)",
+                        "name": "period",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/IndustryMeanResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/industry-means/{year}/{period}": {
+            "get": {
+                "description": "Returns the calculated mean values for all industries for a specific year and period.",
+                "tags": [
+                    "industry-means"
+                ],
+                "summary": "All Industry Means",
+                "operationId": "getAllIndustryMeans",
+                "parameters": [
+                    {
+                        "description": "The year for the data",
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The period (FY, Q1, Q2, Q3, Q4)",
+                        "name": "period",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AllIndustryMeansResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -3099,6 +3157,100 @@
                 }
             }
         },
+        "/sector-means/{sector}/{year}/{period}": {
+            "get": {
+                "description": "Returns the calculated mean values for all financial metrics for a specific sector, year, and period.",
+                "tags": [
+                    "sector-means"
+                ],
+                "summary": "Sector Mean Data",
+                "operationId": "getSectorMean",
+                "parameters": [
+                    {
+                        "description": "The sector name (e.g., \"Technology\", \"Healthcare\")",
+                        "name": "sector",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The year for the data",
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The period (FY, Q1, Q2, Q3, Q4)",
+                        "name": "period",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SectorMeanResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/sector-means/{year}/{period}": {
+            "get": {
+                "description": "Returns the calculated mean values for all sectors for a specific year and period.",
+                "tags": [
+                    "sector-means"
+                ],
+                "summary": "All Sector Means",
+                "operationId": "getAllSectorMeans",
+                "parameters": [
+                    {
+                        "description": "The year for the data",
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The period (FY, Q1, Q2, Q3, Q4)",
+                        "name": "period",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AllSectorMeansResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/stock-screener/screen": {
             "post": {
                 "description": "Filters stocks based on the provided financial criteria and returns\nmatching ticker symbols. The screening is performed against historical\nfinancial data up to the specified cutoff date.",
@@ -3189,6 +3341,24 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/FibonacciCarmiliaResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/ticker-sectors": {
+            "get": {
+                "description": "Returns all tracked tickers and their sectors.",
+                "tags": [
+                    "tickers"
+                ],
+                "summary": "Ticker sectors",
+                "operationId": "GetTickerSectors",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TickerSectorsResponse"
                     },
                     "500": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -3367,6 +3537,79 @@
                 }
             }
         },
+        "/unusual-activities": {
+            "get": {
+                "description": "Retrieves unusual trading activities from QuestDB. These are options trades that exhibit\nunusual patterns such as large size relative to the 99th percentile for that ticker.",
+                "tags": [
+                    "unusual-activities"
+                ],
+                "summary": "Unusual activities",
+                "operationId": "getUnusualActivities",
+                "parameters": [
+                    {
+                        "description": "Maximum number of records to return (default: 100, max: 1000)",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UnusualActivitiesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/unusual-activities/{symbol}": {
+            "get": {
+                "description": "Retrieves unusual trading activities for a specific options symbol from QuestDB.",
+                "tags": [
+                    "unusual-activities"
+                ],
+                "summary": "Unusual activities by symbol",
+                "operationId": "getUnusualActivitiesBySymbol",
+                "parameters": [
+                    {
+                        "description": "The options symbol to get unusual activities for",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Maximum number of records to return (default: 50, max: 500)",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UnusualActivitiesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/volume-footprint/{symbol}": {
             "get": {
                 "description": "This endpoint provides detailed volume footprint analysis for all available trades including:\nPrice action analysis (OHLC, VWAP)\nVolume distribution by price level\nOrder flow imbalances between buy and sell orders\nVolume clusters indicating high activity zones\nAbsorption signals for potential exhaustion points\nPoint of Control (POC) - price level with highest volume\nValue Area High/Low for 70% of traded volume\nDelta percentage to gauge buying vs selling pressure\n\nThe analysis is based on all available trade data from Redis and calculates comprehensive\nmarket microstructure metrics useful for understanding market dynamics.",
@@ -3505,6 +3748,36 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/APIKeyResponse"
+                        }
+                    }
+                }
+            },
+            "AllIndustryMeansResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AllIndustryMeansResponse"
+                        }
+                    }
+                }
+            },
+            "AllSectorMeansResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AllSectorMeansResponse"
+                        }
+                    }
+                }
+            },
+            "AvailableYearsResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/AvailableYearsResponse"
                         }
                     }
                 }
@@ -3953,6 +4226,16 @@
                     }
                 }
             },
+            "IndustryMeanResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/IndustryMeanResponse"
+                        }
+                    }
+                }
+            },
             "InvestorSearchResponse": {
                 "description": "",
                 "content": {
@@ -4000,6 +4283,16 @@
                                     "x-go-name": "Success"
                                 }
                             }
+                        }
+                    }
+                }
+            },
+            "MultiMetricEstimatesResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/MultiMetricEstimatesResponse"
                         }
                     }
                 }
@@ -4153,6 +4446,16 @@
                     }
                 }
             },
+            "SectorMeanResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/SectorMeanResponse"
+                        }
+                    }
+                }
+            },
             "StockSplitsResponse": {
                 "description": "",
                 "content": {
@@ -4169,6 +4472,16 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/TickerProfileResponse"
+                        }
+                    }
+                }
+            },
+            "TickerSectorsResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/TickerSectorsResponse"
                         }
                     }
                 }
@@ -4239,6 +4552,26 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/TreasuryRatesResponse"
+                        }
+                    }
+                }
+            },
+            "UnifiedEstimatesResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UnifiedEstimatesResponse"
+                        }
+                    }
+                }
+            },
+            "UnusualActivitiesResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UnusualActivitiesResponse"
                         }
                     }
                 }
@@ -4377,6 +4710,32 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "AllIndustryMeansResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/IndustryMeanData"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "AllSectorMeansResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/IndustryMeanData"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "AnalysisResults": {
                 "description": "AnalysisResults contains the results of Fibonacci and Camarilla analysis",
                 "type": "object",
@@ -4394,6 +4753,20 @@
                             "$ref": "#/components/schemas/FibonacciRetractmentLevel"
                         },
                         "x-go-name": "FibonacciLevels"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "AvailableYearsResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -4735,51 +5108,6 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "DailyRowData": {
-                "description": "DailyRowData represents daily historical price data from Financial Modeling Prep API",
-                "type": "object",
-                "properties": {
-                    "close": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Close"
-                    },
-                    "high": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "High"
-                    },
-                    "low": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Low"
-                    },
-                    "open": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Open"
-                    },
-                    "symbol": {
-                        "type": "string",
-                        "x-go-name": "Symbol"
-                    },
-                    "ts_event": {
-                        "type": "string",
-                        "x-go-name": "TsEvent"
-                    },
-                    "volume": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "Volume"
-                    },
-                    "vwap": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "VWAP"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "DailyVolume": {
                 "description": "DailyVolume represents daily volume data",
                 "type": "object",
@@ -4920,10 +5248,11 @@
                         "x-go-name": "CurrentPrice",
                         "example": 688.04
                     },
-                    "flags": {
-                        "type": "string",
-                        "x-go-name": "Flags",
-                        "example": "LAST"
+                    "max_size": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaxSize",
+                        "example": 5000
                     },
                     "movement_since_trade": {
                         "type": "number",
@@ -4953,6 +5282,12 @@
                         "format": "date-time",
                         "x-go-name": "TimeOfTrade",
                         "example": "2025-06-20T12:46:12.736331719-04:00"
+                    },
+                    "trade_count": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TradeCount",
+                        "example": 15
                     },
                     "trade_value": {
                         "type": "number",
@@ -5277,22 +5612,6 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "ExtraInfo": {
-                "type": "object",
-                "properties": {
-                    "highest_price": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "HighestPrice"
-                    },
-                    "lowest_price": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "LowestPrice"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "FearGreedIndexResponse": {
                 "type": "object",
                 "properties": {
@@ -5518,60 +5837,12 @@
                 "description": "Volume Footprint",
                 "type": "object",
                 "properties": {
-                    "buy_volume": {
-                        "type": "integer",
-                        "format": "uint64",
-                        "x-go-name": "BuyVolume",
-                        "example": 19651096
-                    },
-                    "close_price": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "ClosePrice",
-                        "example": 195.44
-                    },
-                    "delta": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "Delta",
-                        "example": 533698
-                    },
-                    "delta_pct": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "DeltaPct",
-                        "example": 1.38
-                    },
-                    "high_price": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "HighPrice",
-                        "example": 207.88
-                    },
                     "imbalances": {
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Imbalance"
                         },
                         "x-go-name": "Imbalances"
-                    },
-                    "low_price": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "LowPrice",
-                        "example": 195.07
-                    },
-                    "neutral_volume": {
-                        "type": "integer",
-                        "format": "uint64",
-                        "x-go-name": "NeutralVolume",
-                        "example": 0
-                    },
-                    "open_price": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "OpenPrice",
-                        "example": 198.74
                     },
                     "poc_price": {
                         "type": "number",
@@ -5585,28 +5856,10 @@
                         "x-go-name": "PocVolume",
                         "example": 193614
                     },
-                    "sell_volume": {
-                        "type": "integer",
-                        "format": "uint64",
-                        "x-go-name": "SellVolume",
-                        "example": 19117398
-                    },
                     "symbol": {
                         "type": "string",
                         "x-go-name": "Symbol",
                         "example": "AAPL"
-                    },
-                    "value_area_high": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "ValueAreaHigh",
-                        "example": 205.1
-                    },
-                    "value_area_low": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "ValueAreaLow",
-                        "example": 196
                     },
                     "volume_clusters": {
                         "type": "array",
@@ -5614,12 +5867,6 @@
                             "$ref": "#/components/schemas/VolumeCluster"
                         },
                         "x-go-name": "VolumeClusters"
-                    },
-                    "vwap": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "VWAP",
-                        "example": 200.5829
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -6261,6 +6508,21 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "HistoricalCloseData": {
+                "type": "object",
+                "properties": {
+                    "close": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Close"
+                    },
+                    "date": {
+                        "type": "string",
+                        "x-go-name": "Date"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "HistoricalOptionsData": {
                 "type": "object",
                 "properties": {
@@ -6402,6 +6664,49 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "IndustryMeanData": {
+                "description": "IndustryMeanData represents the calculated mean values for an industry",
+                "type": "object",
+                "properties": {
+                    "company_count": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "CompanyCount"
+                    },
+                    "industry": {
+                        "type": "string",
+                        "x-go-name": "Industry"
+                    },
+                    "last_updated": {
+                        "type": "string",
+                        "x-go-name": "LastUpdated"
+                    },
+                    "metrics": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "x-go-name": "Metrics"
+                    },
+                    "period": {
+                        "type": "string",
+                        "x-go-name": "Period"
+                    },
+                    "year": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Year"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "IndustryMeanResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/IndustryMeanData"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "InvestorSearchResponse": {
                 "type": "object",
                 "properties": {
@@ -6507,6 +6812,32 @@
                         "type": "boolean",
                         "x-go-name": "MarketOpen",
                         "example": true
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "MultiMetricEstimatesResponse": {
+                "description": "MultiMetricEstimatesResponse represents the response for the unified estimates endpoint with multiple metrics and periods",
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "description": "Nested structure: Data[ticker][metric][period] = value",
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "additionalProperties": {}
+                            }
+                        },
+                        "x-go-name": "Data"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Errors"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -7510,6 +7841,15 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "SectorMeanResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/IndustryMeanData"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "SkeletonNewsArticle": {
                 "type": "object",
                 "properties": {
@@ -7751,6 +8091,11 @@
                         "x-go-name": "Country",
                         "example": "United States"
                     },
+                    "description": {
+                        "type": "string",
+                        "x-go-name": "Description",
+                        "example": "Apple Inc. is a technology company that designs, manufactures, and markets smartphones, tablets, personal computers, and accessories."
+                    },
                     "exchange": {
                         "type": "string",
                         "x-go-name": "Exchange",
@@ -7850,6 +8195,36 @@
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/TickerProfile"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TickerSector": {
+                "type": "object",
+                "properties": {
+                    "industry": {
+                        "type": "string",
+                        "x-go-name": "Industry",
+                        "example": "Consumer Electronics"
+                    },
+                    "sector": {
+                        "type": "string",
+                        "x-go-name": "Sector",
+                        "example": "Technology"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TickerSectorsResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/TickerSector"
+                        },
+                        "x-go-name": "Data",
+                        "example": "{\"AAPL\": { sector:\"Technology\", industry: \"Consumer Electronics\"}, \"GOOGL\": { sector:\"Technology\", industry: \"Internet Content & Information\"}, \"AMZN\": { sector:\"Consumer Cyclical\", industry: \"Internet Retail\"}, \"GOOG\": { sector:\"Technology\", industry: \"Internet Content & Information\"}, \"NVDA\": { sector:\"Technology\", industry: \"Semiconductors\"}, \"TSLA\": { sector:\"Consumer Cyclical\", industry: \"Auto Manufacturers\"}, \"META\": { sector:\"Technology\", industry: \"Internet Content & Information\"}, \"NFLX\": { sector:\"Communication Services\", industry: \"Entertainment\"}, \"DIS\": { sector:\"Communication Services\", industry: \"Entertainment\"}, \"BRK.B\": { sector:\"Financial Services\", industry: \"Insurance - Diversified\"}}"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -8078,6 +8453,131 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "UnifiedEstimateValue": {
+                "description": "UnifiedEstimateValue represents the value for a single ticker and metric",
+                "type": "object",
+                "properties": {
+                    "financial_period": {
+                        "type": "string",
+                        "x-go-name": "FinancialPeriod"
+                    },
+                    "metric": {
+                        "type": "string",
+                        "x-go-name": "Metric"
+                    },
+                    "ticker": {
+                        "type": "string",
+                        "x-go-name": "Ticker"
+                    },
+                    "value": {
+                        "x-go-name": "Value"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "UnifiedEstimatesResponse": {
+                "description": "UnifiedEstimatesResponse represents the response for the unified estimates endpoint",
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/UnifiedEstimateValue"
+                        },
+                        "x-go-name": "Data"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Errors"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "UnusualActivitiesResponse": {
+                "description": "UnusualActivitiesResponse represents the response for unusual activities",
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UnusualActivityData"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "UnusualActivityData": {
+                "description": "UnusualActivityData represents a single unusual trading activity",
+                "type": "object",
+                "properties": {
+                    "expiry": {
+                        "type": "string",
+                        "x-go-name": "Expiry",
+                        "example": "2024-03-15"
+                    },
+                    "option_type": {
+                        "type": "string",
+                        "x-go-name": "OptionType",
+                        "example": "CALL"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Price",
+                        "example": 1.25
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Size",
+                        "example": 1000
+                    },
+                    "size_at_99th_percentile": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "SizeAt99thPercentile",
+                        "example": 500
+                    },
+                    "size_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "SizeRatio",
+                        "example": 2
+                    },
+                    "strike": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Strike",
+                        "example": 195
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "AAPL240315C00195000"
+                    },
+                    "ticker": {
+                        "type": "string",
+                        "x-go-name": "Ticker",
+                        "example": "AAPL"
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "x-go-name": "Timestamp",
+                        "example": "2024-03-15 14:30:00"
+                    },
+                    "trade_value": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "TradeValue",
+                        "example": 1250
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "VolumeCluster": {
                 "type": "object",
                 "properties": {
@@ -8142,15 +8642,19 @@
                         "format": "double",
                         "x-go-name": "DaysChangePerc"
                     },
-                    "extra_info": {
-                        "$ref": "#/components/schemas/ExtraInfo"
-                    },
                     "historical_data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/DailyRowData"
+                            "$ref": "#/components/schemas/HistoricalCloseData"
                         },
                         "x-go-name": "HistoricalData"
+                    },
+                    "hourly_data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HistoricalCloseData"
+                        },
+                        "x-go-name": "HourlyData"
                     },
                     "shares": {
                         "type": "integer",
