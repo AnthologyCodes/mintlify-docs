@@ -3684,6 +3684,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "description": "The lookback period in days (default: 3)",
+                        "name": "lookback",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 3
+                        }
                     }
                 ],
                 "responses": {
@@ -3733,6 +3742,15 @@
                         "schema": {
                             "type": "string",
                             "default": "15m"
+                        }
+                    },
+                    {
+                        "description": "The lookback period in days for average calculation (default: 3)",
+                        "name": "lookback",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 3
                         }
                     }
                 ],
