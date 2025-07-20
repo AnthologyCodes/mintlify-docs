@@ -3699,6 +3699,56 @@
                 }
             }
         },
+        "/volume-footprint/intraday/{ticker}": {
+            "get": {
+                "description": "This endpoint provides intraday volume analysis for a specific ticker and date, showing:\nTotal volume for the specified date and interval\n3-day average volume for comparison\nVolume analysis at different time intervals (15m by default)\n\nThe analysis uses QuestDB to calculate volume metrics with configurable sampling intervals\nand provides insights into intraday trading patterns and volume trends.",
+                "tags": [
+                    "volume-footprint"
+                ],
+                "summary": "Intraday volume data",
+                "operationId": "getIntradayVolumeData",
+                "parameters": [
+                    {
+                        "description": "The stock symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The date for data (YYYY-MM-DD)",
+                        "name": "date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The sampling interval (e.g., 15m, 1h, 1d)",
+                        "name": "interval",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "15m"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/IntradayVolumeDataResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/volume-footprint/{symbol}": {
             "get": {
                 "description": "This endpoint provides detailed volume footprint analysis for all available trades including:\nPrice action analysis (OHLC, VWAP)\nVolume distribution by price level\nOrder flow imbalances between buy and sell orders\nVolume clusters indicating high activity zones\nAbsorption signals for potential exhaustion points\nPoint of Control (POC) - price level with highest volume\nValue Area High/Low for 70% of traded volume\nDelta percentage to gauge buying vs selling pressure\n\nThe analysis is based on all available trade data from Redis and calculates comprehensive\nmarket microstructure metrics useful for understanding market dynamics.",
@@ -4334,6 +4384,19 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/IndustryMeanResponse"
+                        }
+                    }
+                }
+            },
+            "IntradayVolumeDataResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/IntradayVolumeData"
+                            }
                         }
                     }
                 }
@@ -6828,6 +6891,29 @@
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/IndustryMeanData"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "IntradayVolumeData": {
+                "type": "object",
+                "properties": {
+                    "avg_volume_3d": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "AvgVolume3d",
+                        "example": 987654
+                    },
+                    "date": {
+                        "type": "string",
+                        "x-go-name": "Date",
+                        "example": "2025-06-10"
+                    },
+                    "total_volume": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TotalVolume",
+                        "example": 1234567
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
