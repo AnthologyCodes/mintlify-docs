@@ -5508,6 +5508,12 @@
             "DatasetInfo": {
                 "type": "object",
                 "properties": {
+                    "avg_volume_3d": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "AvgVolume3d",
+                        "example": 987654
+                    },
                     "dataset": {
                         "type": "string",
                         "x-go-name": "Dataset",
