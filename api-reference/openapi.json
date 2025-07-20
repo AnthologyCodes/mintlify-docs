@@ -3658,6 +3658,47 @@
                 }
             }
         },
+        "/volume-footprint/dataset/{ticker}": {
+            "get": {
+                "description": "This will retrieve dataset information for the specified stock symbol, showing total volume\ngrouped by dataset from the equities_ohlcv_1h_data table for a specific date.",
+                "tags": [
+                    "volume-footprint"
+                ],
+                "summary": "Dataset information",
+                "operationId": "getDatasetInformation",
+                "parameters": [
+                    {
+                        "description": "The stock symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The date for data (YYYY-MM-DD)",
+                        "name": "date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DatasetInformationResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/volume-footprint/{symbol}": {
             "get": {
                 "description": "This endpoint provides detailed volume footprint analysis for all available trades including:\nPrice action analysis (OHLC, VWAP)\nVolume distribution by price level\nOrder flow imbalances between buy and sell orders\nVolume clusters indicating high activity zones\nAbsorption signals for potential exhaustion points\nPoint of Control (POC) - price level with highest volume\nValue Area High/Low for 70% of traded volume\nDelta percentage to gauge buying vs selling pressure\n\nThe analysis is based on all available trade data from Redis and calculates comprehensive\nmarket microstructure metrics useful for understanding market dynamics.",
@@ -3941,6 +3982,19 @@
                             "type": "array",
                             "items": {
                                 "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "DatasetInformationResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/DatasetInfo"
                             }
                         }
                     }
@@ -5447,6 +5501,23 @@
                             "$ref": "#/components/schemas/DarkpoolTrend"
                         },
                         "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "DatasetInfo": {
+                "type": "object",
+                "properties": {
+                    "dataset": {
+                        "type": "string",
+                        "x-go-name": "Dataset",
+                        "example": "dataset1"
+                    },
+                    "total_volume": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TotalVolume",
+                        "example": 1234567
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
