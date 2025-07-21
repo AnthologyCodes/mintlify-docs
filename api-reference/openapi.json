@@ -3783,6 +3783,24 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "description": "The date for data (YYYY-MM-DD)",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "today"
+                        }
+                    },
+                    {
+                        "description": "The lookback period in days",
+                        "name": "lookback",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 7
+                        }
                     }
                 ],
                 "responses": {
