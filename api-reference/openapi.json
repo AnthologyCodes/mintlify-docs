@@ -2643,6 +2643,27 @@
                 }
             }
         },
+        "/options/market-summary": {
+            "get": {
+                "description": "Retrieves comprehensive options market summary data for a given underlying ticker symbol.",
+                "tags": [
+                    "options"
+                ],
+                "summary": "Options market summary",
+                "operationId": "getOptionsMarketSummary",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/OptionsChainResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/price-forecasts": {
             "get": {
                 "description": "Returns a map where each key is a ticker symbol and the value is an array of forecast data points.",
