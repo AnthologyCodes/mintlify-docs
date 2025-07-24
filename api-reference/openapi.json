@@ -747,7 +747,7 @@
         },
         "/estimates/metrics/{ticker}/{period}": {
             "get": {
-                "description": "Retrieves the most recent estimate metrics (e.g., EPS, Sales) for a given stock ticker,\nfor a specified period type (ANN, QTR, or BOTH).\nAn optional cutOff date can be provided to retrieve data as of that date.",
+                "description": "Retrieves the most recent estimate metrics (e.g., EPS, Sales) for a given stock ticker,\nfor a specified period type (ANN or QTR).\nAn optional cutOff date can be provided to retrieve data as of that date.",
                 "tags": [
                     "estimates"
                 ],
@@ -772,14 +772,29 @@
                             "type": "string",
                             "enum": [
                                 "ANN",
-                                "QTR",
-                                "BOTH"
+                                "QTR"
                             ]
                         }
                     },
                     {
                         "description": "Optional cut-off date (e.g., 'YYYY-MM-DD') to retrieve estimates as of a specific date.",
                         "name": "cutOff",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (e.g., 'YYYY-MM-DD') to retrieve estimates from a specific date.",
+                        "name": "start",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (e.g., 'YYYY-MM-DD') to retrieve estimates to a specific date.",
+                        "name": "end",
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -2516,6 +2531,38 @@
                 }
             }
         },
+        "/options/extra-info/{ticker}": {
+            "get": {
+                "description": "Retrieves comprehensive options extra info data for a given underlying ticker symbol.",
+                "tags": [
+                    "options"
+                ],
+                "summary": "Options Extra Info",
+                "operationId": "getOptionsExtraInfo",
+                "parameters": [
+                    {
+                        "description": "The stock symbol (e.g., AAPL).",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/OptionsExtraInfoResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/options/filter-ranges/{ticker}": {
             "get": {
                 "description": "Returns the minimum and maximum values for all filterable fields in the options chain data.",
@@ -2556,6 +2603,65 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/OptionsFilterRangesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/options/historical-data/{symbol}": {
+            "get": {
+                "description": "This will retrieve historical price data for the specified options symbol, aggregated by the given period,\nwithin the specified start and end dates.",
+                "tags": [
+                    "options"
+                ],
+                "summary": "Options Historical Data",
+                "operationId": "getOptionsHistoricalData",
+                "parameters": [
+                    {
+                        "description": "The options symbol (e.g., \"NVDA  260116C00235000\")",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The time period for aggregation (e.g., \"1m\", \"1h\", \"day\")",
+                        "name": "period",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start date for historical data (YYYY-MM-DD)",
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end date for historical data (YYYY-MM-DD)",
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/OptionsHistoricalDataResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -3562,6 +3668,59 @@
                 }
             }
         },
+        "/transcripts/{symbol}/{year}/{quarter}": {
+            "get": {
+                "description": "Retrieves the earnings call transcript for a specific company, year, and quarter.",
+                "tags": [
+                    "transcripts"
+                ],
+                "summary": "Earnings Call Transcript",
+                "operationId": "getEarningsCallTranscript",
+                "parameters": [
+                    {
+                        "description": "The stock symbol (e.g., AAPL).",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The year of the transcript (e.g., 2023).",
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "The quarter of the transcript (e.g., 4 or Q4).",
+                        "name": "quarter",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/EarningsCallTranscriptResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/treasury-rates": {
             "get": {
                 "description": "Retrieves treasury rates data from Bigtable for the specified date range.\nIf no dates are provided, returns data for the current date.",
@@ -4150,6 +4309,16 @@
                     }
                 }
             },
+            "EarningsCallTranscriptResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/EarningsCallTranscript"
+                        }
+                    }
+                }
+            },
             "EarningsResponse": {
                 "description": "",
                 "content": {
@@ -4559,12 +4728,35 @@
                     }
                 }
             },
+            "OptionsExtraInfoResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/OptionsExtraInfo"
+                        }
+                    }
+                }
+            },
             "OptionsFilterRangesResponse": {
                 "description": "",
                 "content": {
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/OptionsFilterRanges"
+                        }
+                    }
+                }
+            },
+            "OptionsHistoricalDataResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/OptionsHistoricalData"
+                            }
                         }
                     }
                 }
@@ -5752,6 +5944,40 @@
                         "format": "double",
                         "x-go-name": "Yield",
                         "example": 0.155844
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "EarningsCallTranscript": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "$ref": "#/components/schemas/TranscriptContent"
+                    },
+                    "date": {
+                        "description": "The date of the call",
+                        "type": "string",
+                        "x-go-name": "Date",
+                        "example": "2023-10-26T18:00:00Z"
+                    },
+                    "period": {
+                        "description": "The reporting period",
+                        "type": "string",
+                        "x-go-name": "Period",
+                        "example": "Q4"
+                    },
+                    "symbol": {
+                        "description": "The stock symbol",
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "AAPL"
+                    },
+                    "year": {
+                        "description": "The reporting year",
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Year",
+                        "example": 2023
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -7417,6 +7643,30 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "OptionsExtraInfo": {
+                "type": "object",
+                "properties": {
+                    "iv": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "IV",
+                        "example": 0.25
+                    },
+                    "put_call_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PutCallRatio",
+                        "example": 0.8
+                    },
+                    "total_volume": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TotalVolume",
+                        "example": 123456
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "OptionsFilterRanges": {
                 "description": "OptionsFilterRanges contains min/max values for all filterable fields",
                 "type": "object",
@@ -7472,6 +7722,53 @@
                     },
                     "volume": {
                         "$ref": "#/components/schemas/FilterRange"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "OptionsHistoricalData": {
+                "description": "OptionsHistoricalData represents historical options OHLCV data from QuestDB",
+                "type": "object",
+                "properties": {
+                    "close": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Close",
+                        "example": 3.67
+                    },
+                    "high": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "High",
+                        "example": 3.67
+                    },
+                    "low": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Low",
+                        "example": 3.67
+                    },
+                    "open": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Open",
+                        "example": 3.67
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "x-go-name": "Symbol",
+                        "example": "NVDA  260116C00235000"
+                    },
+                    "ts_event": {
+                        "type": "string",
+                        "x-go-name": "TsEvent",
+                        "example": "2025-07-17 13:30:00"
+                    },
+                    "volume": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Volume",
+                        "example": 1
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -8196,6 +8493,24 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "SpeakerContent": {
+                "type": "object",
+                "properties": {
+                    "speaker": {
+                        "description": "The speaker's name",
+                        "type": "string",
+                        "x-go-name": "Speaker",
+                        "example": "John Doe"
+                    },
+                    "speech": {
+                        "description": "The speaker's speech",
+                        "type": "string",
+                        "x-go-name": "Speech",
+                        "example": "We had a great quarter."
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "StockData": {
                 "type": "object",
                 "properties": {
@@ -8620,6 +8935,25 @@
                             "$ref": "#/components/schemas/TradeData"
                         },
                         "x-go-name": "Trades"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TranscriptContent": {
+                "type": "object",
+                "properties": {
+                    "parsed": {
+                        "description": "Parsed content of the transcript. This is present if the content could be parsed into speaker segments.",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SpeakerContent"
+                        },
+                        "x-go-name": "Parsed"
+                    },
+                    "raw": {
+                        "description": "Raw content of the transcript. This is present if parsing failed.",
+                        "type": "string",
+                        "x-go-name": "Raw"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
