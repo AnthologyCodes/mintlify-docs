@@ -2253,284 +2253,6 @@
                 }
             }
         },
-        "/options/chain/{ticker}": {
-            "get": {
-                "description": "Retrieves comprehensive options chain data for a given underlying ticker symbol.\nWhen calculate_put_call_ratio is set to true and contract_type is 'both', the response\nwill include put/call ratio analysis which is useful for market sentiment analysis.",
-                "tags": [
-                    "options"
-                ],
-                "summary": "Options chain",
-                "operationId": "getOptionsChain",
-                "parameters": [
-                    {
-                        "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for options expiration range (YYYY-MM-DD format)",
-                        "name": "start_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "End date for options expiration range (YYYY-MM-DD format)",
-                        "name": "end_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Type of contracts to return",
-                        "name": "contract_type",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "call",
-                                "put",
-                                "both"
-                            ],
-                            "default": "both"
-                        }
-                    },
-                    {
-                        "description": "Money status filter",
-                        "name": "money_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "ITM",
-                                "OTM",
-                                "ATM",
-                                "ALL"
-                            ],
-                            "default": "ALL"
-                        }
-                    },
-                    {
-                        "description": "Whether to calculate put/call ratio",
-                        "name": "calculate_put_call_ratio",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    },
-                    {
-                        "description": "Minimum strike price filter",
-                        "name": "min_strike_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum strike price filter",
-                        "name": "max_strike_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum break-even price filter",
-                        "name": "min_break_even_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum break-even price filter",
-                        "name": "max_break_even_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum current option price filter",
-                        "name": "min_current_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum current option price filter",
-                        "name": "max_current_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum price change filter",
-                        "name": "min_price_change",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum price change filter",
-                        "name": "max_price_change",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum price change percentage filter",
-                        "name": "min_price_change_percentage",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum price change percentage filter",
-                        "name": "max_price_change_percentage",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum delta (price sensitivity) filter",
-                        "name": "min_delta",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum delta (price sensitivity) filter",
-                        "name": "max_delta",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum gamma (delta sensitivity) filter",
-                        "name": "min_gamma",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum gamma (delta sensitivity) filter",
-                        "name": "max_gamma",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum theta (time decay) filter",
-                        "name": "min_theta",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum theta (time decay) filter",
-                        "name": "max_theta",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum vega (volatility sensitivity) filter",
-                        "name": "min_vega",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum vega (volatility sensitivity) filter",
-                        "name": "max_vega",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum open interest filter",
-                        "name": "min_open_interest",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Maximum open interest filter",
-                        "name": "max_open_interest",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Minimum volume filter",
-                        "name": "min_volume",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum volume filter",
-                        "name": "max_volume",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum implied volatility filter",
-                        "name": "min_implied_vol",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum implied volatility filter",
-                        "name": "max_implied_vol",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/OptionsChainResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/options/extra-info/{ticker}": {
             "get": {
                 "description": "Retrieves comprehensive options extra info data for a given underlying ticker symbol.",
@@ -2553,56 +2275,6 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/OptionsExtraInfoResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/options/filter-ranges/{ticker}": {
-            "get": {
-                "description": "Returns the minimum and maximum values for all filterable fields in the options chain data.",
-                "tags": [
-                    "options"
-                ],
-                "summary": "Get options filter ranges",
-                "operationId": "getOptionsFilterRanges",
-                "parameters": [
-                    {
-                        "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for options expiration range (YYYY-MM-DD format)",
-                        "name": "start_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "End date for options expiration range (YYYY-MM-DD format)",
-                        "name": "end_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/OptionsFilterRangesResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2672,73 +2344,17 @@
                 }
             }
         },
-        "/options/historical/{ticker}": {
+        "/options/market-summary": {
             "get": {
-                "description": "Retrieves historical aggregate price data (OHLCV bars) for a specific options contract.\nBoth start_date and end_date are required parameters and should be provided in YYYY-MM-DD format.",
+                "description": "Retrieves comprehensive options market summary data for a given underlying ticker symbol.",
                 "tags": [
                     "options"
                 ],
-                "summary": "Historical options",
-                "operationId": "getHistoricalOptionsData",
-                "parameters": [
-                    {
-                        "description": "The options contract ticker (e.g., O:AAPL240119C00150000)",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for historical data (YYYY-MM-DD format)",
-                        "name": "start_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "End date for historical data (YYYY-MM-DD format)",
-                        "name": "end_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Time interval for aggregation",
-                        "name": "interval",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "minute",
-                                "hour",
-                                "day",
-                                "week",
-                                "month",
-                                "quarter",
-                                "year"
-                            ],
-                            "default": "day"
-                        }
-                    },
-                    {
-                        "description": "Time multiplier for the interval (e.g., 5 for 5-minute bars)",
-                        "name": "time_break",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        }
-                    }
-                ],
+                "summary": "Options market summary",
+                "operationId": "getOptionsMarketSummary",
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/HistoricalOptionsResponse"
+                        "$ref": "#/components/responses/OptionsChainResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2749,14 +2365,55 @@
                 }
             }
         },
-        "/options/market-summary": {
+        "/options/v2/chain/{ticker}": {
             "get": {
-                "description": "Retrieves comprehensive options market summary data for a given underlying ticker symbol.",
+                "description": "Retrieves comprehensive options chain data for a given underlying ticker symbol.\nWhen calculate_put_call_ratio is set to true and contract_type is 'both', the response\nwill include put/call ratio analysis which is useful for market sentiment analysis.",
                 "tags": [
                     "options"
                 ],
-                "summary": "Options market summary",
-                "operationId": "getOptionsMarketSummary",
+                "summary": "Options chain",
+                "operationId": "getOptionsChain",
+                "parameters": [
+                    {
+                        "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date for options expiration range (YYYY-MM-DD format)",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date for options expiration range (YYYY-MM-DD format)",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Type of contracts to return",
+                        "name": "contract_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "call",
+                                "put",
+                                "both"
+                            ],
+                            "default": "both"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/OptionsChainResponse"
