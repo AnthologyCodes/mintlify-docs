@@ -3332,6 +3332,74 @@
                 }
             }
         },
+        "/search/unstructured": {
+            "get": {
+                "description": "Searches for unstructured documents using vector similarity search.",
+                "tags": [
+                    "search"
+                ],
+                "summary": "Unstructured data search",
+                "operationId": "searchUnstructuredParams",
+                "parameters": [
+                    {
+                        "description": "Search query text",
+                        "name": "query",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Number of results to return (1-100)",
+                        "name": "top_k",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "description": "Filter results to only include unstructured data type",
+                        "name": "filter_data_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UnstructuredSearchResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/UnstructuredErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/UnstructuredErrorResponse"
+                    }
+                }
+            }
+        },
+        "/search/unstructured/health": {
+            "get": {
+                "description": "Checks if the unstructured data search service is healthy.",
+                "tags": [
+                    "health"
+                ],
+                "summary": "Unstructured data search health check",
+                "operationId": "unstructuredHealthParams",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UnstructuredHealthResponse"
+                    },
+                    "503": {
+                        "$ref": "#/components/responses/UnstructuredErrorResponse"
+                    }
+                }
+            }
+        },
         "/sector-means/{sector}/{year}/{period}": {
             "get": {
                 "description": "Returns the calculated mean values for all financial metrics for a specific sector, year, and period.",
@@ -4976,6 +5044,36 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/UnifiedEstimatesResponse"
+                        }
+                    }
+                }
+            },
+            "UnstructuredErrorResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UnstructuredErrorResponse"
+                        }
+                    }
+                }
+            },
+            "UnstructuredHealthResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UnstructuredHealthResponse"
+                        }
+                    }
+                }
+            },
+            "UnstructuredSearchResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UnstructuredSearchResponse"
                         }
                     }
                 }
@@ -9094,6 +9192,81 @@
                             "type": "string"
                         },
                         "x-go-name": "Errors"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "UnstructuredErrorResponse": {
+                "description": "UnstructuredErrorResponse represents error responses",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "type": "string",
+                        "x-go-name": "Detail"
+                    },
+                    "error_type": {
+                        "type": "string",
+                        "x-go-name": "ErrorType"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "UnstructuredHealthResponse": {
+                "description": "UnstructuredHealthResponse represents the health check response",
+                "type": "object",
+                "properties": {
+                    "service": {
+                        "type": "string",
+                        "x-go-name": "Service"
+                    },
+                    "status": {
+                        "type": "string",
+                        "x-go-name": "Status"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "UnstructuredSearchResponse": {
+                "description": "UnstructuredSearchResponse represents the response for unstructured data search",
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "x-go-name": "Query"
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UnstructuredSearchResultItem"
+                        },
+                        "x-go-name": "Results"
+                    },
+                    "top_k": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TopK"
+                    },
+                    "total_results": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TotalResults"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "UnstructuredSearchResultItem": {
+                "description": "UnstructuredSearchResultItem represents an individual search result",
+                "type": "object",
+                "properties": {
+                    "distance": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Distance"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "x-go-name": "Metadata"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
