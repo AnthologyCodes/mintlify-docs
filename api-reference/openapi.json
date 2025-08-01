@@ -3367,6 +3367,15 @@
                             "type": "boolean",
                             "default": true
                         }
+                    },
+                    {
+                        "description": "Enable reranking for improved relevance",
+                        "name": "enable_rerank",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
                     }
                 ],
                 "responses": {
@@ -7077,6 +7086,32 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "Highlight": {
+                "description": "Highlight represents a highlighted text snippet",
+                "type": "object",
+                "properties": {
+                    "end": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "End"
+                    },
+                    "score": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Score"
+                    },
+                    "start": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Start"
+                    },
+                    "text": {
+                        "type": "string",
+                        "x-go-name": "Text"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "HistoricalCloseData": {
                 "type": "object",
                 "properties": {
@@ -9263,10 +9298,26 @@
                         "format": "double",
                         "x-go-name": "Distance"
                     },
+                    "highlights": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Highlight"
+                        },
+                        "x-go-name": "Highlights"
+                    },
                     "metadata": {
                         "type": "object",
                         "additionalProperties": {},
                         "x-go-name": "Metadata"
+                    },
+                    "rerank_score": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "RerankScore"
+                    },
+                    "text": {
+                        "type": "string",
+                        "x-go-name": "Text"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
