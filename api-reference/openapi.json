@@ -273,69 +273,6 @@
                 }
             }
         },
-        "/darkpool-trends": {
-            "get": {
-                "description": "Retrieves the top K darkpool trends based on the provided count and start date.\nData is fetched from cache if available, otherwise from the primary service.",
-                "tags": [
-                    "darkpool"
-                ],
-                "summary": "Daily darkpool trends",
-                "operationId": "getDarkpoolTrends",
-                "parameters": [
-                    {
-                        "description": "Number of darkpool trends to return.",
-                        "name": "k",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Start date for fetching trends (YYYY-MM-DD).",
-                        "name": "start",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Sort by field.",
-                        "name": "sortBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "total_volume",
-                                "relative_volume_change",
-                                "absolute_volume_change",
-                                "darkpool_ratio"
-                            ]
-                        }
-                    },
-                    {
-                        "description": "Use dollar weighed volumes instead of raw volumes.",
-                        "name": "useDollar",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/DarkpoolTrendsResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/darkpool/daily/{ticker}": {
             "get": {
                 "description": "Retrieves daily darkpool trend metrics for the specified ticker within the given date range.\nIf no dates are provided, defaults to the last 30 days.",
@@ -492,6 +429,69 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/DarkpoolTradeResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/darkpools/trends": {
+            "get": {
+                "description": "Retrieves the top K darkpool trends based on the provided count and start date.\nData is fetched from cache if available, otherwise from the primary service.",
+                "tags": [
+                    "darkpool"
+                ],
+                "summary": "Daily darkpool trends",
+                "operationId": "getDarkpoolTrends",
+                "parameters": [
+                    {
+                        "description": "Number of darkpool trends to return.",
+                        "name": "k",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Start date for fetching trends (YYYY-MM-DD).",
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Sort by field.",
+                        "name": "sortBy",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "total_volume",
+                                "relative_volume_change",
+                                "absolute_volume_change",
+                                "darkpool_ratio"
+                            ]
+                        }
+                    },
+                    {
+                        "description": "Use dollar weighed volumes instead of raw volumes.",
+                        "name": "useDollar",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DarkpoolTrendsResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
