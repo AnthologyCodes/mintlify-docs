@@ -5318,12 +5318,24 @@
                         "x-go-name": "ChatName",
                         "example": "My Chat"
                     },
+                    "context": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ContextItem"
+                        },
+                        "x-go-name": "Context"
+                    },
                     "history": {
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/ChatMessage"
                         },
                         "x-go-name": "History"
+                    },
+                    "id": {
+                        "type": "string",
+                        "x-go-name": "ID",
+                        "example": "acb5c2c4-4fd6-44f0-ab8f-a4cb0a5401ff"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -5368,6 +5380,38 @@
                         "type": "string",
                         "x-go-name": "Ticker",
                         "example": "AAPL"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "ContextItem": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string",
+                        "x-go-name": "Content",
+                        "example": "Full Article: {...}"
+                    },
+                    "id": {
+                        "type": "string",
+                        "x-go-name": "ID",
+                        "example": "ey76r9e"
+                    },
+                    "timestamp": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Timestamp",
+                        "example": 1754504867455
+                    },
+                    "title": {
+                        "type": "string",
+                        "x-go-name": "Title",
+                        "example": "Article Context"
+                    },
+                    "type": {
+                        "type": "string",
+                        "x-go-name": "Type",
+                        "example": "text"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
