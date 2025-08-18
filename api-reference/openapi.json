@@ -1091,56 +1091,6 @@
                 }
             }
         },
-        "/futures-data": {
-            "get": {
-                "description": "Retrieves futures data for a specified ticker symbol within a given date range.",
-                "tags": [
-                    "futures"
-                ],
-                "summary": "Get futures data",
-                "operationId": "getFuturesData",
-                "parameters": [
-                    {
-                        "description": "Ticker symbol for the futures data.",
-                        "name": "ticker",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for the data (YYYY-MM-DD).",
-                        "name": "start",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "End date for the data (YYYY-MM-DD).",
-                        "name": "end",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/FuturesDataResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/futures/continuous/ohlcv": {
             "get": {
                 "tags": [
@@ -1851,47 +1801,6 @@
                 }
             }
         },
-        "/industry-means/{year}/{period}": {
-            "get": {
-                "description": "Returns the calculated mean values for all industries for a specific year and period.",
-                "tags": [
-                    "industry-means"
-                ],
-                "summary": "All Industry Means",
-                "operationId": "getAllIndustryMeans",
-                "parameters": [
-                    {
-                        "description": "The year for the data",
-                        "name": "year",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The period (FY, Q1, Q2, Q3, Q4)",
-                        "name": "period",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/AllIndustryMeansResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/investor-search": {
             "get": {
                 "description": "Returns up to the first 100 investors whose names start with the supplied prefix.",
@@ -1990,24 +1899,6 @@
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/marketsnapshot": {
-            "get": {
-                "description": "This will retrieve the market snapshot for all available tickers\nwith their current price and today's change",
-                "tags": [
-                    "markets"
-                ],
-                "summary": "Market snapshot",
-                "operationId": "getMarketSnapshot",
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/MarketSnapshotResponse"
                     },
                     "500": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -3027,47 +2918,6 @@
                 }
             }
         },
-        "/sector-means/{year}/{period}": {
-            "get": {
-                "description": "Returns the calculated mean values for all sectors for a specific year and period.",
-                "tags": [
-                    "sector-means"
-                ],
-                "summary": "All Sector Means",
-                "operationId": "getAllSectorMeans",
-                "parameters": [
-                    {
-                        "description": "The year for the data",
-                        "name": "year",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The period (FY, Q1, Q2, Q3, Q4)",
-                        "name": "period",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/AllSectorMeansResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/stock-screener/screen": {
             "post": {
                 "description": "Filters stocks based on the provided financial criteria and returns\nmatching ticker symbols. The screening is performed against historical\nfinancial data up to the specified cutoff date.",
@@ -3247,24 +3097,6 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/TickersListWithNamesResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/tickertape": {
-            "get": {
-                "description": "This will retrieve the current market data for a predefined list of popular stock tickers",
-                "tags": [
-                    "tickertape"
-                ],
-                "summary": "Tickertape data",
-                "operationId": "getTickertapeData",
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/TickertapeResponse"
                     },
                     "500": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -3745,26 +3577,6 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/APIKeyResponse"
-                        }
-                    }
-                }
-            },
-            "AllIndustryMeansResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/AllIndustryMeansResponse"
-                        }
-                    }
-                }
-            },
-            "AllSectorMeansResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/AllSectorMeansResponse"
                         }
                     }
                 }
@@ -4835,32 +4647,6 @@
                         "format": "double",
                         "x-go-name": "Volume",
                         "example": 35423294
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "AllIndustryMeansResponse": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/IndustryMeanData"
-                        },
-                        "x-go-name": "Data"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "AllSectorMeansResponse": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/IndustryMeanData"
-                        },
-                        "x-go-name": "Data"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -6866,8 +6652,7 @@
                     "ts_event": {
                         "type": "integer",
                         "format": "uint64",
-                        "x-go-name": "TsEvent",
-                        "example": 1702371929
+                        "x-go-name": "TsEvent"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -7203,7 +6988,6 @@
                 "type": "object",
                 "properties": {
                     "data": {
-                        "description": "in: body",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/FuturesDetails"
