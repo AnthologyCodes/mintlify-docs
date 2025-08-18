@@ -1141,9 +1141,70 @@
                 }
             }
         },
+        "/futures/continuous/ohlcv": {
+            "get": {
+                "tags": [
+                    "futures"
+                ],
+                "summary": "Continuous OHLCV",
+                "operationId": "fetchFuturesContinuousOHLCV",
+                "parameters": [
+                    {
+                        "description": "The asset of the futures contract",
+                        "name": "asset",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The start date of the trades",
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The end date of the trades",
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "The interval of the trades",
+                        "name": "interval",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/FetchFuturesOHLCVResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/futures/contract-naming": {
             "get": {
-                "description": "Retrieves all contract naming information from the globex futures ID mapping table.",
+                "description": "Retrieves all contract naming information from the futures ID mapping table.",
                 "tags": [
                     "futures"
                 ],
@@ -1352,25 +1413,7 @@
                 }
             }
         },
-        "/futures/contracts/all": {
-            "get": {
-                "description": "Retrieves all available futures contracts (security type = FUT).",
-                "tags": [
-                    "futures"
-                ],
-                "summary": "All futures contracts",
-                "operationId": "getAllFuturesContracts",
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/ContractsSearchResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/futures/contracts/asset/{asset}": {
+        "/futures/contracts/{asset}": {
             "get": {
                 "description": "Retrieves all contracts (both futures and options) for a specific underlying asset.",
                 "tags": [
@@ -1399,17 +1442,17 @@
                 }
             }
         },
-        "/futures/contracts/asset/{asset}/futures": {
+        "/futures/current-price/{asset}": {
             "get": {
-                "description": "Retrieves only futures contracts (security type = FUT) for a specific underlying asset.",
+                "description": "Retrieves the current price for a specific futures asset.",
                 "tags": [
                     "futures"
                 ],
-                "summary": "Futures contracts by asset",
-                "operationId": "getFuturesByAsset",
+                "summary": "Fetch current price",
+                "operationId": "fetchCurrentPrice",
                 "parameters": [
                     {
-                        "description": "The underlying asset symbol (e.g., \"ES\", \"CL\", \"GC\")",
+                        "description": "The name of the futures asset",
                         "name": "asset",
                         "in": "path",
                         "required": true,
@@ -1420,7 +1463,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/ContractsByAssetResponse"
+                        "$ref": "#/components/responses/FetchCurrentPriceResponse"
                     },
                     "500": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -1428,18 +1471,18 @@
                 }
             }
         },
-        "/futures/contracts/asset/{asset}/options": {
+        "/futures/details/{contract}": {
             "get": {
-                "description": "Retrieves only options on futures contracts (security type = OOF) for a specific underlying asset.",
+                "description": "Retrieves details for a specific futures contract.",
                 "tags": [
                     "futures"
                 ],
-                "summary": "Options contracts by asset",
-                "operationId": "getOptionsByAsset",
+                "summary": "Fetch futures details",
+                "operationId": "fetchFuturesDetails",
                 "parameters": [
                     {
-                        "description": "The underlying asset symbol (e.g., \"ES\", \"CL\", \"GC\")",
-                        "name": "asset",
+                        "description": "The name of the futures contract",
+                        "name": "contract",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -1449,112 +1492,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/ContractsByAssetResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/futures/contracts/id/{symbol}": {
-            "get": {
-                "description": "Retrieves the instrument ID for a given futures contract symbol.",
-                "tags": [
-                    "futures"
-                ],
-                "summary": "Contract ID by symbol",
-                "operationId": "getContractIDBySymbol",
-                "parameters": [
-                    {
-                        "description": "The futures contract symbol (e.g., \"ESZ3\", \"CLF4\")",
-                        "name": "symbol",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/ContractIDResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/futures/contracts/search": {
-            "get": {
-                "description": "Searches for futures contracts based on various criteria including asset, security type, and instrument class.\nAt least one search criterion must be provided.\n\nNote: When searching by instrumentClass alone, securityType is required. However, instrumentClass\nfiltering is supported in all search combinations and will be applied as a post-filter when necessary.",
-                "tags": [
-                    "futures"
-                ],
-                "summary": "Search futures contracts",
-                "operationId": "searchFuturesContracts",
-                "parameters": [
-                    {
-                        "description": "Filter by underlying asset (e.g., \"ES\", \"CL\", \"GC\")",
-                        "name": "asset",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter by security type (\"FUT\" for futures, \"OOF\" for options on futures)",
-                        "name": "securityType",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter by instrument class (e.g., \"F\" for futures, \"S\" for spreads, \"C\" for calls, \"P\" for puts)",
-                        "name": "instrumentClass",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Alias for instrumentClass (for backward compatibility)",
-                        "name": "InstrumentClass",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Sort results by field",
-                        "name": "sort",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "securityType",
-                                "instrumentClass",
-                                "rawSymbol",
-                                "expiration"
-                            ],
-                            "default": "relevance"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/ContractsSearchResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
+                        "$ref": "#/components/responses/FetchFuturesDetailsResponse"
                     },
                     "500": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -1571,15 +1509,6 @@
                 "operationId": "fetchFuturesLastTrade",
                 "parameters": [
                     {
-                        "description": "The asset of the futures contract",
-                        "name": "asset",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "description": "The raw symbol of the futures contract",
                         "name": "raw_symbol",
                         "in": "query",
@@ -1591,7 +1520,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/FetchFuturesLastTradeResponse"
+                        "description": "TradeData",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TradeData"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -1613,15 +1549,6 @@
                 "summary": "OHLCV",
                 "operationId": "fetchFuturesOHLCV",
                 "parameters": [
-                    {
-                        "description": "The asset of the futures contract",
-                        "name": "asset",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     {
                         "description": "The raw symbol of the futures contract",
                         "name": "raw_symbol",
@@ -1657,14 +1584,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "description": "The limit of the trades",
-                        "name": "limit",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
                     }
                 ],
                 "responses": {
@@ -1683,24 +1602,6 @@
                 }
             }
         },
-        "/futures/options/all": {
-            "get": {
-                "description": "Retrieves all available options on futures contracts (security type = OOF).",
-                "tags": [
-                    "futures"
-                ],
-                "summary": "All options on futures",
-                "operationId": "getAllOptionsOnFutures",
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/ContractsSearchResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/futures/trades": {
             "get": {
                 "tags": [
@@ -1709,15 +1610,6 @@
                 "summary": "Futures trades",
                 "operationId": "fetchFuturesTrades",
                 "parameters": [
-                    {
-                        "description": "The asset of the futures contract",
-                        "name": "asset",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     {
                         "description": "The raw symbol of the futures contract",
                         "name": "raw_symbol",
@@ -1756,7 +1648,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/FetchFuturesTradesResponse"
+                        "$ref": "#/components/responses/TradesDataResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2253,284 +2145,6 @@
                 }
             }
         },
-        "/options/chain/{ticker}": {
-            "get": {
-                "description": "Retrieves comprehensive options chain data for a given underlying ticker symbol.\nWhen calculate_put_call_ratio is set to true and contract_type is 'both', the response\nwill include put/call ratio analysis which is useful for market sentiment analysis.",
-                "tags": [
-                    "options"
-                ],
-                "summary": "Options chain",
-                "operationId": "getOptionsChain",
-                "parameters": [
-                    {
-                        "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for options expiration range (YYYY-MM-DD format)",
-                        "name": "start_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "End date for options expiration range (YYYY-MM-DD format)",
-                        "name": "end_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Type of contracts to return",
-                        "name": "contract_type",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "call",
-                                "put",
-                                "both"
-                            ],
-                            "default": "both"
-                        }
-                    },
-                    {
-                        "description": "Money status filter",
-                        "name": "money_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "ITM",
-                                "OTM",
-                                "ATM",
-                                "ALL"
-                            ],
-                            "default": "ALL"
-                        }
-                    },
-                    {
-                        "description": "Whether to calculate put/call ratio",
-                        "name": "calculate_put_call_ratio",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    },
-                    {
-                        "description": "Minimum strike price filter",
-                        "name": "min_strike_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum strike price filter",
-                        "name": "max_strike_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum break-even price filter",
-                        "name": "min_break_even_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum break-even price filter",
-                        "name": "max_break_even_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum current option price filter",
-                        "name": "min_current_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum current option price filter",
-                        "name": "max_current_price",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum price change filter",
-                        "name": "min_price_change",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum price change filter",
-                        "name": "max_price_change",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum price change percentage filter",
-                        "name": "min_price_change_percentage",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum price change percentage filter",
-                        "name": "max_price_change_percentage",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum delta (price sensitivity) filter",
-                        "name": "min_delta",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum delta (price sensitivity) filter",
-                        "name": "max_delta",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum gamma (delta sensitivity) filter",
-                        "name": "min_gamma",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum gamma (delta sensitivity) filter",
-                        "name": "max_gamma",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum theta (time decay) filter",
-                        "name": "min_theta",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum theta (time decay) filter",
-                        "name": "max_theta",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum vega (volatility sensitivity) filter",
-                        "name": "min_vega",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum vega (volatility sensitivity) filter",
-                        "name": "max_vega",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum open interest filter",
-                        "name": "min_open_interest",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Maximum open interest filter",
-                        "name": "max_open_interest",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Minimum volume filter",
-                        "name": "min_volume",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum volume filter",
-                        "name": "max_volume",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Minimum implied volatility filter",
-                        "name": "min_implied_vol",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "description": "Maximum implied volatility filter",
-                        "name": "max_implied_vol",
-                        "in": "query",
-                        "schema": {
-                            "type": "number"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/OptionsChainResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/options/extra-info/{ticker}": {
             "get": {
                 "description": "Retrieves comprehensive options extra info data for a given underlying ticker symbol.",
@@ -2553,56 +2167,6 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/OptionsExtraInfoResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/options/filter-ranges/{ticker}": {
-            "get": {
-                "description": "Returns the minimum and maximum values for all filterable fields in the options chain data.",
-                "tags": [
-                    "options"
-                ],
-                "summary": "Get options filter ranges",
-                "operationId": "getOptionsFilterRanges",
-                "parameters": [
-                    {
-                        "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for options expiration range (YYYY-MM-DD format)",
-                        "name": "start_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "End date for options expiration range (YYYY-MM-DD format)",
-                        "name": "end_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/OptionsFilterRangesResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2672,73 +2236,17 @@
                 }
             }
         },
-        "/options/historical/{ticker}": {
+        "/options/market-summary": {
             "get": {
-                "description": "Retrieves historical aggregate price data (OHLCV bars) for a specific options contract.\nBoth start_date and end_date are required parameters and should be provided in YYYY-MM-DD format.",
+                "description": "Retrieves comprehensive options market summary data for a given underlying ticker symbol.",
                 "tags": [
                     "options"
                 ],
-                "summary": "Historical options",
-                "operationId": "getHistoricalOptionsData",
-                "parameters": [
-                    {
-                        "description": "The options contract ticker (e.g., O:AAPL240119C00150000)",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for historical data (YYYY-MM-DD format)",
-                        "name": "start_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "End date for historical data (YYYY-MM-DD format)",
-                        "name": "end_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Time interval for aggregation",
-                        "name": "interval",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "minute",
-                                "hour",
-                                "day",
-                                "week",
-                                "month",
-                                "quarter",
-                                "year"
-                            ],
-                            "default": "day"
-                        }
-                    },
-                    {
-                        "description": "Time multiplier for the interval (e.g., 5 for 5-minute bars)",
-                        "name": "time_break",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        }
-                    }
-                ],
+                "summary": "Options market summary",
+                "operationId": "getOptionsMarketSummary",
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/HistoricalOptionsResponse"
+                        "$ref": "#/components/responses/OptionsChainResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2749,14 +2257,71 @@
                 }
             }
         },
-        "/options/market-summary": {
+        "/options/v2/chain/{ticker}": {
             "get": {
-                "description": "Retrieves comprehensive options market summary data for a given underlying ticker symbol.",
+                "description": "Retrieves comprehensive options chain data for a given underlying ticker symbol.\nWhen calculate_put_call_ratio is set to true and contract_type is 'both', the response\nwill include put/call ratio analysis which is useful for market sentiment analysis.",
                 "tags": [
                     "options"
                 ],
-                "summary": "Options market summary",
-                "operationId": "getOptionsMarketSummary",
+                "summary": "Options chain",
+                "operationId": "getOptionsChain",
+                "parameters": [
+                    {
+                        "description": "The underlying ticker symbol (e.g., AAPL, TSLA, SPY)",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date for options expiration range (YYYY-MM-DD format)",
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date for options expiration range (YYYY-MM-DD format)",
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Type of contracts to return",
+                        "name": "contract_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "C",
+                                "P",
+                                "both"
+                            ],
+                            "default": "both"
+                        }
+                    },
+                    {
+                        "description": "Minimum strike price",
+                        "name": "min_strike",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "Maximum strike price",
+                        "name": "max_strike",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/OptionsChainResponse"
@@ -4482,6 +4047,39 @@
                     }
                 }
             },
+            "FetchCurrentPriceResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/FuturesCurrentPrice"
+                        }
+                    }
+                }
+            },
+            "FetchFuturesContinuousOHLCVResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/FuturesContinuousOHLCV"
+                            }
+                        }
+                    }
+                }
+            },
+            "FetchFuturesDetailsResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/EnhancedFuturesDetails"
+                        }
+                    }
+                }
+            },
             "FetchFuturesLastTradeResponse": {
                 "description": "",
                 "content": {
@@ -4610,6 +4208,16 @@
                             "items": {
                                 "$ref": "#/components/schemas/FuturesRowData"
                             }
+                        }
+                    }
+                }
+            },
+            "FuturesDetailsResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/FuturesDetailsResponse"
                         }
                     }
                 }
@@ -5443,25 +5051,51 @@
                         "x-go-name": "Asset",
                         "example": "4EUM5"
                     },
+                    "dollarChange": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "DollarChange",
+                        "example": 0.1
+                    },
                     "expiration": {
                         "type": "string",
                         "x-go-name": "Expiration",
-                        "example": "1751032800000000000"
+                        "example": "U6"
                     },
-                    "instrumentClass": {
-                        "type": "string",
-                        "x-go-name": "InstrumentClass",
-                        "example": "P"
+                    "lastClose": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "LastClose",
+                        "example": 14.8
                     },
-                    "instrumentId": {
+                    "lastDayToTrade": {
                         "type": "string",
-                        "x-go-name": "InstrumentID",
-                        "example": "4EU"
+                        "x-go-name": "LastDayToTrade",
+                        "example": "U5"
                     },
-                    "key": {
-                        "type": "string",
-                        "x-go-name": "Key",
-                        "example": "00#4EU#4EUM5 P1147#07472922436854775807"
+                    "openInterest": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "OpenInterest",
+                        "example": 5000
+                    },
+                    "percentageChange": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PercentageChange",
+                        "example": 0.68
+                    },
+                    "previousClose": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PreviousClose",
+                        "example": 14.7
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Price",
+                        "example": 14.75
                     },
                     "rawSymbol": {
                         "type": "string",
@@ -5471,7 +5105,13 @@
                     "securityType": {
                         "type": "string",
                         "x-go-name": "SecurityType",
-                        "example": "OOF"
+                        "example": "F"
+                    },
+                    "volume": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Volume",
+                        "example": 1000
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -6158,6 +5798,364 @@
                 "type": "object",
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "EnhancedFuturesDetails": {
+                "description": "EnhancedFuturesDetails extends FuturesDetails with additional market data",
+                "type": "object",
+                "properties": {
+                    "activation": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Activation",
+                        "example": 0
+                    },
+                    "appl_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "ApplID",
+                        "example": 0
+                    },
+                    "asset": {
+                        "type": "string",
+                        "x-go-name": "Asset",
+                        "example": "4EU"
+                    },
+                    "cfi": {
+                        "type": "string",
+                        "x-go-name": "Cfi",
+                        "example": "FFICSX"
+                    },
+                    "channel_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "ChannelID",
+                        "example": 0
+                    },
+                    "contract_multiplier": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "ContractMultiplier",
+                        "example": 50
+                    },
+                    "contract_multiplier_unit": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "ContractMultiplierUnit",
+                        "example": 0
+                    },
+                    "currency": {
+                        "type": "string",
+                        "x-go-name": "Currency",
+                        "example": "USD"
+                    },
+                    "currentPrice": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "CurrentPrice"
+                    },
+                    "decay_quantity": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "DecayQuantity",
+                        "example": 0
+                    },
+                    "decay_start_date": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "DecayStartDate",
+                        "example": 0
+                    },
+                    "display_factor": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "DisplayFactor",
+                        "example": 1
+                    },
+                    "dollarChange": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "DollarChange"
+                    },
+                    "exchange": {
+                        "type": "string",
+                        "x-go-name": "Exchange",
+                        "example": "CME"
+                    },
+                    "expiration": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Expiration",
+                        "example": 1750702800000000000
+                    },
+                    "flow_schedule_type": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "FlowScheduleType",
+                        "example": 0
+                    },
+                    "group": {
+                        "type": "string",
+                        "x-go-name": "Group",
+                        "example": "4EU"
+                    },
+                    "high_limit_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "HighLimitPrice",
+                        "example": 5000
+                    },
+                    "inst_attrib_value": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "InstAttribValue",
+                        "example": 0
+                    },
+                    "instrument_class": {
+                        "type": "string",
+                        "x-go-name": "InstrumentClass",
+                        "example": "futures"
+                    },
+                    "instrument_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "InstrumentID",
+                        "example": 42258567
+                    },
+                    "lastClose": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "LastClose"
+                    },
+                    "low_limit_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "LowLimitPrice",
+                        "example": 1000
+                    },
+                    "main_fraction": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MainFraction",
+                        "example": 0
+                    },
+                    "market_depth": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MarketDepth",
+                        "example": 0
+                    },
+                    "market_depth_implied": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MarketDepthImplied",
+                        "example": 0
+                    },
+                    "market_segment_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MarketSegmentID",
+                        "example": 0
+                    },
+                    "match_algorithm": {
+                        "type": "string",
+                        "x-go-name": "MatchAlgorithm"
+                    },
+                    "maturity_day": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaturityDay",
+                        "example": 0
+                    },
+                    "maturity_month": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaturityMonth",
+                        "example": 5
+                    },
+                    "maturity_week": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaturityWeek",
+                        "example": 0
+                    },
+                    "maturity_year": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaturityYear",
+                        "example": 2025
+                    },
+                    "max_price_variation": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MaxPriceVariation",
+                        "example": 100
+                    },
+                    "max_trade_vol": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaxTradeVol",
+                        "example": 1000000
+                    },
+                    "min_lot_size": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MinLotSize",
+                        "example": 1
+                    },
+                    "min_lot_size_block": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MinLotSizeBlock",
+                        "example": 1
+                    },
+                    "min_lot_size_round_lot": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MinLotSizeRoundLot",
+                        "example": 1
+                    },
+                    "min_price_increment": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MinPriceIncrement",
+                        "example": 0.25
+                    },
+                    "min_price_increment_amount": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MinPriceIncrementAmount",
+                        "example": 0.25
+                    },
+                    "min_trade_vol": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MinTradeVol",
+                        "example": 1
+                    },
+                    "openInterest": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "OpenInterest"
+                    },
+                    "original_contract_size": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "OriginalContractSize",
+                        "example": 50
+                    },
+                    "percentageChange": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PercentageChange"
+                    },
+                    "price_display_format": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "PriceDisplayFormat",
+                        "example": 0
+                    },
+                    "price_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PriceRatio",
+                        "example": 1
+                    },
+                    "raw_instrument_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "RawInstrumentID",
+                        "example": 42258567
+                    },
+                    "raw_symbol": {
+                        "type": "string",
+                        "x-go-name": "RawSymbol",
+                        "example": "4EUM5 P1147"
+                    },
+                    "secsubtype": {
+                        "type": "string",
+                        "x-go-name": "Secsubtype"
+                    },
+                    "security_type": {
+                        "type": "string",
+                        "x-go-name": "SecurityType",
+                        "example": "F"
+                    },
+                    "security_update_action": {
+                        "type": "string",
+                        "x-go-name": "SecurityUpdateAction"
+                    },
+                    "settl_currency": {
+                        "type": "string",
+                        "x-go-name": "SettlCurrency",
+                        "example": "USD"
+                    },
+                    "strike_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "StrikePrice",
+                        "example": 0
+                    },
+                    "strike_price_currency": {
+                        "type": "string",
+                        "x-go-name": "StrikePriceCurrency",
+                        "example": "USD"
+                    },
+                    "sub_fraction": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "SubFraction",
+                        "example": 0
+                    },
+                    "tick_rule": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TickRule",
+                        "example": 0
+                    },
+                    "ts_recv": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TSRecv",
+                        "example": 865950674
+                    },
+                    "underlying": {
+                        "type": "string",
+                        "x-go-name": "Underlying"
+                    },
+                    "underlying_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "UnderlyingID",
+                        "example": 0
+                    },
+                    "underlying_product": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "UnderlyingProduct",
+                        "example": 0
+                    },
+                    "unit_of_measure": {
+                        "type": "string",
+                        "x-go-name": "UnitOfMeasure",
+                        "example": "USD"
+                    },
+                    "unit_of_measure_qty": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "UnitOfMeasureQty",
+                        "example": 1
+                    },
+                    "user_defined_instrument": {
+                        "type": "string",
+                        "x-go-name": "UserDefinedInstrument"
+                    },
+                    "volume": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Volume"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "EntityHoldingResponse": {
                 "type": "object",
                 "properties": {
@@ -6673,6 +6671,52 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "FuturesContinuousOHLCV": {
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "type": "string",
+                        "x-go-name": "Asset",
+                        "example": "BTC"
+                    },
+                    "close": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Close",
+                        "example": 0.0015
+                    },
+                    "high": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "High",
+                        "example": 0.0015
+                    },
+                    "low": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Low",
+                        "example": 0.0015
+                    },
+                    "open": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Open",
+                        "example": 0.0015
+                    },
+                    "ts_event": {
+                        "type": "string",
+                        "x-go-name": "TsEvent",
+                        "example": "2025-01-27 15:04:05"
+                    },
+                    "volume": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "Volume",
+                        "example": 1
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "FuturesContractNamingSearchResponse": {
                 "type": "object",
                 "properties": {
@@ -6776,46 +6820,413 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "FuturesOHLCV": {
+            "FuturesCurrentPrice": {
                 "type": "object",
                 "properties": {
                     "asset": {
                         "type": "string",
                         "x-go-name": "Asset",
+                        "example": "BTC"
+                    },
+                    "change_percentage": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "ChangePercentage",
+                        "example": 0.0029
+                    },
+                    "dollar_change": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "DollarChange",
+                        "example": 0.56
+                    },
+                    "previous_close": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PreviousClose",
+                        "example": 195.16
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Price",
+                        "example": 195.72
+                    },
+                    "side": {
+                        "type": "string",
+                        "x-go-name": "Side",
+                        "example": "Bid"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "uint32",
+                        "x-go-name": "Size",
+                        "example": 200
+                    },
+                    "ts_event": {
+                        "type": "integer",
+                        "format": "uint64",
+                        "x-go-name": "TsEvent",
+                        "example": 1702371929
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "FuturesDetails": {
+                "type": "object",
+                "properties": {
+                    "activation": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Activation",
+                        "example": 0
+                    },
+                    "appl_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "ApplID",
+                        "example": 0
+                    },
+                    "asset": {
+                        "type": "string",
+                        "x-go-name": "Asset",
                         "example": "4EU"
                     },
+                    "cfi": {
+                        "type": "string",
+                        "x-go-name": "Cfi",
+                        "example": "FFICSX"
+                    },
+                    "channel_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "ChannelID",
+                        "example": 0
+                    },
+                    "contract_multiplier": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "ContractMultiplier",
+                        "example": 50
+                    },
+                    "contract_multiplier_unit": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "ContractMultiplierUnit",
+                        "example": 0
+                    },
+                    "currency": {
+                        "type": "string",
+                        "x-go-name": "Currency",
+                        "example": "USD"
+                    },
+                    "decay_quantity": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "DecayQuantity",
+                        "example": 0
+                    },
+                    "decay_start_date": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "DecayStartDate",
+                        "example": 0
+                    },
+                    "display_factor": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "DisplayFactor",
+                        "example": 1
+                    },
+                    "exchange": {
+                        "type": "string",
+                        "x-go-name": "Exchange",
+                        "example": "CME"
+                    },
+                    "expiration": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Expiration",
+                        "example": 1750702800000000000
+                    },
+                    "flow_schedule_type": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "FlowScheduleType",
+                        "example": 0
+                    },
+                    "group": {
+                        "type": "string",
+                        "x-go-name": "Group",
+                        "example": "4EU"
+                    },
+                    "high_limit_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "HighLimitPrice",
+                        "example": 5000
+                    },
+                    "inst_attrib_value": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "InstAttribValue",
+                        "example": 0
+                    },
+                    "instrument_class": {
+                        "type": "string",
+                        "x-go-name": "InstrumentClass",
+                        "example": "futures"
+                    },
+                    "instrument_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "InstrumentID",
+                        "example": 42258567
+                    },
+                    "low_limit_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "LowLimitPrice",
+                        "example": 1000
+                    },
+                    "main_fraction": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MainFraction",
+                        "example": 0
+                    },
+                    "market_depth": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MarketDepth",
+                        "example": 0
+                    },
+                    "market_depth_implied": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MarketDepthImplied",
+                        "example": 0
+                    },
+                    "market_segment_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MarketSegmentID",
+                        "example": 0
+                    },
+                    "match_algorithm": {
+                        "type": "string",
+                        "x-go-name": "MatchAlgorithm"
+                    },
+                    "maturity_day": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaturityDay",
+                        "example": 0
+                    },
+                    "maturity_month": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaturityMonth",
+                        "example": 5
+                    },
+                    "maturity_week": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaturityWeek",
+                        "example": 0
+                    },
+                    "maturity_year": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaturityYear",
+                        "example": 2025
+                    },
+                    "max_price_variation": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MaxPriceVariation",
+                        "example": 100
+                    },
+                    "max_trade_vol": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MaxTradeVol",
+                        "example": 1000000
+                    },
+                    "min_lot_size": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MinLotSize",
+                        "example": 1
+                    },
+                    "min_lot_size_block": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MinLotSizeBlock",
+                        "example": 1
+                    },
+                    "min_lot_size_round_lot": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MinLotSizeRoundLot",
+                        "example": 1
+                    },
+                    "min_price_increment": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MinPriceIncrement",
+                        "example": 0.25
+                    },
+                    "min_price_increment_amount": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "MinPriceIncrementAmount",
+                        "example": 0.25
+                    },
+                    "min_trade_vol": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "MinTradeVol",
+                        "example": 1
+                    },
+                    "original_contract_size": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "OriginalContractSize",
+                        "example": 50
+                    },
+                    "price_display_format": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "PriceDisplayFormat",
+                        "example": 0
+                    },
+                    "price_ratio": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "PriceRatio",
+                        "example": 1
+                    },
+                    "raw_instrument_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "RawInstrumentID",
+                        "example": 42258567
+                    },
+                    "raw_symbol": {
+                        "type": "string",
+                        "x-go-name": "RawSymbol",
+                        "example": "4EUM5 P1147"
+                    },
+                    "secsubtype": {
+                        "type": "string",
+                        "x-go-name": "Secsubtype"
+                    },
+                    "security_type": {
+                        "type": "string",
+                        "x-go-name": "SecurityType",
+                        "example": "F"
+                    },
+                    "security_update_action": {
+                        "type": "string",
+                        "x-go-name": "SecurityUpdateAction"
+                    },
+                    "settl_currency": {
+                        "type": "string",
+                        "x-go-name": "SettlCurrency",
+                        "example": "USD"
+                    },
+                    "strike_price": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "StrikePrice",
+                        "example": 0
+                    },
+                    "strike_price_currency": {
+                        "type": "string",
+                        "x-go-name": "StrikePriceCurrency",
+                        "example": "USD"
+                    },
+                    "sub_fraction": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "SubFraction",
+                        "example": 0
+                    },
+                    "tick_rule": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TickRule",
+                        "example": 0
+                    },
+                    "ts_recv": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TSRecv",
+                        "example": 865950674
+                    },
+                    "underlying": {
+                        "type": "string",
+                        "x-go-name": "Underlying"
+                    },
+                    "underlying_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "UnderlyingID",
+                        "example": 0
+                    },
+                    "underlying_product": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "UnderlyingProduct",
+                        "example": 0
+                    },
+                    "unit_of_measure": {
+                        "type": "string",
+                        "x-go-name": "UnitOfMeasure",
+                        "example": "USD"
+                    },
+                    "unit_of_measure_qty": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "UnitOfMeasureQty",
+                        "example": 1
+                    },
+                    "user_defined_instrument": {
+                        "type": "string",
+                        "x-go-name": "UserDefinedInstrument"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "FuturesDetailsResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "description": "in: body",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FuturesDetails"
+                        },
+                        "x-go-name": "Data"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "FuturesOHLCV": {
+                "type": "object",
+                "properties": {
                     "close": {
                         "type": "number",
                         "format": "double",
                         "x-go-name": "Close",
                         "example": 0.0015
                     },
-                    "expiration": {
-                        "type": "string",
-                        "x-go-name": "Expiration",
-                        "example": "2025-01-27"
-                    },
-                    "frequency": {
-                        "type": "string",
-                        "x-go-name": "Frequency",
-                        "example": "1h"
-                    },
                     "high": {
                         "type": "number",
                         "format": "double",
                         "x-go-name": "High",
                         "example": 0.0015
-                    },
-                    "instrument_class": {
-                        "type": "string",
-                        "x-go-name": "InstrumentClass",
-                        "example": "P"
-                    },
-                    "instrument_id": {
-                        "type": "integer",
-                        "format": "uint64",
-                        "x-go-name": "InstrumentID",
-                        "example": 42258567
                     },
                     "low": {
                         "type": "number",
@@ -6829,32 +7240,10 @@
                         "x-go-name": "Open",
                         "example": 0.0015
                     },
-                    "publisher_id": {
-                        "type": "integer",
-                        "format": "uint64",
-                        "x-go-name": "PublisherID",
-                        "example": 1
-                    },
                     "raw_symbol": {
                         "type": "string",
                         "x-go-name": "RawSymbol",
                         "example": "4EUM5 P1147"
-                    },
-                    "row_key": {
-                        "type": "string",
-                        "x-go-name": "RowKey",
-                        "example": "00#4EU#4EUM5 P1147#07472922436854775807"
-                    },
-                    "security_type": {
-                        "type": "string",
-                        "x-go-name": "SecurityType",
-                        "example": "OOF"
-                    },
-                    "strike_price": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "StrikePrice",
-                        "example": 0
                     },
                     "ts_event": {
                         "type": "string",
@@ -6930,58 +7319,16 @@
             "FuturesTrade": {
                 "type": "object",
                 "properties": {
-                    "action": {
-                        "type": "string",
-                        "x-go-name": "Action",
-                        "example": "T"
-                    },
-                    "asset": {
-                        "type": "string",
-                        "x-go-name": "Asset",
-                        "example": "EW2"
-                    },
-                    "expiration": {
-                        "type": "string",
-                        "x-go-name": "Expiration",
-                        "example": "2025-01-27"
-                    },
-                    "instrument_class": {
-                        "type": "string",
-                        "x-go-name": "InstrumentClass",
-                        "example": "P"
-                    },
-                    "instrument_id": {
-                        "type": "integer",
-                        "format": "uint64",
-                        "x-go-name": "InstrumentID",
-                        "example": 42559206
-                    },
                     "price": {
                         "type": "number",
                         "format": "double",
                         "x-go-name": "Price",
                         "example": 14.75
                     },
-                    "publisher_id": {
-                        "type": "integer",
-                        "format": "uint64",
-                        "x-go-name": "PublisherID",
-                        "example": 1
-                    },
                     "raw_symbol": {
                         "type": "string",
                         "x-go-name": "RawSymbol",
                         "example": "EW2N5 P5550"
-                    },
-                    "row_key": {
-                        "type": "string",
-                        "x-go-name": "RowKey",
-                        "example": "01#EW2#EW2N5 P5550"
-                    },
-                    "security_type": {
-                        "type": "string",
-                        "x-go-name": "SecurityType",
-                        "example": "OOF"
                     },
                     "sequence": {
                         "type": "integer",
@@ -6999,12 +7346,6 @@
                         "format": "uint64",
                         "x-go-name": "Size",
                         "example": 1
-                    },
-                    "strike_price": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "StrikePrice",
-                        "example": 0.000006
                     },
                     "ts_event": {
                         "type": "string",
