@@ -1748,6 +1748,59 @@
                 }
             }
         },
+        "/industries": {
+            "get": {
+                "description": "Returns all unique industries from tracked tickers.",
+                "tags": [
+                    "tickers"
+                ],
+                "summary": "All industries",
+                "operationId": "GetAllIndustries",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/IndustriesListResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/industries/{industry}/tickers": {
+            "get": {
+                "description": "Returns all tickers in a specific industry.",
+                "tags": [
+                    "tickers"
+                ],
+                "summary": "Tickers by industry",
+                "operationId": "GetTickersByIndustry",
+                "parameters": [
+                    {
+                        "description": "The industry name (e.g., Consumer Electronics, Biotechnology).",
+                        "name": "industry",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TickersByIndustryResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
         "/industry-means/{industry}/{year}/{period}": {
             "get": {
                 "description": "Returns the calculated mean values for all financial metrics for a specific industry, year, and period.",
@@ -2905,6 +2958,59 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/SectorMeanResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/sectors": {
+            "get": {
+                "description": "Returns all unique sectors from tracked tickers.",
+                "tags": [
+                    "tickers"
+                ],
+                "summary": "All sectors",
+                "operationId": "GetAllSectors",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SectorsListResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/sectors/{sector}/tickers": {
+            "get": {
+                "description": "Returns all tickers in a specific sector.",
+                "tags": [
+                    "tickers"
+                ],
+                "summary": "Tickers by sector",
+                "operationId": "GetTickersBySector",
+                "parameters": [
+                    {
+                        "description": "The sector name (e.g., Technology, Healthcare).",
+                        "name": "sector",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TickersBySectorResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -4101,6 +4207,16 @@
                     }
                 }
             },
+            "IndustriesListResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/IndustriesListResponse"
+                        }
+                    }
+                }
+            },
             "IndustryMeanResponse": {
                 "description": "",
                 "content": {
@@ -4367,6 +4483,16 @@
                     }
                 }
             },
+            "SectorsListResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/SectorsListResponse"
+                        }
+                    }
+                }
+            },
             "StockSplitsResponse": {
                 "description": "",
                 "content": {
@@ -4403,6 +4529,26 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/TickerSentimentResponse"
+                        }
+                    }
+                }
+            },
+            "TickersByIndustryResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/TickersByIndustryResponse"
+                        }
+                    }
+                }
+            },
+            "TickersBySectorResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/TickersBySectorResponse"
                         }
                     }
                 }
@@ -7437,6 +7583,31 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "IndustriesListResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Data",
+                        "example": [
+                            "Consumer Electronics",
+                            "Internet Content & Information",
+                            "Internet Retail",
+                            "Semiconductors",
+                            "Auto Manufacturers",
+                            "Entertainment",
+                            "Insurance - Diversified",
+                            "Software - Infrastructure",
+                            "Banks - Regional",
+                            "Biotechnology"
+                        ]
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "IndustryMeanData": {
                 "description": "IndustryMeanData represents the calculated mean values for an industry",
                 "type": "object",
@@ -8717,6 +8888,32 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
+            "SectorsListResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "Data",
+                        "example": [
+                            "Technology",
+                            "Healthcare",
+                            "Financial Services",
+                            "Consumer Cyclical",
+                            "Communication Services",
+                            "Industrials",
+                            "Energy",
+                            "Utilities",
+                            "Real Estate",
+                            "Consumer Defensive",
+                            "Basic Materials"
+                        ]
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
             "SkeletonNewsArticle": {
                 "type": "object",
                 "properties": {
@@ -9119,6 +9316,69 @@
                 "properties": {
                     "Data": {
                         "$ref": "#/components/schemas/MultiPeriodSentimentMetrics"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TickersByIndustryResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "industry": {
+                                "type": "string",
+                                "x-go-name": "Industry"
+                            },
+                            "tickers": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "x-go-name": "Tickers"
+                            }
+                        },
+                        "x-go-name": "Data",
+                        "example": {
+                            "industry": "Consumer Electronics",
+                            "tickers": [
+                                "AAPL"
+                            ]
+                        }
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "TickersBySectorResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "sector": {
+                                "type": "string",
+                                "x-go-name": "Sector"
+                            },
+                            "tickers": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "x-go-name": "Tickers"
+                            }
+                        },
+                        "x-go-name": "Data",
+                        "example": {
+                            "sector": "Technology",
+                            "tickers": [
+                                "AAPL",
+                                "GOOGL",
+                                "GOOG",
+                                "NVDA",
+                                "META",
+                                "NFLX"
+                            ]
+                        }
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
