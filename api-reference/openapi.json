@@ -3572,6 +3572,37 @@
                 }
             }
         },
+        "/search/unstructured/extract-text": {
+            "post": {
+                "description": "Downloads a file from Google Cloud Storage and extracts its text content.\nSupports PDF, TXT, HTML, and HTM file formats.",
+                "tags": [
+                    "extraction"
+                ],
+                "summary": "Extract text from GCS file",
+                "operationId": "extractGCSTextParams",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GCSFileTextRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GCSFileTextResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/UnstructuredErrorResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/UnstructuredErrorResponse"
+                    }
+                }
+            }
+        },
         "/search/unstructured/health": {
             "get": {
                 "description": "Checks if the unstructured data search service is healthy.",
@@ -5082,6 +5113,16 @@
                             "items": {
                                 "$ref": "#/components/schemas/G7EventsData"
                             }
+                        }
+                    }
+                }
+            },
+            "GCSFileTextResponse": {
+                "description": "",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/GCSFileTextResponse"
                         }
                     }
                 }
@@ -6686,7 +6727,7 @@
                 "type": "object",
                 "properties": {
                     "ai_industries": {
-                        "description": "Third party specific (all are arrays in metadata - use ARRAY_CONTAINS_ANY)",
+                        "description": "Third party specific (stored as string representations of Python lists - use 'like' for substring matching)",
                         "type": "array",
                         "items": {
                             "type": "string"
@@ -6719,7 +6760,7 @@
                         "x-go-name": "EndDate"
                     },
                     "file_type": {
-                        "description": "SEC filings specific (metadata fields - use json_contains_any)",
+                        "description": "SEC filings specific (metadata fields - stored as strings)",
                         "type": "array",
                         "items": {
                             "type": "string"
@@ -8501,6 +8542,45 @@
                         "type": "string",
                         "x-go-name": "Unit",
                         "example": "%"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "GCSFileTextRequest": {
+                "description": "GCSFileTextRequest represents the request for extracting text from a GCS file",
+                "type": "object",
+                "properties": {
+                    "gcs_url": {
+                        "type": "string",
+                        "x-go-name": "GCSURL"
+                    }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "GCSFileTextResponse": {
+                "description": "GCSFileTextResponse represents the response containing extracted text from a GCS file",
+                "type": "object",
+                "properties": {
+                    "file_type": {
+                        "type": "string",
+                        "x-go-name": "FileType"
+                    },
+                    "gcs_url": {
+                        "type": "string",
+                        "x-go-name": "GCSURL"
+                    },
+                    "processed_at": {
+                        "type": "string",
+                        "x-go-name": "ProcessedAt"
+                    },
+                    "text": {
+                        "type": "string",
+                        "x-go-name": "Text"
+                    },
+                    "text_length": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "TextLength"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
