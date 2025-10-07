@@ -3543,7 +3543,7 @@
         },
         "/search/unstructured": {
             "post": {
-                "description": "Searches for unstructured documents using vector similarity search with document-type-specific filters.\nFilters are applied with OR relationship between document types (sec, news, transcripts, ir, third_party).\n\nDocument Types Parameter:\nUse \"document_types\" array to search specific types without metadata filters\nExample: [\"sec\", \"news\", \"third_party\"] searches all documents of those types\nCan be combined with filter objects for more specific queries\n\nDocument Type Filters:\nSEC (sec_filings): ticker, file_type (8-K, 10-K, 10-Q), year\nNews (news): source, sentiment_label, tone, themes (array), tickers (array)\nTranscripts (earnings_call_transcript): ticker, quarter, year\nIR (press_release, earnings_call_slides): ticker, quarter, year\nThird Party (unstructured_third_party_report_downloaded): ai_industries, ai_keywords, ai_sectors, category",
+                "description": "Searches for unstructured documents using vector similarity search with document-type-specific filters.\nFilters are applied with OR relationship between document types.\n\nDocument Types Parameter:\nUse \"document_types\" array to search specific types without metadata filters\nExample: [\"news\", \"earnings_call_transcripts\", \"press_release\", \"earnings_call_slides\", \"sec_filings\", \"third_party\", \"third_party_fixed_income\"]\nCan be combined with filter objects for more specific queries\nIMPORTANT: Use the exact document type names as shown in the example above (case-sensitive)\n\nDocument Type Filters (use these exact JSON field names):\nnews: source, sentiment_label, tone, themes (array), tickers (array)\nearnings_call_transcripts: ticker, quarter, year\npress_release: ticker, quarter, year\nearnings_call_slides: ticker, quarter, year\nsec_filings: ticker, file_type (8-K, 10-K, 10-Q), year\nthird_party: ai_industries, ai_keywords, ai_sectors, ai_tickers, category\nthird_party_fixed_income: ai_industries, ai_keywords, ai_sectors, ai_tickers, category",
                 "tags": [
                     "search"
                 ],
@@ -6748,6 +6748,13 @@
                         },
                         "x-go-name": "AISectors"
                     },
+                    "ai_tickers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "x-go-name": "AITickers"
+                    },
                     "category": {
                         "type": "array",
                         "items": {
@@ -8662,21 +8669,6 @@
                 "description": "Highlight represents a highlighted text snippet",
                 "type": "object",
                 "properties": {
-                    "end": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "End"
-                    },
-                    "score": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Score"
-                    },
-                    "start": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "Start"
-                    },
                     "text": {
                         "type": "string",
                         "x-go-name": "Text"
@@ -9063,6 +9055,21 @@
                         "x-go-name": "MarketOpen",
                         "example": true
                     }
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "MetricData": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string"
+                },
+                "x-go-package": "github.com/api-with-go/app/logic/models"
+            },
+            "MetricSeries": {
+                "description": "forDate → payload",
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/MetricData"
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
@@ -9688,13 +9695,7 @@
                     "metrics": {
                         "type": "object",
                         "additionalProperties": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "object",
-                                "additionalProperties": {
-                                    "type": "string"
-                                }
-                            }
+                            "$ref": "#/components/schemas/MetricSeries"
                         },
                         "x-go-name": "Metrics"
                     }
@@ -11140,6 +11141,12 @@
                         },
                         "x-go-name": "DocumentTypes"
                     },
+                    "earnings_call_slides": {
+                        "$ref": "#/components/schemas/DocumentTypeFilters"
+                    },
+                    "earnings_call_transcript": {
+                        "$ref": "#/components/schemas/DocumentTypeFilters"
+                    },
                     "enable_rerank": {
                         "type": "boolean",
                         "x-go-name": "EnableRerank"
@@ -11149,29 +11156,29 @@
                         "format": "int64",
                         "x-go-name": "InitialCandidates"
                     },
-                    "ir": {
+                    "news": {
                         "$ref": "#/components/schemas/DocumentTypeFilters"
                     },
-                    "news": {
+                    "press_release": {
                         "$ref": "#/components/schemas/DocumentTypeFilters"
                     },
                     "query": {
                         "type": "string",
                         "x-go-name": "Query"
                     },
-                    "sec": {
+                    "sec_filings": {
                         "$ref": "#/components/schemas/DocumentTypeFilters"
                     },
                     "third_party": {
+                        "$ref": "#/components/schemas/DocumentTypeFilters"
+                    },
+                    "third_party_fixed_income": {
                         "$ref": "#/components/schemas/DocumentTypeFilters"
                     },
                     "top_k": {
                         "type": "integer",
                         "format": "int64",
                         "x-go-name": "TopK"
-                    },
-                    "transcripts": {
-                        "$ref": "#/components/schemas/DocumentTypeFilters"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -11258,10 +11265,6 @@
                     "source": {
                         "type": "string",
                         "x-go-name": "Source"
-                    },
-                    "text": {
-                        "type": "string",
-                        "x-go-name": "Text"
                     },
                     "title": {
                         "type": "string",
