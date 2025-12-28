@@ -244,148 +244,6 @@
                 }
             }
         },
-        "/calendar": {
-            "get": {
-                "description": "Fetch calendar information by a specific equity(s) or watchlist(s) from Aiera API.",
-                "tags": [
-                    "events"
-                ],
-                "summary": "Event Calendar",
-                "operationId": "getEventCalendar",
-                "parameters": [
-                    {
-                        "description": "Only return events modified since this ISO 8601 timestamp",
-                        "name": "modified_since",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter by event type (e.g., earnings_call, conference)",
-                        "name": "event_type",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Start date for the calendar range (YYYY-MM-DD)",
-                        "name": "start_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        }
-                    },
-                    {
-                        "description": "End date for the calendar range (YYYY-MM-DD)",
-                        "name": "end_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more Bloomberg tickers (comma-separated, e.g., \"AAPL:US\")",
-                        "name": "bloomberg_ticker",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more ISINs (comma-separated)",
-                        "name": "isin",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more PermIDs (comma-separated)",
-                        "name": "permid",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more RICs (comma-separated)",
-                        "name": "ric",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more tickers (comma-separated)",
-                        "name": "ticker",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to a specific watchlist ID",
-                        "name": "watchlist_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Whether to roll-up any matches to the corresponding company entity",
-                        "name": "company_rollup",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include deleted events",
-                        "name": "include_deleted",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include private events",
-                        "name": "include_private",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Page number for pagination",
-                        "name": "page",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Number of results per page",
-                        "name": "page_size",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/EventCalendarResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/current-price/{symbol}": {
             "get": {
                 "description": "This will retrieve the most recent trade data for the specified stock symbol including\ncurrent price, bid/ask prices, trade size, and other market data from Redis.",
@@ -725,59 +583,6 @@
                 }
             }
         },
-        "/earnings-documents/{symbol}/{year}/{quarter}": {
-            "get": {
-                "description": "Retrieves the earnings documents (press releases and slides) for a specific company, year, and quarter.",
-                "tags": [
-                    "earnings-documents"
-                ],
-                "summary": "Earnings Documents",
-                "operationId": "getEarningsDocuments",
-                "parameters": [
-                    {
-                        "description": "The stock symbol (e.g., AAPL).",
-                        "name": "symbol",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The year of the earnings documents (e.g., 2023).",
-                        "name": "year",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "The quarter of the earnings documents (e.g., 4 or Q4).",
-                        "name": "quarter",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/EarningsDocumentsResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/entity-holdings": {
             "get": {
                 "description": "Retrieves holdings data for a specific entity, with optional filtering by ticker symbol and date range.\nReturns enriched holdings data including fund names, entity names, and ticker symbols.",
@@ -1042,549 +847,6 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/EstimatesResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/events": {
-            "get": {
-                "description": "Fetch events by ticker, date range, etc. Returns all events without pagination.",
-                "tags": [
-                    "events"
-                ],
-                "summary": "Find Events",
-                "operationId": "getEventsV2",
-                "parameters": [
-                    {
-                        "description": "Returns events modified since this date (ISO 8601 format)",
-                        "name": "modified_since",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter by event type (earnings, earnings_release, presentation, investor_meeting, special_situation)",
-                        "name": "event_type",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Fetch events on or after this date (defaults to 2 weeks ago) (YYYY-MM-DD format)",
-                        "name": "start_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Fetch events on or before this date (defaults to 2 weeks from now) (YYYY-MM-DD format)",
-                        "name": "end_date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to the equity ID provided",
-                        "name": "equity_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Filter to the company ID provided",
-                        "name": "company_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more bloomberg tickers (comma-separated)",
-                        "name": "bloomberg_ticker",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more ISINs (comma-separated)",
-                        "name": "isin",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more PermIDs (comma-separated)",
-                        "name": "permid",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more RICs (comma-separated)",
-                        "name": "ric",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more tickers (comma-separated)",
-                        "name": "ticker",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Whether to roll-up any matches to the corresponding company entity",
-                        "name": "company_rollup",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Filter to a specific sector ID",
-                        "name": "sector_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Filter to a specific subsector ID",
-                        "name": "subsector_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Filter to one or more event IDs (comma-separated)",
-                        "name": "event_ids",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter to a specific expected language",
-                        "name": "expected_language",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Whether to include only events with transcripts",
-                        "name": "with_transcripts",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include only events with pricing data",
-                        "name": "with_pricing",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include the associated company's metadata (e.g. names, urls)",
-                        "name": "include_company_metadata",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include deleted events",
-                        "name": "include_deleted",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include connection detail",
-                        "name": "include_connection_detail",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include event hierarchy detail",
-                        "name": "include_hierarchy",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include model-estimated event docs",
-                        "name": "include_estimated_docs",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to exclude any duplicated events",
-                        "name": "exclude_duplicates",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include linguistics metadata",
-                        "name": "linguistics",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include price reaction information",
-                        "name": "pricing",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to simplify the payload response and avoid data enrichment",
-                        "name": "simplified",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Sort by event_id_asc, event_id_desc, event_date_asc (default), or event_date_desc",
-                        "name": "sort_key",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/EventsV2Response"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/events/{event_id}": {
-            "get": {
-                "description": "Fetch a specific event with detailed information from Aiera API.",
-                "tags": [
-                    "events"
-                ],
-                "summary": "Event Details",
-                "operationId": "getEvent",
-                "parameters": [
-                    {
-                        "description": "The unique identifier for the event",
-                        "name": "event_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Whether to include linguistics metadata in the response",
-                        "name": "linguistics",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include price reaction information",
-                        "name": "pricing",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include event transcripts, if available",
-                        "name": "transcripts",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to only return the post-realtime improved transcripts",
-                        "name": "improved_only",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include the associated company's metadata (e.g. names, urls)",
-                        "name": "include_company_metadata",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to include deleted transcripts (if available)",
-                        "name": "include_deleted",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include connection detail",
-                        "name": "include_connection_detail",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include event hierarchy detail",
-                        "name": "include_hierarchy",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include model-estimated event docs",
-                        "name": "include_estimated_docs",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to include any transcripts, regardless of offset (if available)",
-                        "name": "include_everything",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to include transcript tagging (presentation, Q&A, etc)",
-                        "name": "include_tags",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to include people information for equity/event",
-                        "name": "include_people_data",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include word-by-word durations and offsets",
-                        "name": "word_offsets",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/EventResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/events/{event_id}/assets": {
-            "get": {
-                "description": "Get an event's press release or slides documents from Aiera, and related event data from Quartr.",
-                "tags": [
-                    "events"
-                ],
-                "summary": "Fetch event assets from Aiera and Quartr",
-                "operationId": "fetchEventAssets",
-                "parameters": [
-                    {
-                        "description": "The ID of the event (for Aiera)",
-                        "name": "event_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The ticker symbol (for Quartr)",
-                        "name": "ticker",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The date of the event in YYYY-MM-DD format (for Quartr)",
-                        "name": "event_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Whether to include docs as soon as they are available (before human review)",
-                        "name": "allow_estimated",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/CombinedEventAssetsResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/events/{event_id}/transcript": {
-            "get": {
-                "description": "Returns the available transcripts for an event from Aiera API.",
-                "tags": [
-                    "events"
-                ],
-                "summary": "Event Transcripts",
-                "operationId": "getTranscript",
-                "parameters": [
-                    {
-                        "description": "The unique identifier for the event",
-                        "name": "event_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Returns transcripts modified since this date (ISO 8601 format)",
-                        "name": "modified_since",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Whether to include linguistics metadata in the response",
-                        "name": "linguistics",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include price reaction information",
-                        "name": "pricing",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to only return the post-realtime improved transcripts",
-                        "name": "improved_only",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to include deleted transcripts",
-                        "name": "include_deleted",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to include any transcripts, regardless of offset (if available)",
-                        "name": "include_everything",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether or not to include transcript tagging (presentation, Q&A, etc)",
-                        "name": "include_tags",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "description": "Whether to include word-by-word durations and offsets",
-                        "name": "word_offsets",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/TranscriptResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2486,59 +1748,6 @@
                 }
             }
         },
-        "/industries": {
-            "get": {
-                "description": "Returns all unique industries from tracked tickers.",
-                "tags": [
-                    "sector"
-                ],
-                "summary": "All industries",
-                "operationId": "GetAllIndustries",
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/IndustriesListResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/industries/{industry}/tickers": {
-            "get": {
-                "description": "Returns all tickers in a specific industry.",
-                "tags": [
-                    "sector"
-                ],
-                "summary": "Tickers by industry",
-                "operationId": "GetTickersByIndustry",
-                "parameters": [
-                    {
-                        "description": "The industry name (e.g., Consumer Electronics, Biotechnology).",
-                        "name": "industry",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/TickersByIndustryResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
         "/industry-means/{industry}/{year}/{period}": {
             "get": {
                 "description": "Returns the calculated mean values for all financial metrics for a specific industry, year, and period.",
@@ -2739,17 +1948,46 @@
                 }
             }
         },
-        "/news/by-url": {
-            "post": {
-                "description": "Retrieves a news article directly from BigTable using its URL.",
+        "/news/metadata/filters": {
+            "get": {
+                "description": "Returns available filter values for news articles including sources, tickers, themes, and sentiment labels.",
                 "tags": [
                     "news"
                 ],
-                "summary": "News article by URL",
-                "operationId": "getNewsArticleByURL",
+                "summary": "Get available news metadata filters",
+                "operationId": "getNewsMetadataFilters",
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/NewsArticleByURLResponse"
+                        "$ref": "#/components/responses/NewsMetadataFiltersResponse"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/news/sentiment/{ticker}": {
+            "get": {
+                "description": "Retrieves sentiment scores for a ticker over the past 30 days.",
+                "tags": [
+                    "news"
+                ],
+                "summary": "Ticker sentiment",
+                "operationId": "getTickerSentiment30D",
+                "parameters": [
+                    {
+                        "description": "Stock ticker symbol (e.g., AAPL, TSLA)",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/TickerSentimentResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -2763,17 +2001,34 @@
                 }
             }
         },
-        "/news/metadata/filters": {
+        "/news/{id}": {
             "get": {
-                "description": "Returns available filter values for news articles including sources, tickers, themes, and sentiment labels.",
+                "description": "Retrieves a news article by its unique ID.",
                 "tags": [
                     "news"
                 ],
-                "summary": "Get available news metadata filters",
-                "operationId": "getNewsMetadataFilters",
+                "summary": "News article by ID",
+                "operationId": "getNewsArticle",
+                "parameters": [
+                    {
+                        "description": "Unique ID of the news article",
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/NewsMetadataFiltersResponse"
+                        "$ref": "#/components/responses/NewsArticleResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
                     },
                     "500": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -3503,14 +2758,6 @@
                         }
                     },
                     {
-                        "description": "Sector to filter by. Gets all tickers in the specified sector and adds them to the ticker filter",
-                        "name": "filter_sector",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "description": "Source/publisher to filter by (supports fuzzy matching for variations like \"Goldman Sachs\" vs \"GoldmanSachs\")",
                         "name": "filter_source",
                         "in": "query",
@@ -3542,57 +2789,54 @@
             }
         },
         "/search/unstructured": {
-            "post": {
-                "description": "Searches for unstructured documents using vector similarity search with document-type-specific filters.\nFilters are applied with OR relationship between document types.\n\nDocument Types Parameter:\nUse \"document_types\" array to search specific types without metadata filters\nExample: [\"news\", \"earnings_call_transcripts\", \"press_release\", \"earnings_call_slides\", \"sec_filings\", \"third_party\", \"third_party_fixed_income\"]\nCan be combined with filter objects for more specific queries\nIMPORTANT: Use the exact document type names as shown in the example above (case-sensitive)\n\nDocument Type Filters (use these exact JSON field names):\nnews: source, sentiment_label, tone, themes (array), tickers (array)\nearnings_call_transcripts: ticker, quarter, year\npress_release: ticker, quarter, year\nearnings_call_slides: ticker, quarter, year\nsec_filings: ticker, file_type (8-K, 10-K, 10-Q), year\nthird_party: ai_industries, ai_keywords, ai_sectors, ai_tickers, category\nthird_party_fixed_income: ai_industries, ai_keywords, ai_sectors, ai_tickers, category",
+            "get": {
+                "description": "Searches for unstructured documents using vector similarity search.",
                 "tags": [
                     "search"
                 ],
                 "summary": "Unstructured data search",
                 "operationId": "searchUnstructuredParams",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UnstructuredSearchRequest"
-                            }
+                "parameters": [
+                    {
+                        "description": "Search query text",
+                        "name": "query",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     },
-                    "required": true
-                },
+                    {
+                        "description": "Number of results to return (1-100)",
+                        "name": "top_k",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "description": "Filter results to only include unstructured data type",
+                        "name": "filter_data_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    },
+                    {
+                        "description": "Enable reranking for improved relevance",
+                        "name": "enable_rerank",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/UnstructuredSearchResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/UnstructuredErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/UnstructuredErrorResponse"
-                    }
-                }
-            }
-        },
-        "/search/unstructured/extract-text": {
-            "post": {
-                "description": "Downloads a file from Google Cloud Storage and extracts its text content.\nSupports PDF, TXT, HTML, and HTM file formats.",
-                "tags": [
-                    "extraction"
-                ],
-                "summary": "Extract text from GCS file",
-                "operationId": "extractGCSTextParams",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/GCSFileTextRequest"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/GCSFileTextResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/UnstructuredErrorResponse"
@@ -3661,182 +2905,6 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/SectorMeanResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/sectors": {
-            "get": {
-                "description": "Returns all unique sectors from tracked tickers.",
-                "tags": [
-                    "sector"
-                ],
-                "summary": "All sectors",
-                "operationId": "GetAllSectors",
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/SectorsListResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/sectors/{sector}/earnings": {
-            "get": {
-                "description": "Returns earnings events for companies in a specific sector for the upcoming week.",
-                "tags": [
-                    "sector"
-                ],
-                "summary": "Sector earnings events",
-                "operationId": "GetEarningsBySector",
-                "parameters": [
-                    {
-                        "description": "The sector name (e.g., Technology, Healthcare).",
-                        "name": "sector",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/SectorEarningsResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/sectors/{sector}/market-caps": {
-            "get": {
-                "description": "Returns all tickers in a specific sector grouped by market cap categories (Large: >$10B, Medium: $2-10B, Small: <$2B).",
-                "tags": [
-                    "sector"
-                ],
-                "summary": "Sector market caps",
-                "operationId": "GetMarketCapsBySector",
-                "parameters": [
-                    {
-                        "description": "The sector name (e.g., Technology, Healthcare).",
-                        "name": "sector",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/SectorMarketCapResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/sectors/{sector}/sector-means/{year}/{period}": {
-            "get": {
-                "description": "Returns sector mean financial data with nested JSON structure.",
-                "tags": [
-                    "sector"
-                ],
-                "summary": "Sector means",
-                "operationId": "GetSectorMeans",
-                "parameters": [
-                    {
-                        "description": "The sector name (e.g., Technology, Healthcare).",
-                        "name": "sector",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The year for the data (e.g., 2023).",
-                        "name": "year",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "The period (FY, Q1, Q2, Q3, Q4).",
-                        "name": "period",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/SectorMeansResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/sectors/{sector}/tickers": {
-            "get": {
-                "description": "Returns all tickers in a specific sector.",
-                "tags": [
-                    "sector"
-                ],
-                "summary": "Tickers by sector",
-                "operationId": "GetTickersBySector",
-                "parameters": [
-                    {
-                        "description": "The sector name (e.g., Technology, Healthcare).",
-                        "name": "sector",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/TickersBySectorResponse"
                     },
                     "400": {
                         "$ref": "#/components/responses/ErrorResponse"
@@ -4166,102 +3234,6 @@
                         "$ref": "#/components/responses/ErrorResponse"
                     },
                     "500": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    }
-                }
-            }
-        },
-        "/uniform-data": {
-            "get": {
-                "description": "Fetch data using query parameters. Supports fundamentals, transcripts, estimates, and documents data with optional field filtering.",
-                "tags": [
-                    "uniform-data"
-                ],
-                "summary": "Uniform Data API (Query Parameter-Based)",
-                "operationId": "getUniformData",
-                "parameters": [
-                    {
-                        "description": "Type of data to fetch (e.g., \"fundamentals\", \"transcripts\", \"estimates\", \"documents\")",
-                        "name": "data_type",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Stock ticker symbol (required for fundamentals, transcripts, estimates; optional for documents)",
-                        "name": "ticker",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Fiscal year (4-digit) (required for fundamentals, transcripts, estimates; optional for documents)",
-                        "name": "year",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Fiscal period (FY, Q1, Q2, Q3, Q4). For transcripts, use quarter number (1-4) (required for fundamentals, transcripts, estimates; optional for documents)",
-                        "name": "period",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Optional comma-separated field paths to filter response. Use colon (:) to specify nested paths of any depth. Examples: \"balance_sheet\", \"company_data:balance_sheet\", \"company_data:balance_sheet:current_liabilities\", \"company_data:balance_sheet:current_liabilities:Notes_Payable\", \"transcript_data:content:parsed\", \"estimates_data:annual:metrics:BPS\", \"estimates_data:annual:metrics:BPS:2025-09-30:Highest Individual Estimate\"",
-                        "name": "fields",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Search query string (required for documents data type)",
-                        "name": "query",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Document type filter for documents (e.g., \"sec_filings\", \"news\", \"earnings_call_transcript\")",
-                        "name": "document_type",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Number of results to return for documents (default: 10)",
-                        "name": "top_k",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Enable reranking for document search (default: true)",
-                        "name": "rerank_enabled",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "$ref": "#/components/responses/UniformDataResponse"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/ErrorResponse"
-                    },
-                    "404": {
                         "$ref": "#/components/responses/ErrorResponse"
                     }
                 }
@@ -4629,14 +3601,6 @@
                     }
                 }
             },
-            "CombinedEventAssetsResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {}
-                    }
-                }
-            },
             "ContractIDResponse": {
                 "description": "",
                 "content": {
@@ -4809,16 +3773,6 @@
                     }
                 }
             },
-            "EarningsDocumentsResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/EarningsDocument"
-                        }
-                    }
-                }
-            },
             "EarningsResponse": {
                 "description": "",
                 "content": {
@@ -4872,30 +3826,6 @@
                         "schema": {
                             "$ref": "#/components/schemas/EstimatesResponse"
                         }
-                    }
-                }
-            },
-            "EventCalendarResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {}
-                    }
-                }
-            },
-            "EventResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {}
-                    }
-                }
-            },
-            "EventsV2Response": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {}
                     }
                 }
             },
@@ -5117,16 +4047,6 @@
                     }
                 }
             },
-            "GCSFileTextResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/GCSFileTextResponse"
-                        }
-                    }
-                }
-            },
             "GetContractByCodeResponse": {
                 "description": "",
                 "content": {
@@ -5177,16 +4097,6 @@
                             "items": {
                                 "$ref": "#/components/schemas/IPOData"
                             }
-                        }
-                    }
-                }
-            },
-            "IndustriesListResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/IndustriesListResponse"
                         }
                     }
                 }
@@ -5271,16 +4181,6 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/MultiMetricEstimatesResponse"
-                        }
-                    }
-                }
-            },
-            "NewsArticleByURLResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/NewsArticleByURLResponse"
                         }
                     }
                 }
@@ -5457,52 +4357,12 @@
                     }
                 }
             },
-            "SectorEarningsResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/SectorEarningsData"
-                        }
-                    }
-                }
-            },
-            "SectorMarketCapResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/SectorMarketCapData"
-                        }
-                    }
-                }
-            },
             "SectorMeanResponse": {
                 "description": "",
                 "content": {
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/SectorMeanResponse"
-                        }
-                    }
-                }
-            },
-            "SectorMeansResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/SectorMeansData"
-                        }
-                    }
-                }
-            },
-            "SectorsListResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/SectorsListResponse"
                         }
                     }
                 }
@@ -5543,26 +4403,6 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/TickerSentimentResponse"
-                        }
-                    }
-                }
-            },
-            "TickersByIndustryResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/TickersByIndustryResponse"
-                        }
-                    }
-                }
-            },
-            "TickersBySectorResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/TickersBySectorResponse"
                         }
                     }
                 }
@@ -5617,17 +4457,6 @@
                     }
                 }
             },
-            "TranscriptResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "array",
-                            "items": {}
-                        }
-                    }
-                }
-            },
             "TreasuryRatesResponse": {
                 "description": "",
                 "content": {
@@ -5644,16 +4473,6 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/UnifiedEstimatesResponse"
-                        }
-                    }
-                }
-            },
-            "UniformDataResponse": {
-                "description": "",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/UniformDataResponse"
                         }
                     }
                 }
@@ -5934,26 +4753,10 @@
                             "file2.txt"
                         ]
                     },
-                    "followup_questions": {
-                        "description": "Followup questions for AI responses",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "FollowupQuestions"
-                    },
                     "role": {
                         "type": "string",
                         "x-go-name": "Role",
                         "example": "user"
-                    },
-                    "sources": {
-                        "description": "Sources for AI responses",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Source"
-                        },
-                        "x-go-name": "Sources"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -6722,124 +5525,6 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "DocumentTypeFilters": {
-                "description": "DocumentTypeFilters represents filters for a specific document type",
-                "type": "object",
-                "properties": {
-                    "ai_industries": {
-                        "description": "Third party specific (stored as string representations of Python lists - use 'like' for substring matching)",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "AIIndustries"
-                    },
-                    "ai_keywords": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "AIKeywords"
-                    },
-                    "ai_sectors": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "AISectors"
-                    },
-                    "ai_tickers": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "AITickers"
-                    },
-                    "category": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Category"
-                    },
-                    "end_date": {
-                        "type": "string",
-                        "x-go-name": "EndDate"
-                    },
-                    "file_type": {
-                        "description": "SEC filings specific (metadata fields - stored as strings)",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "FileType"
-                    },
-                    "quarter": {
-                        "description": "IR (press_release, earnings_call_slides) specific (metadata fields - use json_contains_any)",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Quarter"
-                    },
-                    "sentiment_label": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "SentimentLabel"
-                    },
-                    "source": {
-                        "description": "News specific",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Source"
-                    },
-                    "start_date": {
-                        "description": "Common filters",
-                        "type": "string",
-                        "x-go-name": "StartDate"
-                    },
-                    "themes": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Themes"
-                    },
-                    "ticker": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Ticker"
-                    },
-                    "tickers": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Tickers"
-                    },
-                    "tone": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Tone"
-                    },
-                    "year": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Year"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "EarningsCallTranscript": {
                 "type": "object",
                 "properties": {
@@ -6891,62 +5576,6 @@
                         "type": "string",
                         "x-go-name": "Time",
                         "example": "bmp"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "EarningsDocument": {
-                "type": "object",
-                "properties": {
-                    "event_date": {
-                        "description": "The date of the earnings event",
-                        "type": "string",
-                        "x-go-name": "EventDate",
-                        "example": "2023-10-26"
-                    },
-                    "event_id": {
-                        "description": "The event ID",
-                        "type": "string",
-                        "x-go-name": "EventID",
-                        "example": "event_12345"
-                    },
-                    "press_gcs_path": {
-                        "description": "GCS path to the press release document",
-                        "type": "string",
-                        "x-go-name": "PressGcsPath",
-                        "example": "gs://bucket/press/AAPL_Q4_2023.pdf"
-                    },
-                    "quarter": {
-                        "description": "The fiscal quarter",
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "Quarter",
-                        "example": 4
-                    },
-                    "slides_gcs_path": {
-                        "description": "GCS path to the slides document",
-                        "type": "string",
-                        "x-go-name": "SlidesGcsPath",
-                        "example": "gs://bucket/slides/AAPL_Q4_2023.pdf"
-                    },
-                    "symbol": {
-                        "description": "The stock symbol",
-                        "type": "string",
-                        "x-go-name": "Symbol",
-                        "example": "AAPL"
-                    },
-                    "title": {
-                        "description": "The title of the earnings event",
-                        "type": "string",
-                        "x-go-name": "Title",
-                        "example": "Q4 2023 Earnings Call"
-                    },
-                    "year": {
-                        "description": "The fiscal year",
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "Year",
-                        "example": 2023
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -8553,45 +7182,6 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "GCSFileTextRequest": {
-                "description": "GCSFileTextRequest represents the request for extracting text from a GCS file",
-                "type": "object",
-                "properties": {
-                    "gcs_url": {
-                        "type": "string",
-                        "x-go-name": "GCSURL"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "GCSFileTextResponse": {
-                "description": "GCSFileTextResponse represents the response containing extracted text from a GCS file",
-                "type": "object",
-                "properties": {
-                    "file_type": {
-                        "type": "string",
-                        "x-go-name": "FileType"
-                    },
-                    "gcs_url": {
-                        "type": "string",
-                        "x-go-name": "GCSURL"
-                    },
-                    "processed_at": {
-                        "type": "string",
-                        "x-go-name": "ProcessedAt"
-                    },
-                    "text": {
-                        "type": "string",
-                        "x-go-name": "Text"
-                    },
-                    "text_length": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "TextLength"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "GetContractByCodeResponse": {
                 "type": "object",
                 "properties": {
@@ -8669,6 +7259,21 @@
                 "description": "Highlight represents a highlighted text snippet",
                 "type": "object",
                 "properties": {
+                    "end": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "End"
+                    },
+                    "score": {
+                        "type": "number",
+                        "format": "double",
+                        "x-go-name": "Score"
+                    },
+                    "start": {
+                        "type": "integer",
+                        "format": "int64",
+                        "x-go-name": "Start"
+                    },
                     "text": {
                         "type": "string",
                         "x-go-name": "Text"
@@ -8832,31 +7437,6 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "IndustriesListResponse": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Data",
-                        "example": [
-                            "Consumer Electronics",
-                            "Internet Content & Information",
-                            "Internet Retail",
-                            "Semiconductors",
-                            "Auto Manufacturers",
-                            "Entertainment",
-                            "Insurance - Diversified",
-                            "Software - Infrastructure",
-                            "Banks - Regional",
-                            "Biotechnology"
-                        ]
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "IndustryMeanData": {
                 "description": "IndustryMeanData represents the calculated mean values for an industry",
                 "type": "object",
@@ -8932,32 +7512,6 @@
                             "$ref": "#/components/schemas/HolderInfo"
                         },
                         "x-go-name": "Data"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "MarketCapCategory": {
-                "description": "MarketCapCategory represents tickers grouped by market cap size",
-                "type": "object",
-                "properties": {
-                    "category": {
-                        "type": "string",
-                        "x-go-name": "Category",
-                        "example": "Large Cap (>$10B)"
-                    },
-                    "count": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "Count",
-                        "example": 15
-                    },
-                    "tickers": {
-                        "description": "List of tickers in this market cap category",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/TickerMarketCap"
-                        },
-                        "x-go-name": "Tickers"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -9137,61 +7691,62 @@
             },
             "NewsArticle": {
                 "type": "object",
-                "title": "NewsArticle represents the new, flattened structure of a news article after being read from Bigtable.",
                 "properties": {
                     "analysis": {
-                        "description": "For backwards compatibility in services, we flatten metadata here.\nThe Bigtable reading logic will handle the nesting.",
                         "type": "string",
-                        "x-go-name": "Analysis"
+                        "x-go-name": "Analysis",
+                        "example": "The International Atomic Energy Agency (IAEA) has reported an inability to currently verify the location of Iran's significant 409-kilogram stockpile of near-bomb-grade enriched uranium..."
                     },
                     "decisions_for_investors": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "x-go-name": "DecisionsForInvestors"
-                    },
-                    "document_type": {
-                        "type": "string",
-                        "x-go-name": "DocumentType"
+                        "x-go-name": "DecisionsForInvestors",
+                        "example": "[\"Investors should anticipate heightened volatility, particularly in energy markets and assets sensitive to Middle Eastern geopolitical risk...\", ]"
                     },
                     "financial_relevance": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "FinancialRelevance"
+                        "x-go-name": "FinancialRelevance",
+                        "example": 0.925
                     },
                     "id": {
                         "type": "string",
-                        "x-go-name": "Id"
+                        "x-go-name": "Id",
+                        "example": "f229ecb06b0c32b98e52519c51ee6ec1a01279e2a62f2288399f5a59ed8177b6"
                     },
                     "image_url": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "x-go-name": "ImageURL"
+                        "x-go-name": "ImageURL",
+                        "example": [
+                            "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iNPdNm9msB_k/v0/1200x800.jpg"
+                        ]
                     },
                     "ingested_at": {
                         "type": "string",
-                        "x-go-name": "IngestedAt"
+                        "x-go-name": "IngestedAt",
+                        "example": "2025-06-18T14:05:20.029986"
                     },
                     "market_impact_score": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "MarketImpact"
-                    },
-                    "page_content": {
-                        "type": "string",
-                        "x-go-name": "PageContent"
+                        "x-go-name": "MarketImpact",
+                        "example": 0.9
                     },
                     "published_at": {
                         "type": "string",
-                        "x-go-name": "PublishedAt"
+                        "x-go-name": "PublishedAt",
+                        "example": "2025-06-18 13:40:48"
                     },
                     "publisher_impact": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "PublisherImpact"
+                        "x-go-name": "PublisherImpact",
+                        "example": 0.975
                     },
                     "sentiment_details": {
                         "type": "object",
@@ -9203,55 +7758,59 @@
                     },
                     "sentiment_label": {
                         "type": "string",
-                        "x-go-name": "SentimentLabel"
+                        "x-go-name": "SentimentLabel",
+                        "example": "extremely negative"
                     },
                     "sentiment_score": {
                         "type": "number",
                         "format": "double",
-                        "x-go-name": "SentimentScore"
+                        "x-go-name": "SentimentScore",
+                        "example": -0.9
                     },
                     "source": {
                         "type": "string",
-                        "x-go-name": "Source"
+                        "x-go-name": "Source",
+                        "example": "Bloomberg"
                     },
                     "summary": {
                         "type": "string",
-                        "x-go-name": "Summary"
+                        "x-go-name": "Summary",
+                        "example": "The UN nuclear watchdog, IAEA, reports that the location of Iran's 409-kilogram stockpile of near-bomb-grade enriched uranium..."
                     },
                     "themes": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "x-go-name": "Themes"
+                        "x-go-name": "Themes",
+                        "example": [
+                            "Geopolitics & War",
+                            "Sanctions & Export Controls",
+                            "Energy Markets & Prices"
+                        ]
                     },
                     "tickers": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "$ref": "#/components/schemas/TickerItem"
                         },
-                        "x-go-name": "Tickers"
+                        "x-go-name": "Tickers",
+                        "example": null
                     },
                     "title": {
                         "type": "string",
-                        "x-go-name": "Title"
+                        "x-go-name": "Title",
+                        "example": "Iran Near-Bomb-Grade Uranium's Location Uncertain, UN Watchdog Says"
                     },
                     "tone": {
                         "type": "string",
-                        "x-go-name": "Tone"
+                        "x-go-name": "Tone",
+                        "example": "uncertain"
                     },
                     "url": {
                         "type": "string",
-                        "x-go-name": "URL"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "NewsArticleByURLResponse": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/NewsArticle"
+                        "x-go-name": "URL",
+                        "example": "https://www.bloomberg.com/news/articles/2025-06-18/iran-nuclear-infrastructure-location-of-enriched-uranium-stocks-uncertain"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -9998,10 +8557,7 @@
                         "x-go-name": "Id"
                     },
                     "image_url": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
+                        "type": "string",
                         "x-go-name": "ImageURL"
                     },
                     "market_impact_score": {
@@ -10075,10 +8631,6 @@
                         "type": "number",
                         "format": "double",
                         "x-go-name": "FilterMarketImpactMin"
-                    },
-                    "filter_sector": {
-                        "type": "string",
-                        "x-go-name": "FilterSector"
                     },
                     "filter_sentiment_label": {
                         "type": "string",
@@ -10165,118 +8717,11 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "SectorEarningsData": {
-                "description": "SectorEarningsData contains earnings events for a specific sector",
-                "type": "object",
-                "properties": {
-                    "earnings": {
-                        "description": "The earnings events for companies in this sector",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/EarningsData"
-                        },
-                        "x-go-name": "Earnings"
-                    },
-                    "sector": {
-                        "description": "The sector name",
-                        "type": "string",
-                        "x-go-name": "Sector",
-                        "example": "Technology"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "SectorMarketCapData": {
-                "description": "SectorMarketCapData contains market cap information for a sector",
-                "type": "object",
-                "properties": {
-                    "categories": {
-                        "description": "Market cap categories for this sector",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/MarketCapCategory"
-                        },
-                        "x-go-name": "Categories"
-                    },
-                    "sector": {
-                        "type": "string",
-                        "x-go-name": "Sector",
-                        "example": "Technology"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "SectorMeanResponse": {
                 "type": "object",
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/IndustryMeanData"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "SectorMeansData": {
-                "description": "SectorMeansData contains sector mean financial data",
-                "type": "object",
-                "properties": {
-                    "company_count": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "CompanyCount",
-                        "example": 150
-                    },
-                    "last_updated": {
-                        "type": "string",
-                        "x-go-name": "LastUpdated",
-                        "example": "2023-12-15T10:30:00Z"
-                    },
-                    "metrics": {
-                        "description": "Financial metrics means for the sector",
-                        "type": "object",
-                        "additionalProperties": {},
-                        "x-go-name": "Metrics"
-                    },
-                    "period": {
-                        "type": "string",
-                        "x-go-name": "Period",
-                        "example": "FY"
-                    },
-                    "sector": {
-                        "type": "string",
-                        "x-go-name": "Sector",
-                        "example": "Technology"
-                    },
-                    "year": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "Year",
-                        "example": 2023
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "SectorsListResponse": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "Data",
-                        "example": [
-                            "Technology",
-                            "Healthcare",
-                            "Financial Services",
-                            "Consumer Cyclical",
-                            "Communication Services",
-                            "Industrials",
-                            "Energy",
-                            "Utilities",
-                            "Real Estate",
-                            "Consumer Defensive",
-                            "Basic Materials"
-                        ]
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -10290,10 +8735,7 @@
                         "example": "f229ecb06b0c32b98e52519c51ee6ec1a01279e2a62f2288399f5a59ed8177b6"
                     },
                     "image_url": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
+                        "type": "string",
                         "x-go-name": "ImageURL",
                         "example": "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iNPdNm9msB_k/v0/1200x800.jpg"
                     },
@@ -10344,7 +8786,7 @@
                     "tickers": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "$ref": "#/components/schemas/TickerItem"
                         },
                         "x-go-name": "Tickers",
                         "example": null
@@ -10358,33 +8800,6 @@
                         "type": "string",
                         "x-go-name": "URL",
                         "example": "https://www.bloomberg.com/news/articles/2025-06-18/iran-nuclear-infrastructure-location-of-enriched-uranium-stocks-uncertain"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "Source": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "ID",
-                        "example": 1
-                    },
-                    "title": {
-                        "type": "string",
-                        "x-go-name": "Title",
-                        "example": "Example Title"
-                    },
-                    "type": {
-                        "type": "string",
-                        "x-go-name": "Type",
-                        "example": "search"
-                    },
-                    "url": {
-                        "type": "string",
-                        "x-go-name": "URL",
-                        "example": "https://example.com"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -10548,25 +8963,16 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "TickerMarketCap": {
-                "description": "TickerMarketCap represents a ticker with its market cap information",
+            "TickerItem": {
                 "type": "object",
                 "properties": {
-                    "market_cap": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "MarketCap",
-                        "example": 14935826000
-                    },
-                    "name": {
+                    "company_name": {
                         "type": "string",
-                        "x-go-name": "Name",
-                        "example": "Apple Inc."
+                        "x-go-name": "CompanyName"
                     },
                     "ticker": {
                         "type": "string",
-                        "x-go-name": "Ticker",
-                        "example": "AAPL"
+                        "x-go-name": "Ticker"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -10722,69 +9128,6 @@
                 "properties": {
                     "Data": {
                         "$ref": "#/components/schemas/MultiPeriodSentimentMetrics"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "TickersByIndustryResponse": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "type": "object",
-                        "properties": {
-                            "industry": {
-                                "type": "string",
-                                "x-go-name": "Industry"
-                            },
-                            "tickers": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "x-go-name": "Tickers"
-                            }
-                        },
-                        "x-go-name": "Data",
-                        "example": {
-                            "industry": "Consumer Electronics",
-                            "tickers": [
-                                "AAPL"
-                            ]
-                        }
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "TickersBySectorResponse": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "type": "object",
-                        "properties": {
-                            "sector": {
-                                "type": "string",
-                                "x-go-name": "Sector"
-                            },
-                            "tickers": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "x-go-name": "Tickers"
-                            }
-                        },
-                        "x-go-name": "Data",
-                        "example": {
-                            "sector": "Technology",
-                            "tickers": [
-                                "AAPL",
-                                "GOOGL",
-                                "GOOG",
-                                "NVDA",
-                                "META",
-                                "NFLX"
-                            ]
-                        }
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -11066,40 +9409,6 @@
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
             },
-            "UniformDataResponse": {
-                "description": "The Data field contains the response payload, which can be filtered using the `fields` query parameter.\nFor fundamentals data, the structure is:\ncompany_data: Company financial data with sections like balance_sheet, income_statement, cash_flow, market_data, etc.\nindustry_mean_data: Industry average metrics (if available)\nsector_mean_data: Sector average metrics (if available)\n\nField filtering supports unlimited nesting depth using colon (:) as separator.\n\nField filtering examples:\nNo filter: Returns all data\nfields=balance_sheet: Returns balance_sheet from all data sources (company, industry, sector)\nfields=company_data: Returns entire company_data object\nfields=company_data:balance_sheet: Returns only balance_sheet from company_data\nfields=company_data:balance_sheet:current_liabilities: Returns current_liabilities section\nfields=company_data:balance_sheet:current_liabilities:Notes_Payable: Returns specific Notes_Payable value\nfields=company_data:balance_sheet,company_data:income_statement: Returns multiple specific sections\nfields=company_data:market_data:Market_Cap,company_data:market_data:Price_Close_Quarter: Returns specific market data fields",
-                "type": "object",
-                "title": "UniformDataResponse represents the response for the uniform data API",
-                "properties": {
-                    "data": {
-                        "description": "Actual data payload (structure varies by data type, can be filtered with fields parameter)",
-                        "type": "object",
-                        "additionalProperties": {},
-                        "x-go-name": "Data"
-                    },
-                    "data_type": {
-                        "description": "Type of data returned (e.g., \"fundamentals\")",
-                        "type": "string",
-                        "x-go-name": "DataType"
-                    },
-                    "period": {
-                        "description": "Fiscal period (FY, Q1-Q4)",
-                        "type": "string",
-                        "x-go-name": "Period"
-                    },
-                    "ticker": {
-                        "description": "Stock ticker symbol",
-                        "type": "string",
-                        "x-go-name": "Ticker"
-                    },
-                    "year": {
-                        "description": "Fiscal year",
-                        "type": "string",
-                        "x-go-name": "Year"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
             "UnstructuredErrorResponse": {
                 "description": "UnstructuredErrorResponse represents error responses",
                 "type": "object",
@@ -11126,59 +9435,6 @@
                     "status": {
                         "type": "string",
                         "x-go-name": "Status"
-                    }
-                },
-                "x-go-package": "github.com/api-with-go/app/logic/models"
-            },
-            "UnstructuredSearchRequest": {
-                "description": "UnstructuredSearchRequest represents the request for unstructured data search",
-                "type": "object",
-                "properties": {
-                    "document_types": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "x-go-name": "DocumentTypes"
-                    },
-                    "earnings_call_slides": {
-                        "$ref": "#/components/schemas/DocumentTypeFilters"
-                    },
-                    "earnings_call_transcript": {
-                        "$ref": "#/components/schemas/DocumentTypeFilters"
-                    },
-                    "enable_rerank": {
-                        "type": "boolean",
-                        "x-go-name": "EnableRerank"
-                    },
-                    "initial_candidates": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "InitialCandidates"
-                    },
-                    "news": {
-                        "$ref": "#/components/schemas/DocumentTypeFilters"
-                    },
-                    "press_release": {
-                        "$ref": "#/components/schemas/DocumentTypeFilters"
-                    },
-                    "query": {
-                        "type": "string",
-                        "x-go-name": "Query"
-                    },
-                    "sec_filings": {
-                        "$ref": "#/components/schemas/DocumentTypeFilters"
-                    },
-                    "third_party": {
-                        "$ref": "#/components/schemas/DocumentTypeFilters"
-                    },
-                    "third_party_fixed_income": {
-                        "$ref": "#/components/schemas/DocumentTypeFilters"
-                    },
-                    "top_k": {
-                        "type": "integer",
-                        "format": "int64",
-                        "x-go-name": "TopK"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
@@ -11220,10 +9476,6 @@
                         "format": "double",
                         "x-go-name": "Distance"
                     },
-                    "document_type": {
-                        "type": "string",
-                        "x-go-name": "DocumentType"
-                    },
                     "highlights": {
                         "type": "array",
                         "items": {
@@ -11231,48 +9483,19 @@
                         },
                         "x-go-name": "Highlights"
                     },
-                    "id": {
-                        "type": "string",
-                        "x-go-name": "ID"
-                    },
-                    "ingested_at": {
-                        "type": "string",
-                        "x-go-name": "IngestedAt"
-                    },
                     "metadata": {
                         "type": "object",
                         "additionalProperties": {},
                         "x-go-name": "Metadata"
-                    },
-                    "page_content": {
-                        "type": "string",
-                        "x-go-name": "PageContent"
-                    },
-                    "published_at": {
-                        "type": "string",
-                        "x-go-name": "PublishedAt"
                     },
                     "rerank_score": {
                         "type": "number",
                         "format": "double",
                         "x-go-name": "RerankScore"
                     },
-                    "score": {
-                        "type": "number",
-                        "format": "double",
-                        "x-go-name": "Score"
-                    },
-                    "source": {
+                    "text": {
                         "type": "string",
-                        "x-go-name": "Source"
-                    },
-                    "title": {
-                        "type": "string",
-                        "x-go-name": "Title"
-                    },
-                    "url": {
-                        "type": "string",
-                        "x-go-name": "URL"
+                        "x-go-name": "Text"
                     }
                 },
                 "x-go-package": "github.com/api-with-go/app/logic/models"
